@@ -4,3 +4,5 @@ webpack.config.production.js
 webpack.config.development.js
 photoshop
 src/pics
+dist/salt.php
+dist/CryptoLib.php

@@ -1,5 +1,6 @@
 <?php
 require_once('CryptoLib.php');
+require_once('salt.php');
 
 $link = mysqli_connect(***REMOVED***);
 
@@ -15,21 +16,57 @@ if (!mysqli_set_charset($link, "utf8")) {
 $login = mysqli_real_escape_string($link, $_POST["login"]);
 $password = mysqli_real_escape_string($link, $_POST["password"]);
 
-$query = "SELECT * FROM Users WHERE Password='$password'";
+$query = "SELECT * FROM Users WHERE Login='$login'";
 $result = mysqli_query($link, $query);
 
 if ($_POST['requestType'] == 'signUp') {
-    $rows = array();
-    while ($row = mysqli_fetch_assoc($result)) {
-        $rows[] = $row;
+    
+    if(mysqli_num_rows($result)>0){
+        $error = array(
+            error => 'User already exist. Did you want to sign in?'
+        );
+        echo json_encode($error);            
     }
-    echo json_encode($rows);
+    else {
+        
+        $hashedPassword = CryptoLib::hash($password, $salt);
+        
+        $query = "INSERT INTO Users (Login, Password) VALUES ('$login', '$hashedPassword')";
+        $insert = mysqli_query($link, $query);
+        
+        if(!$insert){
+            $error = array(
+                error => 'Error occured while trying to create accunt. Please try again.'
+            );
+            echo json_encode($error);
+        }
+        else {
+            $success = array(
+                success => 'Account successfully created'
+            );
+            echo json_encode($success);
+        }
+    }
 }
 else if ($_POST['requestType'] == 'signIn') {
-    echo json_encode('ktoś się loguje');
-}
-else{
-    echo json_encode($_POST);
+    
+    $user = mysqli_fetch_assoc($result);
+    $storedHash = $user['Password'];
+    
+    $isPasswordCorrect = CryptoLib::validateHash($storedHash, $password);
+    
+    if(!mysqli_num_rows($result) || !$isPasswordCorrect) {
+        $error = array(
+            error => 'Incorrect login or password'
+        );
+        echo json_encode($error);
+    }
+    else {
+        $success = array(
+            success => 'You are now signed in'
+        );
+        echo json_encode($success);
+    }
 }
 
 ?>
