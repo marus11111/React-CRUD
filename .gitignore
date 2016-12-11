@@ -1,0 +1,6 @@
+node_modules
+package.json
+webpack.config.production.js
+webpack.config.development.js
+photoshop
+src/pics
