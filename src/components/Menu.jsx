@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Link} from 'react-router';
+import {Link, withRouter} from 'react-router';
 import ajaxRequest from '../actions/ajaxRequest';
 import protect from '../HOC/protectedComponent.jsx';
 
@@ -15,18 +15,34 @@ class Menu extends Component {
     }
     
     render() {
-        let {user} = this.props;
+        let {user, params: {title, postId}} = this.props;
+        let route;
+        
+        let activeChildRoute = this.props.routes[1];
+        if(!activeChildRoute.path) {
+            route = 'home';
+        }
+        else {
+            route = activeChildRoute.path == ':postId/:title' ? 'postView' : null;
+        }
         
         return (
             <nav className='navbar navbar-default container'>
                 <div className='row'>
                     <ul className='navbar-nav nav nav-centered'>
-                        <li className='nav-item col-xs-2 col-sm-2 col-md-2 col-lg-2'>
-                            <Link className='nav-link' to={`${user.toLowerCase()}`}>Home</Link>
-                        </li>
+                        {route != 'home' &&
+                            <li className='nav-item col-xs-2 col-sm-2 col-md-2 col-lg-2'>
+                                <Link className='nav-link' to={`${user.toLowerCase()}`}>Home</Link>
+                            </li>
+                        }
                         <li className='nav-item col-xs-2 col-sm-2 col-md-2 col-lg-2'>
                             <Link className='nav-link' to={`${user.toLowerCase()}/create`}>Create post</Link>
                         </li>
+                        {route == 'postView' &&
+                            <li className='nav-item col-xs-2 col-sm-2 col-md-2 col-lg-2'>
+                                <Link className='nav-link' to={`${user.toLowerCase()}/${postId}/${title}/update`}>Update post</Link>
+                            </li>
+                        }
                         <li className='nav-item col-xs-2 col-sm-2 col-md-2 col-lg-2'>
                             <Link className='nav-link' to='#' onClick={this.clickHandler}>Sign out</Link>
                         </li>

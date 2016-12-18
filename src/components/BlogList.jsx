@@ -7,7 +7,7 @@ class BlogList extends Component {
     render() {
         let {posts, params: {user}} = this.props;
         let children;
-        if(posts){
+        if(posts && posts != 'pending'){
             children = posts.map((post) => {
                 let titleLink = post.title.toLowerCase().replace(/\s/g, '_');
                 return <li className='list-group-item' key={post.id}><Link className='nav-link' to={`/${user}/${post.id}/${titleLink}`}>{post.title}</Link></li>

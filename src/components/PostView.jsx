@@ -2,11 +2,12 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
 class PostView extends Component {
+    
     render() {
         let post;
         let {posts, params: {postId}} = this.props;
         
-        if (posts) {
+        if (posts && posts != 'pending') {
             for (let i = 0; i < posts.length; i++) {
                 if (posts[i].id == postId) {
                     post = posts[i];
@@ -14,7 +15,6 @@ class PostView extends Component {
                 }
             }  
         }
-        
         
         return (
             <div>
