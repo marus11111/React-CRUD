@@ -1,7 +1,7 @@
 export default (state = {
     imageUrl: null,
     imageId: null,
-    posts: null
+    posts: 'pending'
 }, action) => {
     switch (action.type){
         case 'LOAD_IMAGE':

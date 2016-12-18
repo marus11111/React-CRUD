@@ -9,7 +9,8 @@ class BlogList extends Component {
         let children;
         if(posts){
             children = posts.map((post) => {
-                return <li className='list-group-item' key={post.id}><Link className='nav-link' to={`/${user}/${post.id}`}>{post.title}</Link></li>
+                let titleLink = post.title.toLowerCase().replace(/\s/g, '_');
+                return <li className='list-group-item' key={post.id}><Link className='nav-link' to={`/${user}/${post.id}/${titleLink}`}>{post.title}</Link></li>
             });
         }
         

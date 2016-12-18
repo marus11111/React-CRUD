@@ -1,10 +1,35 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
-export default class PostView extends Component {
+class PostView extends Component {
     render() {
+        let post;
+        let {posts, params: {postId}} = this.props;
+        
+        if (posts) {
+            for (let i = 0; i < posts.length; i++) {
+                if (posts[i].id == postId) {
+                    post = posts[i];
+                    break;
+                }
+            }  
+        }
+        
+        
         return (
-            <div></div>
+            <div>
+                {post &&
+                    <div>
+                        <h1>{post.title}</h1>
+                        <p>{post.body}</p>
+                    </div>
+                }
+                {posts != 'pending' && !post &&
+                    <div>
+                        <h1>Post not found</h1>
+                    </div>
+                }
+            </div>
         )
     }
 }
