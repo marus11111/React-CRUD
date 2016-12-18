@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
 import ajaxRequest from '../actions/ajaxRequest';
+import removeImage from '../actions/removeImage';
 import Menu from './Menu.jsx';
 import Dropzone from 'react-dropzone';
 
@@ -26,20 +27,26 @@ class User extends Component {
     }
     
     showControls() {
-        clearTimeout(this.controlsTimeout);
-        this.imageControls.style.visibility = 'visible';
-        this.imageControls.style.opacity = 1;
+        if (this.props.imageUrl) {
+            clearTimeout(this.controlsTimeout);
+            this.imageControls.style.visibility = 'visible';
+            this.imageControls.style.opacity = 1;
+        }
     }
     
     hideControls() {
-        this.imageControls.style.opacity = 0;
-        this.controlsTimeout = setTimeout(() => {
-            this.imageControls.style.visibility = 'hidden';
-        }, 1000)
+        if (this.props.imageUrl) {
+            this.imageControls.style.opacity = 0;
+            this.controlsTimeout = setTimeout(() => {
+                this.imageControls.style.visibility = 'hidden';
+            }, 1000)
+        }
     }
     
     toggleControls() {
-        this.imageControls.style.visibility == 'hidden' ? this.showControls() : this.hideControls();
+        if (this.props.imageUrl) {
+            this.imageControls.style.visibility == 'hidden' ? this.showControls() : this.hideControls();
+        }
     }
     
     uploadImage(images) {
@@ -51,7 +58,8 @@ class User extends Component {
     
     removeImage(e) {
         e.stopPropagation();
-        this.props.ajaxRequest('post', 'removeImage');
+        this.props.ajaxRequest('post', 'removeImage')
+        .then(() => this.props.removeImage());
     }
     
     render() {
@@ -99,4 +107,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps, {ajaxRequest})(User);
+export default connect(mapStateToProps, {ajaxRequest, removeImage})(User);

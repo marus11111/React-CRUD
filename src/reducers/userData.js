@@ -6,6 +6,8 @@ export default (state = {
     switch (action.type){
         case 'LOAD_IMAGE':
             return {...state, imageUrl: action.imageUrl};
+        case 'REMOVE_IMAGE':
+            return {...state, imageUrl: null};
         case 'FETCH_USER_DATA':
             return {...state, 
                     imageUrl: action.imageUrl,

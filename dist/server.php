@@ -182,7 +182,9 @@ if ($reqType == 'CreatePost') {
 ///UPLOAD AND REMOVE IMAGE///
 /////////////////////////////
 
-if ($reqType == 'imageUpload' || $reqType == 'removeImage') {
+if ($reqType == 'removeImage' || $reqType == 'imageUpload') {
+    
+    $userId = $_COOKIE['id'];
         
     \Cloudinary::config(array( 
     ***REMOVED***
@@ -190,8 +192,29 @@ if ($reqType == 'imageUpload' || $reqType == 'removeImage') {
     ***REMOVED***
     ));
     
+    function removeCloudinaryImage($array) {
+        $idOfUser = $array['idOfUser'];
+        $linkToDB = $array['linkToDB'];
+        
+        $query = "SELECT img_public_id FROM users WHERE id = '$idOfUser'";
+        $result = mysqli_fetch_assoc(mysqli_query($linkToDB, $query));
+        
+        if ($imageToRemove = $result['img_public_id']) {
+            \Cloudinary\Uploader::destroy($imageToRemove, array(invalidate => true));
+        }
+        
+        if($array) {
+            $query = "UPDATE users SET img_url = NULL, img_public_id = NULL WHERE id = '$idOfUser'";
+            mysqli_query($linkToDB, $query);
+        }
+        
+        return array(
+            success => 'Image removed'
+        );
+    }
+    
     if ($reqType == 'imageUpload') {
-       $response = \Cloudinary\Uploader::upload($_FILES['file']['tmp_name'], array(
+        $response = \Cloudinary\Uploader::upload($_FILES['file']['tmp_name'], array(
             "upload_preset" => $_POST['upload_preset']
         ));
 
@@ -204,23 +227,25 @@ if ($reqType == 'imageUpload' || $reqType == 'removeImage') {
             );
         }
         else {
+            removeCloudinaryImage(array(
+                idOfUser => $userId,
+                linkToDB => $link
+            ));
+            
             $msg = array(
                 imageUrl => $imageUrl,
             );
-
-            $userId = $_COOKIE['id'];
+            
             $query = "UPDATE users SET img_url = '$imageUrl', img_public_id = '$imageId' WHERE id = '$userId'";
             mysqli_query($link, $query);
         } 
     }
     else if ($reqType == 'removeImage') {
-        $userId = $_COOKIE['id'];
-        
-        $query = "SELECT img_public_id FROM users WHERE id = '$userId'";
-        $result = mysqli_fetch_assoc(mysqli_query($link, $query));
-        $imageId = $result['img_public_id'];
-        
-        \Cloudinary\Uploader::destroy($imageId, array(invalidate => true));
+        $msg = removeCloudinaryImage(array(
+            idOfUser => $userId,
+            linkToDB => $link,
+            removeFromDB => true    
+        ));
     }
 }
 
