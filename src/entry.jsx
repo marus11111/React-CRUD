@@ -35,8 +35,8 @@ store.dispatch(ajaxRequest('post', 'cookieAuth'))
                 <Route path='/' component={Authorization}/>
                 <Route path='/:user' component={User}>
                     <IndexRoute component={BlogList} />
-                    <Route path='post/*' component={PostView} />
-                    <Route path='post/*/update' type='Update' protection='redirect' component={CreateUpdatePost} />
+                    <Route path=':postId' component={PostView} />
+                    <Route path=':postId/update' type='Update' protection='redirect' component={CreateUpdatePost} />
                     <Route path='create' type='Create' protection='redirect' component={CreateUpdatePost} />
                 </Route>
             </Router>

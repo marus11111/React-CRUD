@@ -5,13 +5,11 @@ import ajaxRequest from '../actions/ajaxRequest';
 
 class BlogList extends Component {
     render() {
-        let {posts} = this.props;
-        let {user} = this.props.params;
+        let {posts, params: {user}} = this.props;
         let children;
         if(posts){
             children = posts.map((post) => {
-                let titleLink = post.title.toLowerCase().replace(/\s/g, '_');
-                return <li className='list-group-item' key={post.id}><Link className='nav-link' to={`/${user}/post/${titleLink}`}>{post.title}</Link></li>
+                return <li className='list-group-item' key={post.id}><Link className='nav-link' to={`/${user}/${post.id}`}>{post.title}</Link></li>
             });
         }
         
