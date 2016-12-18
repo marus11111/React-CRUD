@@ -1,5 +1,51 @@
-.red {
-    width: 200px;
-    height: 200px;
-    background-color: red;
+
+
+.row-center {
+    text-align: center;
+    .col-centered {
+        float: none;
+        display: inline-block;
+    }
+}
+
+.nav-centered {
+    float: none;
+    text-align: center;
+    li{
+        float: none;
+        display: inline-block;
+    }
+}
+
+.nav-item {
+    padding: 0;
+}
+
+.jumbotron {
+    padding: 0;
+    margin: 0;
+    height: 50vh;
+    position: relative;
+    
+    &__image-controls {
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity 1s;
+    }
+    
+    img {
+        position: absolute;
+        height: 100%;
+    }
+    
+    .btn {
+        position: relative; 
+    }
+    
+    input {
+        position: absolute;
+        width: 0.1px;
+        height: 0.1px;
+        opacity: 0;
+    }
 }
