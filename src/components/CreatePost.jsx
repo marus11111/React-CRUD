@@ -24,7 +24,7 @@ class CreatePost extends Component {
         .catch(res => errorHandler(res.error));
     }
     
-    render(){
+    render() {
         return ( 
             <div>
                 <form onSubmit={this.submitHandler}>

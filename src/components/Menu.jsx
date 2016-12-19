@@ -15,7 +15,7 @@ class Menu extends Component {
     }
     
     render() {
-        let {user, params: {title, postId}} = this.props;
+        let {user, removePost, params: {titleLink, postId}} = this.props;
         let route;
         
         let activeChildRoute = this.props.routes[1];
@@ -23,7 +23,7 @@ class Menu extends Component {
             route = 'home';
         }
         else {
-            route = activeChildRoute.path == ':postId/:title' ? 'postView' : null;
+            route = activeChildRoute.path == ':postId/:titleLink' ? 'postView' : null;
         }
         
         return (
@@ -40,7 +40,12 @@ class Menu extends Component {
                         </li>
                         {route == 'postView' &&
                             <li className='nav-item col-xs-2 col-sm-2 col-md-2 col-lg-2'>
-                                <Link className='nav-link' to={`${user.toLowerCase()}/${postId}/${title}/update`}>Update post</Link>
+                                <Link className='nav-link' to={`${user.toLowerCase()}/${postId}/${titleLink}/update`}>Update post</Link>
+                            </li>
+                        }
+                        {route == 'postView' &&
+                            <li className='nav-item col-xs-2 col-sm-2 col-md-2 col-lg-2'>
+                                <Link className='nav-link' to={`${user.toLowerCase()}`} onClick={() => removePost(postId)}>Remove post</Link>
                             </li>
                         }
                         <li className='nav-item col-xs-2 col-sm-2 col-md-2 col-lg-2'>

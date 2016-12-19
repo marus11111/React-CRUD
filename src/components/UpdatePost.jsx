@@ -1,8 +1,11 @@
 import React, {Component} from 'react';
 import {Field, reduxForm, formValueSelector} from 'redux-form';
 import {connect} from 'react-redux';
+import {withRouter} from 'react-router';
 import ajaxRequest from '../actions/ajaxRequest';
 import setUpdatedPost from '../actions/setUpdatedPost';
+import updatePost from '../actions/updatePost';
+import errorHandler from '../actions/errorHandler';
 import protect from '../HOC/protectedComponent.jsx';
 
 class UpdatePost extends Component {
@@ -20,8 +23,14 @@ class UpdatePost extends Component {
     
     submitHandler(event){
         event.preventDefault();
-        let {title, body, ajaxRequest, params: {postId}} = this.props;
-        ajaxRequest('post', `updatePost`, {postId, title, body});
+        let {title, body, ajaxRequest, updatePost, errorHandler, router, params: {user, postId}} = this.props;
+        ajaxRequest('post', `updatePost`, {postId, title, body})
+        .then(() => {
+            updatePost(postId, title, body);
+            let titleLink = title.toLowerCase().replace(/\s/g, '_');
+            router.push(`/${user}/${postId}/${titleLink}`);
+        })
+        .catch((res) => errorHandler(res.error));
     }
     
     render(){
@@ -50,6 +59,6 @@ const mapStateToProps = (state, ownProps) => {
     }
 }
 
-UpdatePost = connect(mapStateToProps, {ajaxRequest, setUpdatedPost})(UpdatePost);
+UpdatePost = connect(mapStateToProps, {ajaxRequest, setUpdatedPost, updatePost, errorHandler})(withRouter(UpdatePost));
 
 export default protect(UpdatePost);

@@ -27,12 +27,6 @@
     height: 50vh;
     position: relative;
     
-    &__image-controls {
-        visibility: hidden;
-        opacity: 0;
-        transition: opacity 1s;
-    }
-    
     img {
         position: absolute;
         height: 100%;
@@ -48,4 +42,11 @@
         height: 0.1px;
         opacity: 0;
     }
+}
+
+.hidden-controls {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 1s;
+    position: absolute;
 }

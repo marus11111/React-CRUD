@@ -134,9 +134,9 @@ else {
 }
 
 
-///////////////////////////////
-////CREATE AND UPDATE POSTS////
-///////////////////////////////
+///////////////////////////////////////
+////CREATE, UPDATE AND REMOVE POSTS////
+///////////////////////////////////////
 
 if ($reqType == 'createPost') {
     
@@ -166,7 +166,7 @@ if ($reqType == 'createPost') {
 }
 else if ($reqType == 'updatePost') {
     
-    //get necessary data
+    //get necessary data from request
     $postId = $_POST['postId'];
     $title = $_POST['title'];
     $body = $_POST['body'];
@@ -178,6 +178,23 @@ else if ($reqType == 'updatePost') {
     //set msg depending on whether post was successfully updated or not
     if ($result) {
         $msg['success'] = 'Post updated successfully.';
+    }
+    else {
+        $msg['error'] = 'An error occured. Please try again.';
+    }
+}
+else if ($reqType == 'removePost') {
+    
+    //get id from request
+    $postId = $_POST['postId'];
+
+    //remove post
+    $query = "DELETE FROM posts WHERE id = '$postId' LIMIT 1";
+    $result = mysqli_query($link, $query);
+    
+    //set msg depending on whether post was successfully deleted
+    if ($result) {
+        $msg['success'] = 'Post removed.';
     }
     else {
         $msg['error'] = 'An error occured. Please try again.';

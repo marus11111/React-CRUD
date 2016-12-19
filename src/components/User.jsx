@@ -8,6 +8,7 @@ import loadImage from '../actions/loadImage';
 import errorHandler from '../actions/errorHandler';
 import closeError from '../actions/closeError';
 import removeImage from '../actions/removeImage';
+import removePostAction from '../actions/removePostAction';
 import Menu from './Menu.jsx';
 import Dropzone from 'react-dropzone';
 
@@ -25,6 +26,7 @@ class User extends Component {
         this.controlsTimeout;
         this.uploadImage = this.uploadImage.bind(this);
         this.removeImage = this.removeImage.bind(this);
+        this.removePost = this.removePost.bind(this);
     }
     
     componentWillReceiveProps(nextProps) {
@@ -36,26 +38,20 @@ class User extends Component {
     }
     
     showControls() {
-        if (this.props.imageUrl) {
-            clearTimeout(this.controlsTimeout);
-            this.imageControls.style.visibility = 'visible';
-            this.imageControls.style.opacity = 1;
-        }
+        clearTimeout(this.controlsTimeout);
+        this.imageControls.style.visibility = 'visible';
+        this.imageControls.style.opacity = 1;
     }
     
     hideControls() {
-        if (this.props.imageUrl) {
-            this.imageControls.style.opacity = 0;
-            this.controlsTimeout = setTimeout(() => {
-                this.imageControls.style.visibility = 'hidden';
-            }, 1000)
-        }
+        this.imageControls.style.opacity = 0;
+        this.controlsTimeout = setTimeout(() => {
+            this.imageControls.style.visibility = 'hidden';
+        }, 1000)
     }
     
     toggleControls() {
-        if (this.props.imageUrl) {
-            this.imageControls.style.visibility == 'hidden' ? this.showControls() : this.hideControls();
-        }
+        this.imageControls.style.visibility == 'hidden' ? this.showControls() : this.hideControls();
     }
     
     uploadImage(images) {
@@ -74,26 +70,49 @@ class User extends Component {
         .catch(res => this.props.errorHandler(res.error));
     }
     
+    removePost(postId) {
+        this.props.ajaxRequest('post', 'removePost', {postId})
+        .then(() => this.props.removePostAction(postId))
+        .catch(res => this.props.errorHandler(res.error));
+    }
+    
     render() {
         let {imageUrl, userError, error, authorizedUser, params: {user}} = this.props;
+        
+        let eventHandlers = {};
+        if (imageUrl && user == authorizedUser) {
+            eventHandlers = {
+                onMouseEnter: this.showControls,
+                onMouseLeave: this.hideControls,
+                onClick: this.toggleControls
+            }
+        }
+        
+        let children = React.Children.map(this.props.children, (child) => {
+            return React.cloneElement(child, {
+                removePost: this.removePost
+            });
+        });
         return (
             <div>
                 { (imageUrl || user == authorizedUser) &&
-                    <div className='jumbotron' onMouseEnter={this.showControls} onMouseLeave={this.hideControls} onClick={this.toggleControls}>
+                    <div className='jumbotron' {...eventHandlers}>
                         {imageUrl && 
                             <div>
                                 <img src={imageUrl}></img>
-                                <div className='jumbotron__image-controls' ref={div => this.imageControls = div}>
-                                    <form>
-                                        <label htmlFor='imageUpload' className='btn btn-primary btn-sm' onClick={e => e.stopPropagation()}>
-                                            <span className='glyphicon glyphicon-edit'></span> Change
-                                        </label>
-                                        <input id='imageUpload' type='file' onChange={() => this.uploadImage(this.imageInput.files)} ref={input => this.imageInput = input}></input>
-                                    </form>
-                                    <button className='btn btn-danger btn-sm' onClick={this.removeImage}>
-                                        <span className='glyphicon glyphicon-trash'></span> Remove
-                                    </button>
-                                </div>
+                                { user == authorizedUser &&
+                                    <div className='hidden-controls' ref={div => this.imageControls = div}>
+                                        <form>
+                                            <label htmlFor='imageUpload' className='btn btn-primary btn-sm' onClick={e => e.stopPropagation()}>
+                                                <span className='glyphicon glyphicon-edit'></span> Change
+                                            </label>
+                                            <input id='imageUpload' type='file' onChange={() => this.uploadImage(this.imageInput.files)} ref={input => this.imageInput = input}></input>
+                                        </form>
+                                        <button className='btn btn-danger btn-sm' onClick={this.removeImage}>
+                                            <span className='glyphicon glyphicon-trash'></span> Remove
+                                        </button>
+                                    </div>
+                                }
                             </div>
                         }
                         {!imageUrl && 
@@ -104,7 +123,7 @@ class User extends Component {
                         }
                     </div>
                 }
-                <Menu user={user} protection='hide'/>
+                <Menu user={user} removePost={this.removePost} protection='hide'/>
                 {userError && 
                     <p>{userError}</p>
                 }
@@ -114,7 +133,7 @@ class User extends Component {
                         <button className='close' onClick={this.props.closeError}><span className='glyphicon glyphicon-remove'></span></button>
                     </div>
                 }
-                {this.props.children}
+                {children}
             </div>
         )
     }
@@ -129,4 +148,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps, {ajaxRequest, fetchUserData, fetchingUserError, loadImage, errorHandler, closeError, removeImage})(User);
+export default connect(mapStateToProps, {ajaxRequest, fetchUserData, fetchingUserError, loadImage, errorHandler, closeError, removeImage, removePostAction})(User);

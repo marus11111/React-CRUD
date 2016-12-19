@@ -3,13 +3,58 @@ import {connect} from 'react-redux';
 import {Link} from 'react-router';
 
 class BlogList extends Component {
+    constructor(props) {
+        super(props);
+        this.showControls = this.showControls.bind(this);
+        this.hideControls = this.hideControls.bind(this);
+        this.toggleControls = this.toggleControls.bind(this);
+        this.controlsTimeout;
+    }
+    
+    
+    showControls(element) {
+        clearTimeout(this.controlsTimeout);
+        element.style.visibility = 'visible';
+        element.style.opacity = 1;
+    }
+    
+    hideControls(element) {
+        element.style.opacity = 0;
+        this.controlsTimeout = setTimeout(() => {
+            element.style.visibility = 'hidden';
+        }, 1000)
+    }
+    
+    toggleControls(element) {
+        element.style.visibility == 'hidden' ? this.showControls() : this.hideControls();
+    }
+    
     render() {
-        let {posts, params: {user}} = this.props;
+        let {posts, removePost, authorizedUser, params: {user}} = this.props;
         let children;
         if(posts && posts != 'pending'){
             children = posts.map((post) => {
                 let titleLink = post.title.toLowerCase().replace(/\s/g, '_');
-                return <li className='list-group-item' key={post.id}><Link className='nav-link' to={`/${user}/${post.id}/${titleLink}`}>{post.title}</Link></li>
+                let postControls;
+                return (
+                    <li className='list-group-item' 
+                        key={post.id} 
+                        onMouseEnter={() => this.showControls(postControls)}
+                        onMouseLeave={() => this.hideControls(postControls)}
+                        onClick={() => this.toggleControls(postControls)}>
+                        <Link className='nav-link' to={`/${user}/${post.id}/${titleLink}`} onClick={(e) => e.stopPropagation()}>{post.title}</Link>
+                        {user == authorizedUser &&
+                            <div className='hidden-controls' ref={div => postControls = div} onClick={(e) => e.stopPropagation()}>
+                                <Link className='btn btn-primary btn-sm' to={`/${user}/${post.id}/${titleLink}/update`}>
+                                    <span className='glyphicon glyphicon-edit'></span>
+                                </Link>
+                                <button className='btn btn-danger btn-sm' onClick={() => removePost(post.id)}>
+                                    <span className='glyphicon glyphicon-trash'></span>
+                                </button>
+                            </div>
+                        }
+                    </li>
+                )
             });
             children = children.reverse();
         }
@@ -28,7 +73,8 @@ class BlogList extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        posts: state.userData.posts
+        posts: state.userData.posts,
+        authorizedUser: state.auth.authorizedUser
     }
 }
 
