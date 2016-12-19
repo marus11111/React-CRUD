@@ -13,7 +13,8 @@ import Authorization from './components/Authorization.jsx';
 import User from './components/User.jsx';
 import BlogList from './components/BlogList.jsx';
 import PostView from './components/PostView.jsx';
-import CreateUpdatePost from './components/CreateUpdatePost.jsx';
+import CreatePost from './components/CreatePost.jsx';
+import UpdatePost from './components/UpdatePost.jsx';
 import ajaxRequest from './actions/ajaxRequest';
 
 
@@ -36,11 +37,18 @@ store.dispatch(ajaxRequest('post', 'cookieAuth'))
                 <Route path='/:user' component={User}>
                     <IndexRoute component={BlogList} />
                     <Route path=':postId/:title' component={PostView} />
-                    <Route path=':postId/:title/update' type='Update' protection='redirect' component={CreateUpdatePost} />
-                    <Route path='create' type='Create' protection='redirect' component={CreateUpdatePost} />
+                    <Route path=':postId/:title/update' protection='redirect' component={UpdatePost} />
+                    <Route path='create' protection='redirect' component={CreatePost} />
                 </Route>
             </Router>
         </Provider>,
        document.getElementById('root')
      );
-});
+})
+//dont proceed if user credentials cant be checked
+.catch((error) => {
+    render(
+        <p>An error occured when trying to connect to the server.</p>,
+        document.getElementById('root')
+    )
+})

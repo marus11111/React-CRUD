@@ -2,6 +2,11 @@ import React, {Component} from 'react';
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
 import ajaxRequest from '../actions/ajaxRequest';
+import fetchUserData from '../actions/fetchUserData';
+import fetchingUserError from '../actions/fetchingUserError';
+import loadImage from '../actions/loadImage';
+import errorHandler from '../actions/errorHandler';
+import closeError from '../actions/closeError';
 import removeImage from '../actions/removeImage';
 import Menu from './Menu.jsx';
 import Dropzone from 'react-dropzone';
@@ -10,7 +15,9 @@ class User extends Component {
     constructor(props){
         super(props);
         
-        props.ajaxRequest('post', 'fetchUserData', {user: this.props.params.user});        
+        props.ajaxRequest('post', 'fetchUserData', {user: this.props.params.user})
+        .then(res => this.props.fetchUserData(res.userData))
+        .catch(res => this.props.fetchingUserError(res.error));  
         
         this.showControls = this.showControls.bind(this);
         this.hideControls = this.hideControls.bind(this);
@@ -22,7 +29,9 @@ class User extends Component {
     
     componentWillReceiveProps(nextProps) {
         if (this.props.params.user != nextProps.params.user) {
-            this.props.ajaxRequest('post', 'fetchUserData', {user: nextProps.params.user});
+            this.props.ajaxRequest('post', 'fetchUserData', {user: nextProps.params.user})
+            .then(res => this.props.fetchUserData(res.userData))
+            .catch(res => this.props.fetchingUserError(res.error));
         }
     }
     
@@ -52,18 +61,21 @@ class User extends Component {
     uploadImage(images) {
         const upload_preset = 'jyju7fnq';
         let file = images[0];
-             
-        this.props.ajaxRequest('post', 'imageUpload', {upload_preset, file});
+        
+        this.props.ajaxRequest('post', 'imageUpload', {upload_preset, file})
+        .then(res => this.props.loadImage(res.imageUrl))
+        .catch(res => this.props.errorHandler(res.error));
     }
     
     removeImage(e) {
         e.stopPropagation();
         this.props.ajaxRequest('post', 'removeImage')
-        .then(() => this.props.removeImage());
+        .then(() => this.props.removeImage())
+        .catch(res => this.props.errorHandler(res.error));
     }
     
     render() {
-        let {imageUrl, authorizedUser, params: {user}} = this.props;
+        let {imageUrl, userError, error, authorizedUser, params: {user}} = this.props;
         return (
             <div>
                 { (imageUrl || user == authorizedUser) &&
@@ -88,12 +100,20 @@ class User extends Component {
                             <div>
                                 <Dropzone multiple={false} accept='image/*' onDrop={this.uploadImage}/>
                                 <p>Drop an image or click to select a file from your computer.</p>
-                                <img src={this.props.imageUrl}></img>
                             </div>
                         }
                     </div>
                 }
                 <Menu user={user} protection='hide'/>
+                {userError && 
+                    <p>{userError}</p>
+                }
+                {error && 
+                    <div>
+                        <p>{error}</p>
+                        <button className='close' onClick={this.props.closeError}><span className='glyphicon glyphicon-remove'></span></button>
+                    </div>
+                }
                 {this.props.children}
             </div>
         )
@@ -103,8 +123,10 @@ class User extends Component {
 const mapStateToProps = (state) => {
     return {
         imageUrl: state.userData.imageUrl,
+        userError: state.userData.userError,
+        error: state.userData.error,
         authorizedUser: state.auth.authorizedUser
     }
 }
 
-export default connect(mapStateToProps, {ajaxRequest, removeImage})(User);
+export default connect(mapStateToProps, {ajaxRequest, fetchUserData, fetchingUserError, loadImage, errorHandler, closeError, removeImage})(User);

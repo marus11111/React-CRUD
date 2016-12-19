@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Field, reduxForm, formValueSelector} from 'redux-form';
 import {connect} from 'react-redux';
 import ajaxRequest from '../actions/ajaxRequest';
+import signInErrorAction from '../actions/signInErrorAction';
 
 
 
@@ -15,7 +16,8 @@ class SignIn extends Component {
     submitHandler(event){
         event.preventDefault();
         let {username, password, ajaxRequest} = this.props;
-        ajaxRequest('post', 'signIn', {username, password});
+        ajaxRequest('post', 'signIn', {username, password})
+        .catch(res => this.props.signInErrorAction(res.error));
     }
     
     render(){
@@ -41,17 +43,13 @@ class SignIn extends Component {
 SignIn = reduxForm({ form: 'signIn' })(SignIn);
 
 const selector = formValueSelector('signIn');
-const mapStateToProps = (state) => { 
-    
-    let username = selector(state, `username`);
-    let password = selector(state, `password`);
-        
+const mapStateToProps = (state) => {         
     return { 
-        username,
-        password,
+        username: selector(state, `username`),
+        password: selector(state, `password`),
         signInError: state.auth.signInError
     } 
 }
-SignIn = connect(mapStateToProps, {ajaxRequest})(SignIn);
+SignIn = connect(mapStateToProps, {ajaxRequest, signInErrorAction})(SignIn);
 
 export default SignIn;

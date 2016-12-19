@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
-import ajaxRequest from '../actions/ajaxRequest';
 
 class BlogList extends Component {
     render() {
@@ -12,6 +11,7 @@ class BlogList extends Component {
                 let titleLink = post.title.toLowerCase().replace(/\s/g, '_');
                 return <li className='list-group-item' key={post.id}><Link className='nav-link' to={`/${user}/${post.id}/${titleLink}`}>{post.title}</Link></li>
             });
+            children = children.reverse();
         }
         
         return (
@@ -32,4 +32,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps, {ajaxRequest})(BlogList);
+export default connect(mapStateToProps)(BlogList);

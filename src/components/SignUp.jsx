@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import {Field, reduxForm, formValueSelector, getFormSyncErrors} from 'redux-form';
+import {Field, reduxForm, formValueSelector} from 'redux-form';
 import {connect} from 'react-redux';
 import ajaxRequest from '../actions/ajaxRequest';
-
+import signUpErrorAction from '../actions/signUpErrorAction';
 
 const validateUsername = value => {
     let errors = []
@@ -20,7 +20,7 @@ const validateUsername = value => {
         errors.push('No whitespace allowed');
     }
     
-    return errors;
+    return errors.length > 0 ? errors : undefined;
 }
 
 const validatePassword = value => {
@@ -45,7 +45,7 @@ const validatePassword = value => {
         errors.push('Must contain at least one capital letter');
     }
     
-    return errors;
+    return errors.length > 0 ? errors : undefined;
 }
  
 const validateConfirmation = (value, allValues) => {
@@ -55,7 +55,7 @@ const validateConfirmation = (value, allValues) => {
         errors.push('Passwords don\'t match');
     }
     
-    return errors;
+    return errors.length > 0 ? errors : undefined;
 }
 
 const customInput = ({input, meta: {touched, error}, type, placeholder, className }) => {
@@ -82,9 +82,9 @@ class SignUp extends Component {
     }
     
     createUser(event){
-        event.preventDefault();
         let {username, password, ajaxRequest} = this.props;
-        ajaxRequest('post', 'signUp', {username, password});
+        ajaxRequest('post', 'signUp', {username, password})
+        .catch(res => this.props.signUpErrorAction(res.error));
     }
     
     render(){
@@ -110,18 +110,14 @@ class SignUp extends Component {
 
 SignUp = reduxForm({ form: 'signUp' })(SignUp);
 
-const getValues = formValueSelector('signUp');
+const selector = formValueSelector('signUp');
 const mapStateToProps = (state) => { 
-    
-    let username = getValues(state, `username`);
-    let password = getValues(state, `password`);
-        
     return { 
-        username,
-        password,
+        username: selector(state, `username`),
+        password: selector(state, `password`),
         signUpError: state.auth.signUpError
     } 
 }
-SignUp = connect(mapStateToProps, {ajaxRequest})(SignUp);
+SignUp = connect(mapStateToProps, {ajaxRequest, signUpErrorAction})(SignUp);
 
 export default SignUp;

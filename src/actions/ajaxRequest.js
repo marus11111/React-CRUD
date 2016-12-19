@@ -1,10 +1,5 @@
-import reqwest from 'reqwest';
 import authorize from './authorize';
 import deauthorize from './deathorize';
-import fetchUserData from './fetchUserData';
-import loadImage from './loadImage';
-import signInError from './signInError';
-import signUpError from './signUpError';
 import axios from 'axios';
 
 const url = '/project2/server.php';
@@ -34,22 +29,10 @@ const ajaxRequest = (method, requestType, optionalData) =>{
                     resolve(dispatch(deauthorize()));
                 }
                 else if (res.success) {
-                    resolve(`Success: ${res.success}`);
+                    resolve(res);
                 }
-                else if (res.userData) {
-                    resolve(dispatch(fetchUserData(res.userData)));
-                }
-                else if (res.imageUrl) {
-                    resolve(dispatch(loadImage(res.imageUrl)));
-                }
-                else if (res.signInError) {
-                    resolve(dispatch(signInError(res.signInError)));
-                }
-                else if (res.signUpError) {
-                    resolve(dispatch(signUpError(res.signUpError)));
-                }
-                else if (res.error) {
-                    reject(`Error occured: ${res.error}`);
+                else {
+                    reject(res);
                 }
             })
        })  

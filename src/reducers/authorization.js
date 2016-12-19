@@ -1,9 +1,4 @@
-export default function(state = { 
-    authorizedUser: null,
-    activeForm: 'signIn',
-    signInError: null,
-    signUpError: null
-}, action) {
+export default function(state = {activeForm: 'signIn'}, action) {
     switch (action.type) {
         case 'AUTHORIZE':
             return {...state, 
