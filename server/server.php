@@ -321,7 +321,7 @@ if ($reqType == 'removeImage' || $reqType == 'imageUpload') {
 if ($reqType == 'fetchUserData') {
     $user = mysqli_real_escape_string($link, $_POST['user']);
         
-    $query = "SELECT id, img_url FROM users WHERE username COLLATE utf8_polish_ci = '$user' LIMIT 1";
+    $query = "SELECT username, id, img_url FROM users WHERE username COLLATE utf8_polish_ci = '$user' LIMIT 1";
     $result = mysqli_fetch_array(mysqli_query($link, $query));
     if (!$result) {
         $msg['error'] = "Could not retrieve data for user '$user'.";

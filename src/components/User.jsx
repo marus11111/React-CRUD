@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
 import ajaxRequest from '../actions/ajaxRequest';
+import setLinkUser from '../actions/setLinkUser';
 import fetchUserData from '../actions/fetchUserData';
 import fetchingUserError from '../actions/fetchingUserError';
 import loadImage from '../actions/loadImage';
@@ -16,10 +17,13 @@ class User extends Component {
     constructor(props){
         super(props);
         
-        props.ajaxRequest('post', 'fetchUserData', {user: this.props.params.user})
-        .then(res => this.props.fetchUserData(res.userData))
-        .catch(res => this.props.fetchingUserError(res.error));  
-        
+        this.fetchDataFromLink = (currentProps, nextProps) => {
+            let {user} = nextProps ? nextProps.params : currentProps.params;
+            currentProps.setLinkUser(user);
+            currentProps.ajaxRequest('post', 'fetchUserData', {user})
+            .then(res => currentProps.fetchUserData(res.userData))
+            .catch(res => currentProps.fetchingUserError(res.error));
+        }      
         this.showControls = this.showControls.bind(this);
         this.hideControls = this.hideControls.bind(this);
         this.toggleControls = this.toggleControls.bind(this);
@@ -27,13 +31,13 @@ class User extends Component {
         this.uploadImage = this.uploadImage.bind(this);
         this.removeImage = this.removeImage.bind(this);
         this.removePost = this.removePost.bind(this);
+        
+        this.fetchDataFromLink(props);
     }
     
     componentWillReceiveProps(nextProps) {
-        if (this.props.params.user != nextProps.params.user) {
-            this.props.ajaxRequest('post', 'fetchUserData', {user: nextProps.params.user})
-            .then(res => this.props.fetchUserData(res.userData))
-            .catch(res => this.props.fetchingUserError(res.error));
+        if (this.props.linkUser != nextProps.params.user.toLowerCase()) {
+            this.fetchDataFromLink(this.props, nextProps);
         }
     }
     
@@ -77,10 +81,10 @@ class User extends Component {
     }
     
     render() {
-        let {imageUrl, userError, error, authorizedUser, params: {user}} = this.props;
+        let {imageUrl, userError, error, authorizedUser, linkUser} = this.props;
         
         let eventHandlers = {};
-        if (imageUrl && user == authorizedUser) {
+        if (imageUrl && linkUser == authorizedUser) {
             eventHandlers = {
                 onMouseEnter: this.showControls,
                 onMouseLeave: this.hideControls,
@@ -93,14 +97,16 @@ class User extends Component {
                 removePost: this.removePost
             });
         });
+        
+        console.log(this.props);
         return (
             <div>
-                { (imageUrl || user == authorizedUser) &&
+                { (imageUrl || linkUser == authorizedUser) &&
                     <div className='jumbotron' {...eventHandlers}>
                         {imageUrl && 
                             <div>
                                 <img src={imageUrl}></img>
-                                { user == authorizedUser &&
+                                { linkUser == authorizedUser &&
                                     <div className='hidden-controls' ref={div => this.imageControls = div}>
                                         <form>
                                             <label htmlFor='imageUpload' className='btn btn-primary btn-sm' onClick={e => e.stopPropagation()}>
@@ -123,7 +129,7 @@ class User extends Component {
                         }
                     </div>
                 }
-                <Menu user={user} removePost={this.removePost} protection='hide'/>
+                <Menu removePost={this.removePost}/>
                 {userError && 
                     <p>{userError}</p>
                 }
@@ -144,8 +150,9 @@ const mapStateToProps = (state) => {
         imageUrl: state.userData.imageUrl,
         userError: state.userData.userError,
         error: state.userData.error,
-        authorizedUser: state.auth.authorizedUser
+        authorizedUser: state.auth.authorizedUser,
+        linkUser: state.auth.linkUser
     }
 }
 
-export default connect(mapStateToProps, {ajaxRequest, fetchUserData, fetchingUserError, loadImage, errorHandler, closeError, removeImage, removePostAction})(User);
+export default connect(mapStateToProps, {ajaxRequest, setLinkUser, fetchUserData, fetchingUserError, loadImage, errorHandler, closeError, removeImage, removePostAction})(User);

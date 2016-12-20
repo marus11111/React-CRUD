@@ -16,7 +16,7 @@ class UpdatePost extends Component {
         
     componentWillReceiveProps(nextProps){
         let {posts, setUpdatedPost, params: {postId}} = nextProps;
-        if (posts != 'pending'){
+        if (posts.length > 0){
             setUpdatedPost(postId);
         }
     }
@@ -24,13 +24,19 @@ class UpdatePost extends Component {
     submitHandler(event){
         event.preventDefault();
         let {title, body, ajaxRequest, updatePost, errorHandler, router, params: {user, postId}} = this.props;
-        ajaxRequest('post', `updatePost`, {postId, title, body})
-        .then(() => {
-            updatePost(postId, title, body);
-            let titleLink = title.toLowerCase().replace(/\s/g, '_');
-            router.push(`/${user}/${postId}/${titleLink}`);
-        })
-        .catch((res) => errorHandler(res.error));
+        
+        if(!title || !body) {
+            errorHandler('Post must contain title and body.');
+        }
+        else {
+            ajaxRequest('post', `updatePost`, {postId, title, body})
+            .then(() => {
+                updatePost(postId, title, body);
+                let titleLink = title.toLowerCase().replace(/\s/g, '_');
+                router.push(`/${user}/${postId}/${titleLink}`);
+            })
+            .catch((res) => errorHandler(res.error));
+        }
     }
     
     render(){

@@ -16,6 +16,10 @@ import PostView from './components/PostView.jsx';
 import CreatePost from './components/CreatePost.jsx';
 import UpdatePost from './components/UpdatePost.jsx';
 import ajaxRequest from './actions/ajaxRequest';
+import errorHandler from './actions/errorHandler';
+import signInErrorAction from './actions/signInErrorAction';
+import signUpErrorAction from './actions/signUpErrorAction';
+import commentError from './actions/commentError';
 
 
 
@@ -26,6 +30,13 @@ const reducers = combineReducers({
 });
 
 const store = createStore(reducers, applyMiddleware(thunk));
+
+hashHistory.listen(() => {
+    store.dispatch(errorHandler(null));
+    store.dispatch(signInErrorAction(null));
+    store.dispatch(signUpErrorAction(null));
+    store.dispatch(commentError(null));
+});
 
 //check cookies and start rendering after it's done
 store.dispatch(ajaxRequest('post', 'cookieAuth'))
@@ -48,7 +59,7 @@ store.dispatch(ajaxRequest('post', 'cookieAuth'))
 //dont proceed if user credentials cant be checked
 .catch((error) => {
     render(
-        <p>An error occured when trying to connect to the server.</p>,
+        <p>{error}An error occured when trying to connect to the server.</p>,
         document.getElementById('root')
     )
 })

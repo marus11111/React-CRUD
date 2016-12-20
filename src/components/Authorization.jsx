@@ -11,12 +11,12 @@ class Authorization extends React.Component {
     
     componentDidMount(){        
         let {authorizedUser, router} = this.props;
-        authorizedUser ? router.push(`${authorizedUser.toLowerCase()}`) : null;
+        authorizedUser ? router.push(`${authorizedUser}`) : null;
     }
     
     componentWillUpdate(nextProps){
         let {authorizedUser, router} = nextProps;
-        authorizedUser ? router.push(`${authorizedUser.toLowerCase()}`) : null;
+        authorizedUser ? router.push(`${authorizedUser}`) : null;
     }
     
     render (){ 

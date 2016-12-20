@@ -1,5 +1,7 @@
 export default function(state = {activeForm: 'signIn'}, action) {
     switch (action.type) {
+        case 'SET_LINK_USER':
+            return {...state, linkUser: action.linkUser};
         case 'AUTHORIZE':
             return {...state, 
                     authorizedUser: action.authorizedUser,

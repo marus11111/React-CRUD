@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import Comments from './Comments.jsx';
 
 class PostView extends Component {
     
@@ -7,7 +8,7 @@ class PostView extends Component {
         let post;
         let {posts, params: {postId}} = this.props;
         
-        if (posts && posts != 'pending') {
+        if (posts.length > 0) {
             for (let i = 0; i < posts.length; i++) {
                 if (posts[i].id == postId) {
                     post = posts[i];
@@ -22,9 +23,10 @@ class PostView extends Component {
                     <div>
                         <h1>{post.title}</h1>
                         <p>{post.body}</p>
+                        <Comments />
                     </div>
                 }
-                {posts != 'pending' && !post &&
+                {posts.length > 0 && !post &&
                     <div>
                         <h1>Post not found</h1>
                     </div>

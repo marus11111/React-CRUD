@@ -16,12 +16,18 @@ class CreatePost extends Component {
     submitHandler(event){
         event.preventDefault();
         let {title, body, ajaxRequest, createPost, errorHandler, router, params: {user}} = this.props;
-        ajaxRequest('post', `createPost`, {title, body})
-        .then(res => {
-            createPost({title, body, id: res.postId});
-            router.push(`/${user}`);
-        })
-        .catch(res => errorHandler(res.error));
+        
+        if(!title || !body) {
+            errorHandler('Post must contain title and body.');
+        }
+        else {
+            ajaxRequest('post', `createPost`, {title, body})
+            .then(res => {
+                createPost({title, body, id: res.postId});
+                router.push(`/${user}`);
+            })
+            .catch(res => errorHandler(res.error));
+        }
     }
     
     render() {
@@ -37,7 +43,7 @@ class CreatePost extends Component {
     }
 }
 
-CreatePost = reduxForm({ form: 'createPost' })(CreatePost);
+CreatePost = reduxForm({form: 'createPost'})(CreatePost);
 
 const selector = formValueSelector('createPost');
 const mapStateToProps = (state) => {

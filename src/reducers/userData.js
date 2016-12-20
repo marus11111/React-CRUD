@@ -1,4 +1,5 @@
-export default (state = {posts: 'pending', updatedPost: {}}, action) => {
+export default (state = {posts: [], updatedPost: {}, comments: []}, action) => {
+    let {posts} = state;
     switch (action.type){
         case 'LOAD_IMAGE':
             return {...state, imageUrl: action.imageUrl, userError: null};
@@ -7,13 +8,12 @@ export default (state = {posts: 'pending', updatedPost: {}}, action) => {
         case 'FETCH_USER_DATA':
             return {...state, 
                     imageUrl: action.imageUrl,
-                    posts: action.posts,
+                    posts: action.posts ? action.posts : posts,
                     userError: null
                    };
-        case 'CREATE_POST':
-            return {...state, posts: state.posts.concat([action.postObject])};
+        case 'CREATE_POST': 
+            return {...state, posts: posts.concat([action.postObject])};    
         case 'SET_UPDATED_POST': {
-            let {posts} = state;
             for (let i=0; i<posts.length; i++) {
                 let {title, body, id} = posts[i];
                 if (action.id == id){
@@ -22,7 +22,6 @@ export default (state = {posts: 'pending', updatedPost: {}}, action) => {
             }
         } 
         case 'UPDATE_POST': {
-            let {posts} = state;
             let {id, title, body} = action;
             let updateIndex = (() => {
                 for (let i=0; i<posts.length; i++){
@@ -38,7 +37,6 @@ export default (state = {posts: 'pending', updatedPost: {}}, action) => {
             return {...state, posts: newPosts};
         }
         case 'REMOVE_POST': {
-            let {posts} = state;
             let removeIndex = (() => {
                 for (let i=0; i<posts.length; i++){
                     if (action.id == posts[i].id){
@@ -51,8 +49,14 @@ export default (state = {posts: 'pending', updatedPost: {}}, action) => {
             let newPosts = before.concat(after);
             return {...state, posts: newPosts};
         }
+        case 'CREATE_COMMENT': {
+            let {author, title, body} = action;
+            return {...state, comments: state.comments.concat([{author, title, body}])};
+        }
         case 'USER_ERROR':
             return {userError: action.error};
+        case 'COMMENT_ERROR':
+            return {...state, commentError: action.error};
         case 'ERROR':
             return {...state, error: action.error};
         case 'CLOSE_ERROR':

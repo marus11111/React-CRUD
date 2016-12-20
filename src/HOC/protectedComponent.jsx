@@ -12,17 +12,14 @@ export default function(WrappedComp) {
             
             if (protection == 'redirect'){
                 this.protect = (props) => {
-                    let {authorizedUser, params, router} = props;
-                    (authorizedUser ? 
-                        authorizedUser.toLowerCase() == params.user ? null : router.push('/') : 
-                            router.push('/'))
+                    let {authorizedUser, linkUser, router} = props;
+                    authorizedUser == linkUser ? null : router.push('/');
                 }
             }
             else if (protection == 'hide'){
                 this.protect = (props) => {
-                    let {authorizedUser, params, router} = props;
-                    this.hide = (authorizedUser ? 
-                                 authorizedUser.toLowerCase() == params.user ? null : true : true )
+                    let {authorizedUser, linkUser, router} = props;
+                    this.hide = authorizedUser == linkUser ? null : true;
                 }
             }
         }
@@ -45,7 +42,8 @@ export default function(WrappedComp) {
     
     let mapStateToProps = (state) => {
         return {
-            authorizedUser: state.auth.authorizedUser
+            authorizedUser: state.auth.authorizedUser,
+            linkUser: state.auth.linkUser
         }
     } 
     

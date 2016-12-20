@@ -30,20 +30,26 @@ class BlogList extends Component {
     }
     
     render() {
-        let {posts, removePost, authorizedUser, params: {user}} = this.props;
+        let {posts, removePost, authorizedUser, linkUser, params: {user}} = this.props;
         let children;
-        if(posts && posts != 'pending'){
+        if(posts.length > 0) {
             children = posts.map((post) => {
                 let titleLink = post.title.toLowerCase().replace(/\s/g, '_');
                 let postControls;
                 return (
                     <li className='list-group-item' 
                         key={post.id} 
-                        onMouseEnter={() => this.showControls(postControls)}
-                        onMouseLeave={() => this.hideControls(postControls)}
-                        onClick={() => this.toggleControls(postControls)}>
+                        onMouseEnter={() => {
+                            linkUser == authorizedUser ? this.showControls(postControls) : null;    
+                        }}
+                        onMouseLeave={() => {
+                            linkUser == authorizedUser ? this.hideControls(postControls) : null;    
+                        }}
+                        onClick={() => {
+                            linkUser == authorizedUser ? this.toggleControls(postControls) : null;    
+                        }}>
                         <Link className='nav-link' to={`/${user}/${post.id}/${titleLink}`} onClick={(e) => e.stopPropagation()}>{post.title}</Link>
-                        {user == authorizedUser &&
+                        {linkUser == authorizedUser &&
                             <div className='hidden-controls' ref={div => postControls = div} onClick={(e) => e.stopPropagation()}>
                                 <Link className='btn btn-primary btn-sm' to={`/${user}/${post.id}/${titleLink}/update`}>
                                     <span className='glyphicon glyphicon-edit'></span>
@@ -74,7 +80,8 @@ class BlogList extends Component {
 const mapStateToProps = (state) => {
     return {
         posts: state.userData.posts,
-        authorizedUser: state.auth.authorizedUser
+        authorizedUser: state.auth.authorizedUser,
+        linkUser: state.auth.linkUser
     }
 }
 
