@@ -16,10 +16,10 @@ import PostView from './components/PostView.jsx';
 import CreatePost from './components/CreatePost.jsx';
 import UpdatePost from './components/UpdatePost.jsx';
 import ajaxRequest from './actions/ajaxRequest';
-import errorHandler from './actions/errorHandler';
-import signInErrorAction from './actions/signInErrorAction';
-import signUpErrorAction from './actions/signUpErrorAction';
-import commentError from './actions/commentError';
+import variousErrors from './actions/ajaxErrors/variousErrors';
+import signInErrorAction from './actions/ajaxErrors/signInErrorAction';
+import signUpErrorAction from './actions/ajaxErrors/signUpErrorAction';
+import commentError from './actions/ajaxErrors/commentError';
 
 
 
@@ -32,7 +32,7 @@ const reducers = combineReducers({
 const store = createStore(reducers, applyMiddleware(thunk));
 
 hashHistory.listen(() => {
-    store.dispatch(errorHandler(null));
+    store.dispatch(variousErrors(null));
     store.dispatch(signInErrorAction(null));
     store.dispatch(signUpErrorAction(null));
     store.dispatch(commentError(null));

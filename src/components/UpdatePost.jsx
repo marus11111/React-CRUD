@@ -4,8 +4,8 @@ import {connect} from 'react-redux';
 import {withRouter} from 'react-router';
 import ajaxRequest from '../actions/ajaxRequest';
 import setUpdatedPost from '../actions/setUpdatedPost';
-import updatePost from '../actions/updatePost';
-import errorHandler from '../actions/errorHandler';
+import updatePost from '../actions/ajaxSuccess/updatePost';
+import variousErrors from '../actions/ajaxErrors/variousErrors';
 import protect from '../HOC/protectedComponent.jsx';
 
 class UpdatePost extends Component {
@@ -23,10 +23,10 @@ class UpdatePost extends Component {
     
     submitHandler(event){
         event.preventDefault();
-        let {title, body, ajaxRequest, updatePost, errorHandler, router, params: {user, postId}} = this.props;
+        let {title, body, ajaxRequest, updatePost, variousErrors, router, params: {user, postId}} = this.props;
         
         if(!title || !body) {
-            errorHandler('Post must contain title and body.');
+            variousErrors('Post must contain title and body.');
         }
         else {
             ajaxRequest('post', `updatePost`, {postId, title, body})
@@ -35,7 +35,7 @@ class UpdatePost extends Component {
                 let titleLink = title.toLowerCase().replace(/\s/g, '_');
                 router.push(`/${user}/${postId}/${titleLink}`);
             })
-            .catch((res) => errorHandler(res.error));
+            .catch((res) => variousErrors(res.error));
         }
     }
     
@@ -65,6 +65,6 @@ const mapStateToProps = (state, ownProps) => {
     }
 }
 
-UpdatePost = connect(mapStateToProps, {ajaxRequest, setUpdatedPost, updatePost, errorHandler})(withRouter(UpdatePost));
+UpdatePost = connect(mapStateToProps, {ajaxRequest, setUpdatedPost, updatePost, variousErrors})(withRouter(UpdatePost));
 
 export default protect(UpdatePost);

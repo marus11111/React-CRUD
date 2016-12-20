@@ -1,6 +1,6 @@
 export default (imageUrl) => {
     return {
-        type: 'LOAD_IMAGE',
+        type: 'DISPLAY_IMAGE',
         imageUrl
     }
 }

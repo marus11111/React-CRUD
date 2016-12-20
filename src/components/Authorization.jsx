@@ -3,8 +3,8 @@ import {connect} from 'react-redux';
 import {withRouter} from 'react-router';
 import SignIn from './SignIn.jsx';
 import SignUp from './SignUp.jsx';
-import activateSignIn from '../actions/activateSignIn';
-import activateSignUp from '../actions/activateSignUp';
+import activateSignIn from '../actions/authorization/activateSignIn';
+import activateSignUp from '../actions/authorization/activateSignUp';
 
 
 class Authorization extends React.Component { 

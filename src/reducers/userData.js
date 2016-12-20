@@ -1,11 +1,11 @@
 export default (state = {posts: [], updatedPost: {}, comments: []}, action) => {
     let {posts} = state;
     switch (action.type){
-        case 'LOAD_IMAGE':
+        case 'DISPLAY_IMAGE':
             return {...state, imageUrl: action.imageUrl, userError: null};
         case 'REMOVE_IMAGE':
             return {...state, imageUrl: null};
-        case 'FETCH_USER_DATA':
+        case 'LOAD_USER_DATA':
             return {...state, 
                     imageUrl: action.imageUrl,
                     posts: action.posts ? action.posts : posts,
@@ -53,13 +53,13 @@ export default (state = {posts: [], updatedPost: {}, comments: []}, action) => {
             let {author, title, body} = action;
             return {...state, comments: state.comments.concat([{author, title, body}])};
         }
-        case 'USER_ERROR':
+        case 'USER_NOT_FOUND':
             return {userError: action.error};
         case 'COMMENT_ERROR':
             return {...state, commentError: action.error};
-        case 'ERROR':
+        case 'VARIOUS_ERRORS':
             return {...state, error: action.error};
-        case 'CLOSE_ERROR':
+        case 'CLOSE_ERROR_MESSAGE':
             return {...state, error: null};
     }
     

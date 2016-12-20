@@ -1,6 +1,6 @@
 export default ({imageUrl, posts}) => {
     return {
-        type: 'FETCH_USER_DATA',
+        type: 'LOAD_USER_DATA',
         imageUrl,
         posts
     }

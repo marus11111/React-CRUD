@@ -3,8 +3,8 @@ import {Field, reduxForm, formValueSelector} from 'redux-form';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router';
 import ajaxRequest from '../actions/ajaxRequest';
-import createPost from '../actions/createPost';
-import errorHandler from '../actions/errorHandler';
+import createPost from '../actions/ajaxSuccess/createPost';
+import variousErrors from '../actions/ajaxErrors/variousErrors';
 import protect from '../HOC/protectedComponent.jsx';
 
 class CreatePost extends Component {
@@ -15,10 +15,10 @@ class CreatePost extends Component {
     
     submitHandler(event){
         event.preventDefault();
-        let {title, body, ajaxRequest, createPost, errorHandler, router, params: {user}} = this.props;
+        let {title, body, ajaxRequest, createPost, variousErrors, router, params: {user}} = this.props;
         
         if(!title || !body) {
-            errorHandler('Post must contain title and body.');
+            variousErrors('Post must contain title and body.');
         }
         else {
             ajaxRequest('post', `createPost`, {title, body})
@@ -26,7 +26,7 @@ class CreatePost extends Component {
                 createPost({title, body, id: res.postId});
                 router.push(`/${user}`);
             })
-            .catch(res => errorHandler(res.error));
+            .catch(res => variousErrors(res.error));
         }
     }
     
@@ -53,6 +53,6 @@ const mapStateToProps = (state) => {
     }
 }
 
-CreatePost = connect(mapStateToProps, {ajaxRequest, createPost, errorHandler})(CreatePost);
+CreatePost = connect(mapStateToProps, {ajaxRequest, createPost, variousErrors})(CreatePost);
 
 export default protect(withRouter(CreatePost));

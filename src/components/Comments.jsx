@@ -2,8 +2,8 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {reduxForm, Field, formValueSelector} from 'redux-form'
 import ajaxRequest from '../actions/ajaxRequest';
-import commentError from '../actions/commentError';
-import createComment from '../actions/createComment';
+import commentError from '../actions/ajaxErrors/commentError';
+import createComment from '../actions/ajaxSuccess/createComment';
 
 class Comments extends Component {
     constructor(props) {
@@ -17,7 +17,7 @@ class Comments extends Component {
         let {title, body, author, ajaxRequest, createComment, commentError, params: {postId}} = this.props;
         
         if(!title || !body) {
-            errorHandler('Comment must contain title and body.');
+            commentError('Comment must contain title and body.');
         }
         else {
             ajaxRequest('post', `createComment`, {title, body, postId, authorId})

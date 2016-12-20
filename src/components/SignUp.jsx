@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Field, reduxForm, formValueSelector} from 'redux-form';
 import {connect} from 'react-redux';
 import ajaxRequest from '../actions/ajaxRequest';
-import signUpErrorAction from '../actions/signUpErrorAction';
+import signUpErrorAction from '../actions/ajaxErrors/signUpErrorAction';
 
 const validateUsername = value => {
     let errors = []

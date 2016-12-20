@@ -1,6 +1,6 @@
 export default (error) => {
     return {
-        type: 'ERROR',
+        type: 'VARIOUS_ERRORS',
         error
     }
 }

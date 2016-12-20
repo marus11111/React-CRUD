@@ -3,13 +3,13 @@ import {Link} from 'react-router';
 import {connect} from 'react-redux';
 import ajaxRequest from '../actions/ajaxRequest';
 import setLinkUser from '../actions/setLinkUser';
-import fetchUserData from '../actions/fetchUserData';
-import fetchingUserError from '../actions/fetchingUserError';
-import loadImage from '../actions/loadImage';
-import errorHandler from '../actions/errorHandler';
-import closeError from '../actions/closeError';
-import removeImage from '../actions/removeImage';
-import removePostAction from '../actions/removePostAction';
+import loadUserData from '../actions/ajaxSuccess/loadUserData';
+import userNotFound from '../actions/ajaxErrors/userNotFound';
+import displayImage from '../actions/ajaxSuccess/displayImage';
+import variousErrors from '../actions/ajaxErrors/variousErrors';
+import closeErrorMessage from '../actions/closeErrorMessage';
+import removeImageAction from '../actions/ajaxSuccess/removeImageAction';
+import removePostAction from '../actions/ajaxSuccess/removePostAction';
 import Menu from './Menu.jsx';
 import Dropzone from 'react-dropzone';
 
@@ -21,8 +21,8 @@ class User extends Component {
             let {user} = nextProps ? nextProps.params : currentProps.params;
             currentProps.setLinkUser(user);
             currentProps.ajaxRequest('post', 'fetchUserData', {user})
-            .then(res => currentProps.fetchUserData(res.userData))
-            .catch(res => currentProps.fetchingUserError(res.error));
+            .then(res => currentProps.loadUserData(res.userData))
+            .catch(res => currentProps.userNotFound(res.error));
         }      
         this.showControls = this.showControls.bind(this);
         this.hideControls = this.hideControls.bind(this);
@@ -63,21 +63,21 @@ class User extends Component {
         let file = images[0];
         
         this.props.ajaxRequest('post', 'imageUpload', {upload_preset, file})
-        .then(res => this.props.loadImage(res.imageUrl))
-        .catch(res => this.props.errorHandler(res.error));
+        .then(res => this.props.displayImage(res.imageUrl))
+        .catch(res => this.props.variousErrors(res.error));
     }
     
     removeImage(e) {
         e.stopPropagation();
         this.props.ajaxRequest('post', 'removeImage')
-        .then(() => this.props.removeImage())
-        .catch(res => this.props.errorHandler(res.error));
+        .then(() => this.props.removeImageAction())
+        .catch(res => this.props.variousErrors(res.error));
     }
     
     removePost(postId) {
         this.props.ajaxRequest('post', 'removePost', {postId})
         .then(() => this.props.removePostAction(postId))
-        .catch(res => this.props.errorHandler(res.error));
+        .catch(res => this.props.variousErrors(res.error));
     }
     
     render() {
@@ -136,7 +136,7 @@ class User extends Component {
                 {error && 
                     <div>
                         <p>{error}</p>
-                        <button className='close' onClick={this.props.closeError}><span className='glyphicon glyphicon-remove'></span></button>
+                        <button className='close' onClick={this.props.closeErrorMessage}><span className='glyphicon glyphicon-remove'></span></button>
                     </div>
                 }
                 {children}
@@ -155,4 +155,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps, {ajaxRequest, setLinkUser, fetchUserData, fetchingUserError, loadImage, errorHandler, closeError, removeImage, removePostAction})(User);
+export default connect(mapStateToProps, {ajaxRequest, setLinkUser, loadUserData, userNotFound, displayImage, variousErrors, closeErrorMessage, removeImageAction, removePostAction})(User);
