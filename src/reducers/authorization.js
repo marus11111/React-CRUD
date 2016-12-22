@@ -8,10 +8,6 @@ export default function(state = {activeForm: 'signIn'}, action) {
                    };
         case 'DEAUTHORIZE':
             return {...state, authorizedUser: null};
-        case 'SIGN_IN_ERROR':
-            return {...state, signInError: action.message}
-        case 'SIGN_UP_ERROR':
-            return {...state, signUpError: action.message}
         case 'ACTIVATE_SIGN_IN':
             return {...state, activeForm: 'signIn'};
         case 'ACTIVATE_SIGN_UP':

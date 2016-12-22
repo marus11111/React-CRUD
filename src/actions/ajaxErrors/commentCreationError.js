@@ -2,7 +2,7 @@
 
 export default (error) => {
     return {
-        type: 'COMMENT_ERROR',
+        type: 'COMMENT_CREATION_ERROR',
         error
     }
 }

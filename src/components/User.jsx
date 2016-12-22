@@ -3,12 +3,13 @@ import {Link, withRouter} from 'react-router';
 import {connect} from 'react-redux';
 import ajaxRequest from '../helpers/ajaxRequest';
 import loadUserData from '../actions/ajaxSuccess/loadUserData';
+import clearUserData from '../actions/clearUserData';
 import userNotFound from '../actions/ajaxErrors/userNotFound';
-import displayImage from '../actions/ajaxSuccess/displayImage';
 import variousErrors from '../actions/ajaxErrors/variousErrors';
-import closeErrorMessage from '../actions/closeErrorMessage';
-import removeImageAction from '../actions/ajaxSuccess/removeImageAction';
-import removePostAction from '../actions/ajaxSuccess/removePostAction';
+import fetchingPostsError from '../actions/ajaxErrors/fetchingPostsError';
+import displayImage from '../actions/ajaxSuccess/displayImage';
+import removeImageAction from '../actions/ajaxSuccess/removeImage';
+import removePostAction from '../actions/ajaxSuccess/removePost';
 import Menu from './Menu.jsx';
 import Dropzone from 'react-dropzone';
 import ciCompare from '../helpers/ciCompare';
@@ -19,8 +20,12 @@ class User extends Component {
         
         this.fetchDataFromLink = (currentProps, nextProps) => {
             let {user} = nextProps ? nextProps.params : currentProps.params;
-            currentProps.ajaxRequest('post', 'fetchUserData', {user})
-            .then(res => currentProps.loadUserData(res.userData))
+            let {ajaxRequest, loadUserData, fetchingPostsError, userNotFound} = currentProps;
+            ajaxRequest('post', 'fetchUserData', {user})
+            .then(res => {
+                loadUserData(res.userData);
+                res.postsError ? fetchingPostsError(res.postsError) : null;
+            })
             .catch(res => currentProps.userNotFound(res.error));
         }      
         this.showControls = this.showControls.bind(this);
@@ -38,6 +43,10 @@ class User extends Component {
         if (!ciCompare(this.props.params.user, nextProps.params.user)) {
             this.fetchDataFromLink(this.props, nextProps);
         }
+    }
+    
+    componentWillUnmount() {
+        this.props.clearUserData();
     }
     
     showControls() {
@@ -81,6 +90,9 @@ class User extends Component {
     
     render() {
         let {imageUrl, userError, error, authorizedUser, params: {user}} = this.props;
+        
+        if (userError) return <p>{userError}</p>;
+        
         let usersEqual = ciCompare(authorizedUser, user);
         
         let eventHandlers = {};
@@ -129,13 +141,9 @@ class User extends Component {
                     </div>
                 }
                 <Menu removePost={this.removePost}/>
-                {userError && 
-                    <p>{userError}</p>
-                }
                 {error && 
                     <div>
                         <p>{error}</p>
-                        <button className='close' onClick={this.props.closeErrorMessage}><span className='glyphicon glyphicon-remove'></span></button>
                     </div>
                 }
                 {children}
@@ -147,12 +155,12 @@ class User extends Component {
 const mapStateToProps = (state) => {
     return {
         imageUrl: state.userData.imageUrl,
-        userError: state.userData.userError,
-        error: state.userData.error,
+        userError: state.errors.userError,
+        error: state.errors.error,
         authorizedUser: state.auth.authorizedUser
     }
 }
 
 User = withRouter(User);
 
-export default connect(mapStateToProps, {ajaxRequest, loadUserData, userNotFound, displayImage, variousErrors, closeErrorMessage, removeImageAction, removePostAction})(User);
+export default connect(mapStateToProps, {ajaxRequest, loadUserData, clearUserData, userNotFound, fetchingPostsError, displayImage, variousErrors, removeImageAction, removePostAction})(User);

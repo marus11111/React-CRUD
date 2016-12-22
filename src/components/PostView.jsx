@@ -1,8 +1,17 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import Comments from './Comments.jsx';
+import ajaxRequest from '../helpers/ajaxRequest';
+import loadComments from '../actions/loadComments';
 
 class PostView extends Component {
+    
+    componentDidMount() {
+        let {ajaxRequest, params: {postId}} = this.props;
+        ajaxRequest('post', 'fetchComments', {postId})
+        .then(res => loadComments(res))
+        .catch(res => {});
+    }
     
     render() {
         let post;
@@ -42,4 +51,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps)(PostView);
+export default connect(mapStateToProps, {ajaxRequest, loadComments})(PostView);

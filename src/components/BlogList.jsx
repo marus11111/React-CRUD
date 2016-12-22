@@ -32,11 +32,25 @@ class BlogList extends Component {
     }
     
     render() {
-        let {posts, removePost, authorizedUser, params: {user}} = this.props;
+        let {posts, removePost, authorizedUser, fetchingPostsError, params: {user}} = this.props;
         let usersEqual = ciCompare(authorizedUser, user);
-        let children;
-        if(posts.length > 0) {
-            children = posts.map((post) => {
+
+        if (!Array.isArray(posts)) {
+            if (posts === 'pending') {
+                return null;
+            }
+            else if (fetchingPostsError) {
+                return <p>{fetchingPostsError}</p>
+            }
+            else if (!posts && usersEqual) {
+                return <p>You haven't written any posts yet.</p>;
+            }
+            else if (!posts) {
+                return <p>No posts found.</p>;
+            }
+        }
+        else if(posts.length > 0) {
+            let children = posts.map((post) => {
                 let titleLink = post.title.toLowerCase().replace(/\s/g, '_');
                 let postControls;
                 return (
@@ -61,23 +75,24 @@ class BlogList extends Component {
                 )
             });
             children = children.reverse();
-        }
-        
-        return (
-            <div className='container'>
-                <div className='row'>
-                    <ul className='list-group nav col-xs-9 col-sm-9 col-md-9 col-lg-9 col-centered'>
-                        {children}
-                    </ul>
+            
+            return (
+                <div className='container'>
+                    <div className='row'>
+                        <ul className='list-group nav col-xs-9 col-sm-9 col-md-9 col-lg-9 col-centered'>
+                            {children}
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        )
+            )
+        }
     }
 }
 
 const mapStateToProps = (state) => {
     return {
         posts: state.userData.posts,
+        fetchingPostsError: state.errors.fetchingPostsError,
         authorizedUser: state.auth.authorizedUser
     }
 }

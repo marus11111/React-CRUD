@@ -1,4 +1,4 @@
-export default (state = {posts: [], editedPost: {}, comments: []}, action) => {
+export default (state = {posts: 'pending', editedPost: {}, comments: 'pending'}, action) => {
     let {posts} = state;
     switch (action.type){
         case 'DISPLAY_IMAGE':
@@ -9,11 +9,18 @@ export default (state = {posts: [], editedPost: {}, comments: []}, action) => {
             console.log(action);
             return {...state, 
                     imageUrl: action.imageUrl,
-                    posts: action.posts ? action.posts : posts,
+                    posts: action.posts,
                     userError: null
                    };
+        case 'CLEAR_USER_DATA':
+            return {posts: 'pending',
+                    imageUrl: null
+                   }
         case 'CREATE_POST': 
-            return {...state, posts: posts.concat([action.postObject])};    
+            return {...state, posts: Array.isArray(posts) ? 
+                              posts.concat([action.postObject]) :
+                              action.postObject
+                   };    
         case 'SET_EDITED_POST': {
             for (let i=0; i<posts.length; i++) {
                 let {title, body, id} = posts[i];
@@ -50,18 +57,16 @@ export default (state = {posts: [], editedPost: {}, comments: []}, action) => {
             let newPosts = before.concat(after);
             return {...state, posts: newPosts};
         }
+        case 'LOAD_COMMENTS':
+            return {...state, comments: action.comments}
         case 'DISPLAY_CREATED_COMMENT': {
-            let {body, author, date} = action;
-            return {...state, comments: state.comments.concat([{body, author, date, commentId}])};
+            let {author, date, body, commentId} = action;
+            return {...state, 
+                    comments: Array.isArray(state.comments) ? 
+                              state.comments.concat([{body, author, date, commentId}]) : 
+                              [{body, author, date, commentId}]
+                   };
         }
-        case 'USER_NOT_FOUND':
-            return {userError: action.error};
-        case 'COMMENT_ERROR':
-            return {...state, commentError: action.error};
-        case 'VARIOUS_ERRORS':
-            return {...state, error: action.error};
-        case 'CLOSE_ERROR_MESSAGE':
-            return {...state, error: null};
     }
     
     return state;

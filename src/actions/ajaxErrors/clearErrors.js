@@ -1,5 +1,5 @@
 export default () => {
     return {
-        type: 'CLOSE_ERROR_MESSAGE'
+        type: 'CLEAR_ERRORS'
     }
 }

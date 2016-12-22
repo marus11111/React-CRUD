@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Field, reduxForm, formValueSelector} from 'redux-form';
 import {connect} from 'react-redux';
 import ajaxRequest from '../helpers/ajaxRequest';
-import signUpErrorAction from '../actions/ajaxErrors/signUpErrorAction';
+import signUpErrorAction from '../actions/ajaxErrors/signUpError';
 
 const validateUsername = value => {
     let errors = []
@@ -115,7 +115,7 @@ const mapStateToProps = (state) => {
     return { 
         username: selector(state, `username`),
         password: selector(state, `password`),
-        signUpError: state.auth.signUpError
+        signUpError: state.errors.signUpError
     } 
 }
 SignUp = connect(mapStateToProps, {ajaxRequest, signUpErrorAction})(SignUp);

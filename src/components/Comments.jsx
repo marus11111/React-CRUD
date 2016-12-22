@@ -2,22 +2,22 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {reduxForm, Field, formValueSelector} from 'redux-form'
 import ajaxRequest from '../helpers/ajaxRequest';
-import commentErrorAction from '../actions/ajaxErrors/commentErrorAction';
+import commentCreationErrorAction from '../actions/ajaxErrors/commentCreationError';
 import displayCreatedComment from '../actions/ajaxSuccess/displayCreatedComment';
 
 class Comments extends Component {
 
     submitHandler = (event) => {
         event.preventDefault();
-        let {body, postId, authorizedUser, ajaxRequest, displayCreatedComment, commentErrorAction} = this.props;
+        let {body, postId, authorizedUser, ajaxRequest, displayCreatedComment, commentCreationError} = this.props;
         let author = authorizedUser ? authorizedUser : 'Anonymous';
         if(!body) {
-            commentErrorAction('Comment must contain some text.');
+            commentCreationErrorAction('Comment must contain some text.');
         }
         else {
             ajaxRequest('post', `createComment`, {body, postId, author})
-            .then(res => displayCreatedComment({body, author, date, commentId}))
-            .catch(res => commentErrorAction(res.error));
+            .then(res => displayCreatedComment({body, author, date: res.date, id: res.commentId}))
+            .catch(res => commentCreationErrorAction(res.error));
         }
     }
     
@@ -40,11 +40,11 @@ let selector = formValueSelector('addComment');
 let mapStateToProps = (state) => {
     return {
         body: selector(state, 'body'),
-        commentError: state.userData.commentError
+        commentCreationError: state.errors.commentCreationError
     }
 }
 
-Comments = connect(mapStateToProps, {ajaxRequest, commentErrorAction, displayCreatedComment})(Comments);
+Comments = connect(mapStateToProps, {ajaxRequest, commentCreationErrorAction, displayCreatedComment})(Comments);
 Comments = reduxForm ({form: 'addComment'})(Comments);
 
 export default Comments;

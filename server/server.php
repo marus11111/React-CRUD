@@ -142,8 +142,8 @@ if ($reqType == 'createPost') {
     
     //get necessary data
     $authorId = $_COOKIE['id'];
-    $title = $_POST['title'];
-    $body = $_POST['body'];
+    $title = mysqli_real_escape_string($link, $_POST['title']);
+    $body = mysqli_real_escape_string($link, $_POST['body']);
     
     //insert post to database
     $query = "INSERT INTO posts (author_id, title, body) VALUES ('$authorId','$title','$body')";
@@ -168,8 +168,8 @@ else if ($reqType == 'editPost') {
     
     //get necessary data from request
     $postId = $_POST['postId'];
-    $title = $_POST['title'];
-    $body = $_POST['body'];
+    $title = mysqli_real_escape_string($link, $_POST['title']);
+    $body = mysqli_real_escape_string($link, $_POST['body']);
     
     //edit post
     $query = "UPDATE posts SET title = '$title', body = '$body' WHERE id = '$postId' LIMIT 1";
@@ -202,10 +202,42 @@ else if ($reqType == 'removePost') {
 }
 
 
-////////////////////////////////
-///CREATE AND REMOVE COMMENTS///
-////////////////////////////////
+///////////////////////////////////////
+///CREATE, FETCH AND REMOVE COMMENTS///
+///////////////////////////////////////
 
+if ($reqType == 'createComment') {
+    $postId = $_POST('postId');
+    $author = $_POST('author');
+    $time - time();
+    $body = mysqli_real_escape_string($link, $_POST('body'));
+    
+    $query = "INSERT INTO posts (post_id, comment_author, date, body) VALUES ('$postId','$author','$time', '$body')";
+    $result = mysqli_query($link, $query);
+    
+    if ($result) {
+        $commentId = mysqli_insert_id($link);
+        
+        $msg = array(
+            success => 'Comment successfully added.',
+            date => $time,
+            id => $commentId
+        );
+    }
+    else {
+        $message['error'] = 'An error occured. Please try again.';
+    }
+}
+else if ($reqType == 'fetchComments') {
+    $postId = $_POST['postId'];
+    
+    $query = "SELECT comment_author, date, body, id FROM posts WHERE post_id = '$postId'";
+    $comments = mysqli_query($link, $query);
+    
+   // while ($row = mysqli_fetch_assoc($comments)) {
+        //$msg
+    //}
+}
 
 
 /////////////////////////////
@@ -343,8 +375,14 @@ if ($reqType == 'fetchUserData') {
         $userId = $result['id'];
         $query = "SELECT title, body, id FROM posts WHERE author_id = '$userId'";
         $posts = mysqli_query($link, $query);
-        while ($row = mysqli_fetch_assoc($posts)) {
-            $msg['userData']['posts'][] = $row;
+        
+        if (gettype($posts) != object) {
+            $msg['postsError'] = 'Error occured while trying to retrieve posts from database.';
+        }
+        else {
+            while ($row = mysqli_fetch_assoc($posts)) {
+                $msg['userData']['posts'][] = $row;
+            } 
         }   
     }
 }

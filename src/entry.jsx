@@ -8,6 +8,7 @@ import {Router, Route, IndexRoute, hashHistory} from 'react-router';
 import {reducer as formReducer, Field} from 'redux-form';
 import authorizationReducer from './reducers/authorization';
 import userDataReducer from './reducers/userData';
+import errorsReducer from './reducers/errors';
 import thunk from 'redux-thunk';
 import Authorization from './components/Authorization.jsx';
 import User from './components/User.jsx';
@@ -16,26 +17,20 @@ import PostView from './components/PostView.jsx';
 import CreatePost from './components/CreatePost.jsx';
 import EditPost from './components/EditPost.jsx';
 import ajaxRequest from './helpers/ajaxRequest';
-import variousErrors from './actions/ajaxErrors/variousErrors';
-import signInErrorAction from './actions/ajaxErrors/signInErrorAction';
-import signUpErrorAction from './actions/ajaxErrors/signUpErrorAction';
-import commentErrorAction from './actions/ajaxErrors/commentErrorAction';
-
+import clearErrors from './actions/ajaxErrors/clearErrors';
 
 
 const reducers = combineReducers({
     auth: authorizationReducer,
     userData: userDataReducer,
+    errors: errorsReducer,
     form: formReducer
 });
 
 const store = createStore(reducers, applyMiddleware(thunk));
 
 hashHistory.listen(() => {
-    store.dispatch(variousErrors(null));
-    store.dispatch(signInErrorAction(null));
-    store.dispatch(signUpErrorAction(null));
-    store.dispatch(commentErrorAction(null));
+    store.dispatch(clearErrors());
 });
 
 //check cookies and start rendering after it's done
