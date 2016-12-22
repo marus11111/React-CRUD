@@ -9,14 +9,14 @@ class Comments extends Component {
 
     submitHandler = (event) => {
         event.preventDefault();
-        let {body, postId, authorizedUser, ajaxRequest, displayCreatedComment, commentCreationError} = this.props;
+        let {body, postId, authorizedUser, ajaxRequest, displayCreatedComment, commentCreationErrorAction} = this.props;
         let author = authorizedUser ? authorizedUser : 'Anonymous';
         if(!body) {
             commentCreationErrorAction('Comment must contain some text.');
         }
         else {
             ajaxRequest('post', `createComment`, {body, postId, author})
-            .then(res => displayCreatedComment({body, author, date: res.date, id: res.commentId}))
+            .then(res => displayCreatedComment(author, res.date, body, res.commentId))
             .catch(res => commentCreationErrorAction(res.error));
         }
     }
@@ -24,8 +24,8 @@ class Comments extends Component {
     render() {
         return (
             <div>
-                {this.props.commentError &&
-                    <p>{this.props.commentError}</p>
+                {this.props.commentCreationError &&
+                    <p>{this.props.commentCreationError}</p>
                 }
                 <form onSubmit={this.submitHandler}>
                     <Field component='textarea' name='body'/>

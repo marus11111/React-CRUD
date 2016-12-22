@@ -207,12 +207,12 @@ else if ($reqType == 'removePost') {
 ///////////////////////////////////////
 
 if ($reqType == 'createComment') {
-    $postId = $_POST('postId');
-    $author = $_POST('author');
-    $time - time();
-    $body = mysqli_real_escape_string($link, $_POST('body'));
+    $postId = $_POST['postId'];
+    $author = $_POST['author'];
+    $time = time();
+    $body = mysqli_real_escape_string($link, $_POST['body']);
     
-    $query = "INSERT INTO posts (post_id, comment_author, date, body) VALUES ('$postId','$author','$time', '$body')";
+    $query = "INSERT INTO comments (post_id, comment_author, date, body) VALUES ('$postId','$author','$time', '$body')";
     $result = mysqli_query($link, $query);
     
     if ($result) {
@@ -221,22 +221,22 @@ if ($reqType == 'createComment') {
         $msg = array(
             success => 'Comment successfully added.',
             date => $time,
-            id => $commentId
+            commentId => $commentId
         );
     }
     else {
-        $message['error'] = 'An error occured. Please try again.';
+        $msg['error'] = 'An error occured. Please try again.';
     }
 }
 else if ($reqType == 'fetchComments') {
     $postId = $_POST['postId'];
     
-    $query = "SELECT comment_author, date, body, id FROM posts WHERE post_id = '$postId'";
-    $comments = mysqli_query($link, $query);
+    $query = "SELECT comment_author, date, body, id FROM comments WHERE post_id = '$postId'";
+    $result = mysqli_query($link, $query);
     
-   // while ($row = mysqli_fetch_assoc($comments)) {
-        //$msg
-    //}
+    while ($row = mysqli_fetch_assoc($result)) {
+        $msg[] = $row;
+    }
 }
 
 
@@ -374,13 +374,13 @@ if ($reqType == 'fetchUserData') {
         
         $userId = $result['id'];
         $query = "SELECT title, body, id FROM posts WHERE author_id = '$userId'";
-        $posts = mysqli_query($link, $query);
+        $result = mysqli_query($link, $query);
         
-        if (gettype($posts) != object) {
+        if (gettype($result) != object) {
             $msg['postsError'] = 'Error occured while trying to retrieve posts from database.';
         }
         else {
-            while ($row = mysqli_fetch_assoc($posts)) {
+            while ($row = mysqli_fetch_assoc($result)) {
                 $msg['userData']['posts'][] = $row;
             } 
         }   
