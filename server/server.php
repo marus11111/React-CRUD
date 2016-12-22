@@ -212,7 +212,7 @@ if ($reqType == 'createComment') {
     $time = time();
     $body = mysqli_real_escape_string($link, $_POST['body']);
     
-    $query = "INSERT INTO comments (post_id, comment_author, date, body) VALUES ('$postId','$author','$time', '$body')";
+    $query = "INSERT INTO comments (post_id, comment_author, timestamp, body) VALUES ('$postId','$author','$time', '$body')";
     $result = mysqli_query($link, $query);
     
     if ($result) {
@@ -220,8 +220,8 @@ if ($reqType == 'createComment') {
         
         $msg = array(
             success => 'Comment successfully added.',
-            date => $time,
-            commentId => $commentId
+            timestamp => $time,
+            id => $commentId
         );
     }
     else {
@@ -231,11 +231,17 @@ if ($reqType == 'createComment') {
 else if ($reqType == 'fetchComments') {
     $postId = $_POST['postId'];
     
-    $query = "SELECT comment_author, date, body, id FROM comments WHERE post_id = '$postId'";
+    $query = "SELECT comment_author AS author, timestamp, body, id FROM comments WHERE post_id = '$postId'";
     $result = mysqli_query($link, $query);
     
-    while ($row = mysqli_fetch_assoc($result)) {
-        $msg[] = $row;
+    if (gettype($result) != object) {
+        $msg['error'] = 'Error while trying to retrieve comments from database';
+    }
+    else {
+        $msg['success'] = 'Comments successfully fetched';
+        while ($row = mysqli_fetch_assoc($result)) {
+            $msg['comments'][] = $row;
+        }
     }
 }
 

@@ -2,22 +2,26 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import Comments from './Comments.jsx';
 import ajaxRequest from '../helpers/ajaxRequest';
-import loadComments from '../actions/loadComments';
+import loadComments from '../actions/ajaxSuccess/loadComments';
+import fetchingCommentsError from '../actions/ajaxErrors/fetchingCommentsError';
 
 class PostView extends Component {
     
     componentDidMount() {
-        let {ajaxRequest, params: {postId}} = this.props;
+        let {ajaxRequest, loadComments, fetchingCommentsError, params: {postId}} = this.props;
         ajaxRequest('post', 'fetchComments', {postId})
-        .then(res => loadComments(res))
-        .catch(res => {});
+        .then(res => loadComments(res.comments))
+        .catch(res => {
+            fetchingCommentsError(res.error);
+            loadComments(res.comments); //undefined - in order to chane pending status and inform app that it' not pending anymore
+        });
     }
     
     render() {
         let post;
         let {posts, params: {postId}} = this.props;
         
-        if (posts.length > 0) {
+        if (Array.isArray(posts)) {
             for (let i = 0; i < posts.length; i++) {
                 if (posts[i].id == postId) {
                     post = posts[i];
@@ -35,7 +39,7 @@ class PostView extends Component {
                         <Comments postId={post.id}/>
                     </div>
                 }
-                {posts.length > 0 && !post &&
+                {!post &&
                     <div>
                         <h1>Post not found</h1>
                     </div>
@@ -51,4 +55,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps, {ajaxRequest, loadComments})(PostView);
+export default connect(mapStateToProps, {ajaxRequest, loadComments, fetchingCommentsError})(PostView);

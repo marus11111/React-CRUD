@@ -60,12 +60,12 @@ export default (state = {posts: 'pending', editedPost: {}, comments: 'pending'},
         case 'LOAD_COMMENTS':
             return {...state, comments: action.comments}
         case 'DISPLAY_CREATED_COMMENT': {
-            let {author, date, body, commentId} = action;
+            let {author, timestamp, body, id} = action;
             console.log(action);
             return {...state, 
                     comments: Array.isArray(state.comments) ? 
-                              state.comments.concat([{author, date, body, commentId}]) : 
-                              [{author, date, body, commentId}]
+                              state.comments.concat([{author, timestamp, body, id}]) : 
+                              [{author, timestamp, body, id}]
                    };
         }
     }

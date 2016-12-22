@@ -1,9 +1,9 @@
-export default (author, date, body, commentId) => {
+export default (author, timestamp, body, id) => {
     return {
         type: 'DISPLAY_CREATED_COMMENT',
         author,
-        date,
+        timestamp,
         body,
-        commentId
+        id
     }
 }
