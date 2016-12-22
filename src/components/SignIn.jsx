@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Field, reduxForm, formValueSelector} from 'redux-form';
 import {connect} from 'react-redux';
-import ajaxRequest from '../actions/ajaxRequest';
+import ajaxRequest from '../helpers/ajaxRequest';
 import signInErrorAction from '../actions/ajaxErrors/signInErrorAction';
 
 

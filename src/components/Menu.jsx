@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Link, withRouter} from 'react-router';
-import ajaxRequest from '../actions/ajaxRequest';
+import ajaxRequest from '../helpers/ajaxRequest';
+import ciCompare from '../helpers/ciCompare';
 
 class Menu extends Component {
     constructor(props) {
@@ -14,7 +15,8 @@ class Menu extends Component {
     }
     
     render() {
-        let {authorizedUser, linkUser, removePost, params: {user, titleLink, postId}} = this.props;
+        let {authorizedUser, removePost, params: {user, titleLink, postId}} = this.props;
+        let usersEqual = ciCompare(authorizedUser, user);
         let route;
         
         let activeChildRoute = this.props.routes[1];
@@ -32,16 +34,16 @@ class Menu extends Component {
                     <Link className='nav-link' to={`${user}`}>Home</Link>
                 </li>
             ) : null;
-        authorizedUser == linkUser ? 
+        usersEqual ? 
             menuItems.push(
                 <li key='create' className='nav-item col-xs-2 col-sm-2 col-md-2 col-lg-2'>
                     <Link className='nav-link' to={`${user}/create`}>Create post</Link>
                 </li>
             ) : null;
-        (route == 'postView' && authorizedUser == linkUser) ? 
+        (route == 'postView' && usersEqual) ? 
             menuItems.push(
-                <li key='update' className='nav-item col-xs-2 col-sm-2 col-md-2 col-lg-2'>
-                    <Link className='nav-link' to={`${user}/${postId}/${titleLink}/update`}>Update post</Link>
+                <li key='edit' className='nav-item col-xs-2 col-sm-2 col-md-2 col-lg-2'>
+                    <Link className='nav-link' to={`${user}/${postId}/${titleLink}/edit`}>Edit post</Link>
                 </li>,
                 <li key='remove' className='nav-item col-xs-2 col-sm-2 col-md-2 col-lg-2'>
                     <Link className='nav-link' to={`${user}`} onClick={() => removePost(postId)}>Remove post</Link>
@@ -55,7 +57,7 @@ class Menu extends Component {
             ) : 
             menuItems.push(
                 <li key='sign-in' className='nav-item col-xs-2 col-sm-2 col-md-2 col-lg-2'>
-                    <Link className='nav-link' to='/'>Sign in</Link>
+                    <Link className='nav-link' to='/'>Sign in/SignUp</Link>
                 </li>
             );
         
@@ -73,8 +75,7 @@ class Menu extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        authorizedUser: state.auth.authorizedUser,
-        linkUser: state.auth.linkUser
+        authorizedUser: state.auth.authorizedUser
     }
 }
 

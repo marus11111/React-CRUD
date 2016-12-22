@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router';
+import ciCompare from '../helpers/ciCompare';
 
 
 export default function(WrappedComp) {
@@ -12,14 +13,14 @@ export default function(WrappedComp) {
             
             if (protection == 'redirect'){
                 this.protect = (props) => {
-                    let {authorizedUser, linkUser, router} = props;
-                    authorizedUser == linkUser ? null : router.push('/');
+                    let {authorizedUser, router, params: {user}} = props;
+                    ciCompare(authorizedUser, user) ? null : router.push('/');
                 }
             }
             else if (protection == 'hide'){
                 this.protect = (props) => {
-                    let {authorizedUser, linkUser, router} = props;
-                    this.hide = authorizedUser == linkUser ? null : true;
+                    let {authorizedUser, router, params: {user}} = props;
+                    this.hide = ciCompare(authorizedUser, user) ? null : true;
                 }
             }
         }
@@ -42,8 +43,7 @@ export default function(WrappedComp) {
     
     let mapStateToProps = (state) => {
         return {
-            authorizedUser: state.auth.authorizedUser,
-            linkUser: state.auth.linkUser
+            authorizedUser: state.auth.authorizedUser
         }
     } 
     

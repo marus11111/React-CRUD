@@ -1,36 +1,39 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
+import ciCompare from '../helpers/ciCompare';
 
 class BlogList extends Component {
     constructor(props) {
         super(props);
-        this.showControls = this.showControls.bind(this);
-        this.hideControls = this.hideControls.bind(this);
-        this.toggleControls = this.toggleControls.bind(this);
         this.controlsTimeout;
     }
     
     
-    showControls(element) {
+    showControls = (element) => {
         clearTimeout(this.controlsTimeout);
         element.style.visibility = 'visible';
         element.style.opacity = 1;
     }
     
-    hideControls(element) {
+    hideControls = (element) => {
         element.style.opacity = 0;
         this.controlsTimeout = setTimeout(() => {
             element.style.visibility = 'hidden';
         }, 1000)
     }
     
-    toggleControls(element) {
+    toggleControls = (element) => {
         element.style.visibility == 'hidden' ? this.showControls() : this.hideControls();
     }
     
+    stopPropagation = (e) => {
+        e.stopPropagation();
+    }
+    
     render() {
-        let {posts, removePost, authorizedUser, linkUser, params: {user}} = this.props;
+        let {posts, removePost, authorizedUser, params: {user}} = this.props;
+        let usersEqual = ciCompare(authorizedUser, user);
         let children;
         if(posts.length > 0) {
             children = posts.map((post) => {
@@ -39,19 +42,14 @@ class BlogList extends Component {
                 return (
                     <li className='list-group-item' 
                         key={post.id} 
-                        onMouseEnter={() => {
-                            linkUser == authorizedUser ? this.showControls(postControls) : null;    
-                        }}
-                        onMouseLeave={() => {
-                            linkUser == authorizedUser ? this.hideControls(postControls) : null;    
-                        }}
-                        onClick={() => {
-                            linkUser == authorizedUser ? this.toggleControls(postControls) : null;    
-                        }}>
-                        <Link className='nav-link' to={`/${user}/${post.id}/${titleLink}`} onClick={(e) => e.stopPropagation()}>{post.title}</Link>
-                        {linkUser == authorizedUser &&
-                            <div className='hidden-controls' ref={div => postControls = div} onClick={(e) => e.stopPropagation()}>
-                                <Link className='btn btn-primary btn-sm' to={`/${user}/${post.id}/${titleLink}/update`}>
+                        onMouseEnter={() => usersEqual ? this.showControls(postControls) : null}
+                        onMouseLeave={() => usersEqual ? this.hideControls(postControls) : null}
+                        onClick={() => usersEqual ? this.toggleControls(postControls) : null} 
+                        >
+                        <Link className='nav-link' to={`/${user}/${post.id}/${titleLink}`} onClick={this.stopPropagation}>{post.title}</Link>
+                        {usersEqual &&
+                            <div className='hidden-controls' ref={div => postControls = div} onClick={this.stopPropagation}>
+                                <Link className='btn btn-primary btn-sm' to={`/${user}/${post.id}/${titleLink}/edit`}>
                                     <span className='glyphicon glyphicon-edit'></span>
                                 </Link>
                                 <button className='btn btn-danger btn-sm' onClick={() => removePost(post.id)}>
@@ -80,8 +78,7 @@ class BlogList extends Component {
 const mapStateToProps = (state) => {
     return {
         posts: state.userData.posts,
-        authorizedUser: state.auth.authorizedUser,
-        linkUser: state.auth.linkUser
+        authorizedUser: state.auth.authorizedUser
     }
 }
 

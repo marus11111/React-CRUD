@@ -1,4 +1,4 @@
-export default (state = {posts: [], updatedPost: {}, comments: []}, action) => {
+export default (state = {posts: [], editedPost: {}, comments: []}, action) => {
     let {posts} = state;
     switch (action.type){
         case 'DISPLAY_IMAGE':
@@ -6,6 +6,7 @@ export default (state = {posts: [], updatedPost: {}, comments: []}, action) => {
         case 'REMOVE_IMAGE':
             return {...state, imageUrl: null};
         case 'LOAD_USER_DATA':
+            console.log(action);
             return {...state, 
                     imageUrl: action.imageUrl,
                     posts: action.posts ? action.posts : posts,
@@ -13,27 +14,27 @@ export default (state = {posts: [], updatedPost: {}, comments: []}, action) => {
                    };
         case 'CREATE_POST': 
             return {...state, posts: posts.concat([action.postObject])};    
-        case 'SET_UPDATED_POST': {
+        case 'SET_EDITED_POST': {
             for (let i=0; i<posts.length; i++) {
                 let {title, body, id} = posts[i];
                 if (action.id == id){
-                    return {...state, updatedPost: {title, body}};
+                    return {...state, editedPost: {title, body}};
                 }
             }
         } 
-        case 'UPDATE_POST': {
+        case 'EDIT_POST': {
             let {id, title, body} = action;
-            let updateIndex = (() => {
+            let editIndex = (() => {
                 for (let i=0; i<posts.length; i++){
                     if (id == posts[i].id){
                         return i; 
                     }
                 }
             })();
-            let before = posts.slice(0, updateIndex);
-            let updatedPost = [{id, title, body}];
-            let after = posts.slice(updateIndex+1);
-            let newPosts = before.concat(updatedPost.concat(after));
+            let before = posts.slice(0, editIndex);
+            let editedPost = [{id, title, body}];
+            let after = posts.slice(editIndex+1);
+            let newPosts = before.concat(editedPost.concat(after));
             return {...state, posts: newPosts};
         }
         case 'REMOVE_POST': {
@@ -49,9 +50,9 @@ export default (state = {posts: [], updatedPost: {}, comments: []}, action) => {
             let newPosts = before.concat(after);
             return {...state, posts: newPosts};
         }
-        case 'CREATE_COMMENT': {
-            let {author, title, body} = action;
-            return {...state, comments: state.comments.concat([{author, title, body}])};
+        case 'DISPLAY_CREATED_COMMENT': {
+            let {body, author, date} = action;
+            return {...state, comments: state.comments.concat([{body, author, date, commentId}])};
         }
         case 'USER_NOT_FOUND':
             return {userError: action.error};

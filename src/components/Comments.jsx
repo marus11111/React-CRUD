@@ -1,38 +1,35 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {reduxForm, Field, formValueSelector} from 'redux-form'
-import ajaxRequest from '../actions/ajaxRequest';
-import commentError from '../actions/ajaxErrors/commentError';
-import createComment from '../actions/ajaxSuccess/createComment';
+import ajaxRequest from '../helpers/ajaxRequest';
+import commentErrorAction from '../actions/ajaxErrors/commentErrorAction';
+import displayCreatedComment from '../actions/ajaxSuccess/displayCreatedComment';
 
 class Comments extends Component {
-    constructor(props) {
-        super(props);
-        this.submitHandler = this.submitHandler.bind(this);
-    }
-    
-    
-    submitHandler(event){
+
+    submitHandler = (event) => {
         event.preventDefault();
-        let {title, body, author, ajaxRequest, createComment, commentError, params: {postId}} = this.props;
-        
-        if(!title || !body) {
-            commentError('Comment must contain title and body.');
+        let {body, postId, authorizedUser, ajaxRequest, displayCreatedComment, commentErrorAction} = this.props;
+        let author = authorizedUser ? authorizedUser : 'Anonymous';
+        if(!body) {
+            commentErrorAction('Comment must contain some text.');
         }
         else {
-            ajaxRequest('post', `createComment`, {title, body, postId, authorId})
-            .then(res => createComment({title, body, id: res.postId}))
-            .catch(res => commentError(res.error));
+            ajaxRequest('post', `createComment`, {body, postId, author})
+            .then(res => displayCreatedComment({body, author, date, commentId}))
+            .catch(res => commentErrorAction(res.error));
         }
     }
     
     render() {
         return (
             <div>
+                {this.props.commentError &&
+                    <p>{this.props.commentError}</p>
+                }
                 <form onSubmit={this.submitHandler}>
-                    <Field component='input' type='text' name='title'/>
                     <Field component='textarea' name='body'/>
-                    <button type='submit'>Create post</button>
+                    <button type='submit'>Create comment</button>
                 </form>
             </div>
         )
@@ -42,12 +39,12 @@ class Comments extends Component {
 let selector = formValueSelector('addComment');
 let mapStateToProps = (state) => {
     return {
-        title: selector(state, 'title'),
         body: selector(state, 'body'),
+        commentError: state.userData.commentError
     }
 }
 
-Comments = connect(mapStateToProps, {ajaxRequest, commentError, createComment})(Comments);
+Comments = connect(mapStateToProps, {ajaxRequest, commentErrorAction, displayCreatedComment})(Comments);
 Comments = reduxForm ({form: 'addComment'})(Comments);
 
 export default Comments;

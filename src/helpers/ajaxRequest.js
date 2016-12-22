@@ -1,5 +1,5 @@
-import authorize from './authorization/authorize';
-import deauthorize from './authorization/deathorize';
+import authorize from '../actions/authorization/authorize';
+import deauthorize from '../actions/authorization/deathorize';
 import axios from 'axios';
 
 const url = '/project2/server.php';

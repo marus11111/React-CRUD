@@ -1,6 +1,6 @@
 export default (id, title, body) => {
     return {
-        type: 'UPDATE_POST',
+        type: 'EDIT_POST',
         id,
         title,
         body

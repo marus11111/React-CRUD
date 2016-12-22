@@ -1,6 +1,6 @@
 export default (id) => {
     return {
-        type: 'SET_UPDATED_POST',
+        type: 'SET_EDITED_POST',
         id
     }
 }

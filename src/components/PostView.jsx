@@ -23,7 +23,7 @@ class PostView extends Component {
                     <div>
                         <h1>{post.title}</h1>
                         <p>{post.body}</p>
-                        <Comments />
+                        <Comments postId={post.id}/>
                     </div>
                 }
                 {posts.length > 0 && !post &&

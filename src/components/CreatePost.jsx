@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Field, reduxForm, formValueSelector} from 'redux-form';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router';
-import ajaxRequest from '../actions/ajaxRequest';
+import ajaxRequest from '../helpers/ajaxRequest';
 import createPost from '../actions/ajaxSuccess/createPost';
 import variousErrors from '../actions/ajaxErrors/variousErrors';
 import protect from '../HOC/protectedComponent.jsx';

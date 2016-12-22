@@ -14,7 +14,7 @@ class Authorization extends React.Component {
         authorizedUser ? router.push(`${authorizedUser}`) : null;
     }
     
-    componentWillUpdate(nextProps){
+    componentWillReceiveProps(nextProps){
         let {authorizedUser, router} = nextProps;
         authorizedUser ? router.push(`${authorizedUser}`) : null;
     }

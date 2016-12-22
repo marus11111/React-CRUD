@@ -14,12 +14,12 @@ import User from './components/User.jsx';
 import BlogList from './components/BlogList.jsx';
 import PostView from './components/PostView.jsx';
 import CreatePost from './components/CreatePost.jsx';
-import UpdatePost from './components/UpdatePost.jsx';
-import ajaxRequest from './actions/ajaxRequest';
+import EditPost from './components/EditPost.jsx';
+import ajaxRequest from './helpers/ajaxRequest';
 import variousErrors from './actions/ajaxErrors/variousErrors';
 import signInErrorAction from './actions/ajaxErrors/signInErrorAction';
 import signUpErrorAction from './actions/ajaxErrors/signUpErrorAction';
-import commentError from './actions/ajaxErrors/commentError';
+import commentErrorAction from './actions/ajaxErrors/commentErrorAction';
 
 
 
@@ -35,7 +35,7 @@ hashHistory.listen(() => {
     store.dispatch(variousErrors(null));
     store.dispatch(signInErrorAction(null));
     store.dispatch(signUpErrorAction(null));
-    store.dispatch(commentError(null));
+    store.dispatch(commentErrorAction(null));
 });
 
 //check cookies and start rendering after it's done
@@ -48,7 +48,7 @@ store.dispatch(ajaxRequest('post', 'cookieAuth'))
                 <Route path='/:user' component={User}>
                     <IndexRoute component={BlogList} />
                     <Route path=':postId/:titleLink' component={PostView} />
-                    <Route path=':postId/:titleLink/update' protection='redirect' component={UpdatePost} />
+                    <Route path=':postId/:titleLink/edit' protection='redirect' component={EditPost} />
                     <Route path='create' protection='redirect' component={CreatePost} />
                 </Route>
             </Router>

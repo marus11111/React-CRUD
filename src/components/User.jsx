@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
-import {Link} from 'react-router';
+import {Link, withRouter} from 'react-router';
 import {connect} from 'react-redux';
-import ajaxRequest from '../actions/ajaxRequest';
-import setLinkUser from '../actions/setLinkUser';
+import ajaxRequest from '../helpers/ajaxRequest';
 import loadUserData from '../actions/ajaxSuccess/loadUserData';
 import userNotFound from '../actions/ajaxErrors/userNotFound';
 import displayImage from '../actions/ajaxSuccess/displayImage';
@@ -12,6 +11,7 @@ import removeImageAction from '../actions/ajaxSuccess/removeImageAction';
 import removePostAction from '../actions/ajaxSuccess/removePostAction';
 import Menu from './Menu.jsx';
 import Dropzone from 'react-dropzone';
+import ciCompare from '../helpers/ciCompare';
 
 class User extends Component { 
     constructor(props){
@@ -19,7 +19,6 @@ class User extends Component {
         
         this.fetchDataFromLink = (currentProps, nextProps) => {
             let {user} = nextProps ? nextProps.params : currentProps.params;
-            currentProps.setLinkUser(user);
             currentProps.ajaxRequest('post', 'fetchUserData', {user})
             .then(res => currentProps.loadUserData(res.userData))
             .catch(res => currentProps.userNotFound(res.error));
@@ -36,7 +35,7 @@ class User extends Component {
     }
     
     componentWillReceiveProps(nextProps) {
-        if (this.props.linkUser != nextProps.params.user.toLowerCase()) {
+        if (!ciCompare(this.props.params.user, nextProps.params.user)) {
             this.fetchDataFromLink(this.props, nextProps);
         }
     }
@@ -81,10 +80,11 @@ class User extends Component {
     }
     
     render() {
-        let {imageUrl, userError, error, authorizedUser, linkUser} = this.props;
+        let {imageUrl, userError, error, authorizedUser, params: {user}} = this.props;
+        let usersEqual = ciCompare(authorizedUser, user);
         
         let eventHandlers = {};
-        if (imageUrl && linkUser == authorizedUser) {
+        if (imageUrl && usersEqual) {
             eventHandlers = {
                 onMouseEnter: this.showControls,
                 onMouseLeave: this.hideControls,
@@ -98,15 +98,14 @@ class User extends Component {
             });
         });
         
-        console.log(this.props);
         return (
             <div>
-                { (imageUrl || linkUser == authorizedUser) &&
+                { (imageUrl || usersEqual) &&
                     <div className='jumbotron' {...eventHandlers}>
                         {imageUrl && 
                             <div>
                                 <img src={imageUrl}></img>
-                                { linkUser == authorizedUser &&
+                                { usersEqual &&
                                     <div className='hidden-controls' ref={div => this.imageControls = div}>
                                         <form>
                                             <label htmlFor='imageUpload' className='btn btn-primary btn-sm' onClick={e => e.stopPropagation()}>
@@ -150,9 +149,10 @@ const mapStateToProps = (state) => {
         imageUrl: state.userData.imageUrl,
         userError: state.userData.userError,
         error: state.userData.error,
-        authorizedUser: state.auth.authorizedUser,
-        linkUser: state.auth.linkUser
+        authorizedUser: state.auth.authorizedUser
     }
 }
 
-export default connect(mapStateToProps, {ajaxRequest, setLinkUser, loadUserData, userNotFound, displayImage, variousErrors, closeErrorMessage, removeImageAction, removePostAction})(User);
+User = withRouter(User);
+
+export default connect(mapStateToProps, {ajaxRequest, loadUserData, userNotFound, displayImage, variousErrors, closeErrorMessage, removeImageAction, removePostAction})(User);

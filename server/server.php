@@ -17,7 +17,7 @@ if (!mysqli_set_charset($link, 'utf8')) {
 } 
 
 //Get request type - sign in, sign up, cookie authorization, 
-//add post, update post, remove post, load picture, add comment 
+//add post, edit post, remove post, load picture, add comment 
 $reqType = $_POST['requestType'];
 
 //create array, that will contain response
@@ -135,7 +135,7 @@ else {
 
 
 ///////////////////////////////////////
-////CREATE, UPDATE AND REMOVE POSTS////
+////CREATE, EDIT AND REMOVE POSTS////
 ///////////////////////////////////////
 
 if ($reqType == 'createPost') {
@@ -164,20 +164,20 @@ if ($reqType == 'createPost') {
         $msg['error'] = 'An error occured. Please try again.';
     }
 }
-else if ($reqType == 'updatePost') {
+else if ($reqType == 'editPost') {
     
     //get necessary data from request
     $postId = $_POST['postId'];
     $title = $_POST['title'];
     $body = $_POST['body'];
     
-    //update post
+    //edit post
     $query = "UPDATE posts SET title = '$title', body = '$body' WHERE id = '$postId' LIMIT 1";
     $result = mysqli_query($link, $query);
     
-    //set msg depending on whether post was successfully updated or not
+    //set msg depending on whether post was successfully updated in DB or not
     if ($result) {
-        $msg['success'] = 'Post updated successfully.';
+        $msg['success'] = 'Post edited successfully.';
     }
     else {
         $msg['error'] = 'An error occured. Please try again.';
@@ -200,6 +200,11 @@ else if ($reqType == 'removePost') {
         $msg['error'] = 'An error occured. Please try again.';
     }
 }
+
+
+////////////////////////////////
+///CREATE AND REMOVE COMMENTS///
+////////////////////////////////
 
 
 
