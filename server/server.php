@@ -235,13 +235,26 @@ else if ($reqType == 'fetchComments') {
     $result = mysqli_query($link, $query);
     
     if (gettype($result) != object) {
-        $msg['error'] = 'Error while trying to retrieve comments from database';
+        $msg['error'] = 'Error while trying to retrieve comments from database.';
     }
     else {
-        $msg['success'] = 'Comments successfully fetched';
+        $msg['success'] = 'Comments successfully fetched.';
         while ($row = mysqli_fetch_assoc($result)) {
             $msg['comments'][] = $row;
         }
+    }
+}
+else if ($reqType == 'removeComment') {
+    $commentId = $_POST['commentId'];
+    
+    $query = "DELETE FROM comments WHERE id = '$commentId' LIMIT 1";
+    $result = mysqli_query($link, $query);
+    
+    if ($result) {
+        $msg['success'] = 'Comment successfully removed.';
+    }
+    else {
+        $msg['error'] = 'An error occured while trying to remove comment. Please try again.';
     }
 }
 
@@ -269,7 +282,7 @@ if ($reqType == 'removeImage' || $reqType == 'imageUpload') {
         //which is necessary to remove it from cloudinary database 
         $idOfUser = $args['idOfUser'];
         $linkToDB = $args['linkToDB'];
-        $query = "SELECT img_public_id FROM users WHERE id = '$idOfUser'";
+        $query = "SELECT img_public_id FROM users WHERE id = '$idOfUser' LIMIT 1";
         $result = mysqli_fetch_assoc(mysqli_query($linkToDB, $query));
         
         //value that will indicate whether image was removed successfully
@@ -328,7 +341,7 @@ if ($reqType == 'removeImage' || $reqType == 'imageUpload') {
             ));
             
             //update mysql database
-            $query = "UPDATE users SET img_url = '$imageUrl', img_public_id = '$imageId' WHERE id = '$userId'";
+            $query = "UPDATE users SET img_url = '$imageUrl', img_public_id = '$imageId' WHERE id = '$userId' LIMIT 1";
             $updateMysql = mysqli_query($link, $query);
             
             if($updateMysql) {

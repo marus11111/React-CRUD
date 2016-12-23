@@ -68,6 +68,20 @@ export default (state = {posts: 'pending', editedPost: {}, comments: 'pending'},
                               [{author, timestamp, body, id}]
                    };
         }
+        case 'REMOVE_COMMENT': {
+            let {comments} = state;
+            let removeIndex = (() => {
+                for (let i=0; i<comments.length; i++){
+                    if (action.id == comments[i].id){
+                        return i; 
+                    }
+                }
+            })();
+            let before = comments.slice(0, removeIndex);
+            let after = comments.slice(removeIndex + 1);
+            let newComments = before.concat(after);
+            return {...state, comments: newComments};
+        }
     }
     
     return state;

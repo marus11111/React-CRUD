@@ -19,7 +19,7 @@ class PostView extends Component {
     
     render() {
         let post;
-        let {posts, params: {postId}} = this.props;
+        let {posts, params: {user, postId}} = this.props;
         
         if (Array.isArray(posts)) {
             for (let i = 0; i < posts.length; i++) {
@@ -36,10 +36,10 @@ class PostView extends Component {
                     <div>
                         <h1>{post.title}</h1>
                         <p>{post.body}</p>
-                        <Comments postId={post.id}/>
+                        <Comments postId={post.id} linkUser={user}/>
                     </div>
                 }
-                {!post &&
+                {Array.isArray(posts) && !post &&
                     <div>
                         <h1>Post not found</h1>
                     </div>

@@ -4,7 +4,10 @@ import {reduxForm, Field, formValueSelector} from 'redux-form';
 import {Link} from 'react-router';
 import ajaxRequest from '../helpers/ajaxRequest';
 import commentCreationErrorAction from '../actions/ajaxErrors/commentCreationError';
+import commentRemoveErrorAction from '../actions/ajaxErrors/commentRemoveError';
 import displayCreatedComment from '../actions/ajaxSuccess/displayCreatedComment';
+import removeCommentAction from '../actions/ajaxSuccess/removeComment';
+import ciCompare from '../helpers/ciCompare';
 
 class Comments extends Component {
 
@@ -22,8 +25,15 @@ class Comments extends Component {
         }
     }
     
+    removeComment = (commentId) => {
+        this.props.ajaxRequest('post', 'removeComment', {commentId})
+        .then(() => this.props.removeCommentAction(commentId))
+        .catch(res => this.props.commentRemoveErrorAction(res.error));
+    }
+    
     render() {
-        let {comments, authorizedUser, commentCreationError, fetchingCommentsError} = this.props;
+        let {comments, authorizedUser, linkUser, commentCreationError, fetchingCommentsError, commentRemoveError} = this.props;
+        let usersEqual = ciCompare(authorizedUser,linkUser);
         let children;
         
         console.log(fetchingCommentsError);
@@ -48,12 +58,18 @@ class Comments extends Component {
 
                 return (
                     <li key={id}>
+                        {
+                            
+                        }
                         <time>{date}</time>
                         {author &&
                             <Link to={`/${author}`}>{author}</Link>
                         }
                         {!author &&
                             <span>Anonymous</span>
+                        }
+                        {(authorizedUser === author || usersEqual) &&
+                            <button className='btn btn-sm btn-danger' onClick={() => this.removeComment(id)}><span className='glyphicon glyphicon-trash'></span></button>
                         }
                         <p>{body}</p>
                     </li>
@@ -83,13 +99,14 @@ let mapStateToProps = (state) => {
     return {
         body: selector(state, 'body'),
         commentCreationError: state.errors.commentCreationError,
+        commentRemoveError: state.errors.commentRemoveError,
         fetchingCommentsError: state.errors.fetchingCommentsError,
         comments: state.userData.comments,
         authorizedUser: state.auth.authorizedUser
     }
 }
 
-Comments = connect(mapStateToProps, {ajaxRequest, commentCreationErrorAction, displayCreatedComment})(Comments);
+Comments = connect(mapStateToProps, {ajaxRequest, commentCreationErrorAction, displayCreatedComment, removeCommentAction, commentRemoveErrorAction})(Comments);
 Comments = reduxForm ({form: 'addComment'})(Comments);
 
 export default Comments;

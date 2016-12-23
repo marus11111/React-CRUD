@@ -9,6 +9,8 @@ export default (state = {}, action) => {
             return {...state, userError: error};
         case 'COMMENT_CREATION_ERROR':
             return {...state, commentCreationError: error};
+        case 'COMMENT_REMOVE_ERROR':
+            return {...state, commentRemoveError: error};
         case 'FETCHING_COMMENTS_ERROR':
             return {...state, fetchingCommentsError: error}
         case 'FETCHING_POSTS_ERROR':
