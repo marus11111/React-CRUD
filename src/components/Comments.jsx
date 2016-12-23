@@ -21,14 +21,14 @@ class Comments extends Component {
         else {
             ajaxRequest('post', `createComment`, {body, postId, author})
             .then(res => displayCreatedComment(author, res.timestamp, body, res.id))
-            .catch(res => commentCreationErrorAction(res.error));
+            .catch(res => commentCreationErrorAction(res.error)); // opisać że catch w react 'połyka' błędy 
         }
     }
     
     removeComment = (commentId) => {
         this.props.ajaxRequest('post', 'removeComment', {commentId})
         .then(() => this.props.removeCommentAction(commentId))
-        .catch(res => this.props.commentRemoveErrorAction(res.error));
+        .catch(res => this.props.commentRemoveErrorAction(res.error, commentId));
     }
     
     render() {
@@ -55,11 +55,12 @@ class Comments extends Component {
                 let date = new Date(timestamp * 1000);
                 let minutes = `0${date.getMinutes()}`
                 date = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()} ${date.getHours()}:${minutes.substr(-2)}`;
-
+                
+                let isRemoveError = commentRemoveError.ids.some((errorId) => errorId === id);
                 return (
                     <li key={id}>
-                        {
-                            
+                        {isRemoveError &&
+                            <p>{commentRemoveError.error}</p>
                         }
                         <time>{date}</time>
                         {author &&

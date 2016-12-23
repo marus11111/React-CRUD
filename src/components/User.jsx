@@ -7,6 +7,7 @@ import clearUserData from '../actions/clearUserData';
 import userNotFound from '../actions/ajaxErrors/userNotFound';
 import variousErrors from '../actions/ajaxErrors/variousErrors';
 import fetchingPostsError from '../actions/ajaxErrors/fetchingPostsError';
+import blogListRemoveError from '../actions/ajaxErrors/blogListRemoveError';
 import displayImage from '../actions/ajaxSuccess/displayImage';
 import removeImageAction from '../actions/ajaxSuccess/removeImage';
 import removePostAction from '../actions/ajaxSuccess/removePost';
@@ -82,10 +83,14 @@ class User extends Component {
         .catch(res => this.props.variousErrors(res.error));
     }
     
-    removePost(postId) {
-        this.props.ajaxRequest('post', 'removePost', {postId})
-        .then(() => this.props.removePostAction(postId))
-        .catch(res => this.props.variousErrors(res.error));
+    removePost(postId, from) {
+        let {ajaxRequest, removePostAction, blogListRemoveError, variousErrors} = this.props;
+        let errorHandler;
+        from === 'list' ? errorHandler = blogListRemoveError :
+                          errorHandler = variousErrors;
+        ajaxRequest('post', 'removePost', {postId})
+        .then(() => removePostAction(postId))
+        .catch(res => errorHandler(res.error, postId));
     }
     
     render() {
@@ -163,4 +168,4 @@ const mapStateToProps = (state) => {
 
 User = withRouter(User);
 
-export default connect(mapStateToProps, {ajaxRequest, loadUserData, clearUserData, userNotFound, fetchingPostsError, displayImage, variousErrors, removeImageAction, removePostAction})(User);
+export default connect(mapStateToProps, {ajaxRequest, loadUserData, clearUserData, userNotFound, fetchingPostsError, displayImage, variousErrors, blogListRemoveError, removeImageAction, removePostAction})(User);

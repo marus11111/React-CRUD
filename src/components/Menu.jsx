@@ -10,7 +10,8 @@ class Menu extends Component {
         this.signOut = this.signOut.bind(this);
     }
     
-    signOut() {
+    signOut(e) {
+        e.preventDefault();
         this.props.ajaxRequest('post', 'signOut');
     }
     
@@ -46,7 +47,7 @@ class Menu extends Component {
                     <Link className='nav-link' to={`${user}/${postId}/${titleLink}/edit`}>Edit post</Link>
                 </li>,
                 <li key='remove' className='nav-item col-xs-2 col-sm-2 col-md-2 col-lg-2'>
-                    <Link className='nav-link' to={`${user}`} onClick={() => removePost(postId)}>Remove post</Link>
+                    <Link className='nav-link' to='#' onClick={(e) => {e.preventDefault(); removePost(postId);}}>Remove post</Link>
                 </li>
             ) : null;
         authorizedUser ? 

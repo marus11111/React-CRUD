@@ -1,6 +1,6 @@
 export default (error, id) => {
     return {
-        type: 'COMMENT_REMOVE_ERROR',
+        type: 'BLOG_LIST_REMOVE_ERROR',
         error,
         id
     }
