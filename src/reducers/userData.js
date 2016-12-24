@@ -2,7 +2,11 @@ export default (state = {posts: 'pending', editedPost: {}, comments: 'pending'},
     let {posts} = state;
     switch (action.type){
         case 'DISPLAY_IMAGE':
-            return {...state, imageUrl: action.imageUrl, userError: null};
+            return {...state, 
+                    imageUrl: action.imageUrl, 
+                    userError: null,
+                    imageLoading: false
+                   };
         case 'REMOVE_IMAGE':
             return {...state, imageUrl: null};
         case 'LOAD_USER_DATA':
@@ -10,16 +14,18 @@ export default (state = {posts: 'pending', editedPost: {}, comments: 'pending'},
             return {...state, 
                     imageUrl: action.imageUrl,
                     posts: action.posts,
-                    userError: null
+                    userError: null,
+                    imageLoading: false
                    };
         case 'CLEAR_USER_DATA':
             return {posts: 'pending',
                     imageUrl: null
                    }
         case 'CREATE_POST': 
-            return {...state, posts: Array.isArray(posts) ? 
-                              posts.concat([action.postObject]) :
-                              action.postObject
+            return {...state, 
+                    posts: Array.isArray(posts) ? 
+                           posts.concat([action.postObject]) :
+                           action.postObject
                    };    
         case 'SET_EDITED_POST': {
             for (let i=0; i<posts.length; i++) {
@@ -82,6 +88,8 @@ export default (state = {posts: 'pending', editedPost: {}, comments: 'pending'},
             let newComments = before.concat(after);
             return {...state, comments: newComments};
         }
+        case 'IMAGE_LOADING':
+            return {...state, imageLoading: true};
     }
     
     return state;

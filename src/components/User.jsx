@@ -9,6 +9,7 @@ import variousErrors from '../actions/ajaxErrors/variousErrors';
 import fetchingPostsError from '../actions/ajaxErrors/fetchingPostsError';
 import blogListRemoveError from '../actions/ajaxErrors/blogListRemoveError';
 import displayImage from '../actions/ajaxSuccess/displayImage';
+import imageLoadingAction from '../actions/imageLoading';
 import removeImageAction from '../actions/ajaxSuccess/removeImage';
 import removePostAction from '../actions/ajaxSuccess/removePost';
 import Menu from './Menu.jsx';
@@ -71,9 +72,15 @@ class User extends Component {
         const upload_preset = 'jyju7fnq';
         let file = images[0];
         
-        this.props.ajaxRequest('post', 'imageUpload', {upload_preset, file})
-        .then(res => this.props.displayImage(res.imageUrl))
-        .catch(res => this.props.variousErrors(res.error));
+        if (file.size > 512000) {
+            this.props.variousErrors('Maximum file size is 500 kB.');
+        }
+        else {
+            this.props.imageLoadingAction();
+            this.props.ajaxRequest('post', 'imageUpload', {upload_preset, file})
+            .then(res => this.props.displayImage(res.imageUrl))
+            .catch(res => this.props.variousErrors(res.error));    
+        }
     }
     
     removeImage(e) {
@@ -94,7 +101,7 @@ class User extends Component {
     }
     
     render() {
-        let {imageUrl, userError, error, authorizedUser, params: {user}} = this.props;
+        let {imageUrl, imageLoading, userError, error, authorizedUser, params: {user}} = this.props;
         
         if (userError) return <p>{userError}</p>;
         
@@ -137,10 +144,16 @@ class User extends Component {
                                 }
                             </div>
                         }
-                        {!imageUrl && 
+                        {!imageUrl && !imageLoading &&
                             <div>
                                 <Dropzone multiple={false} accept='image/*' onDrop={this.uploadImage}/>
-                                <p>Drop an image or click to select a file from your computer.</p>
+                                <p>Drop an image or click to select a file from your computer.<br/>Maximum file size is 500 kB.</p>
+                            </div>
+                        }
+                        {imageLoading &&
+                            <div>
+                                <div className='dot'></div>
+                                <div className='pacman'></div>
                             </div>
                         }
                     </div>
@@ -162,10 +175,11 @@ const mapStateToProps = (state) => {
         imageUrl: state.userData.imageUrl,
         userError: state.errors.userError,
         error: state.errors.error,
-        authorizedUser: state.auth.authorizedUser
+        authorizedUser: state.auth.authorizedUser,
+        imageLoading: state.userData.imageLoading
     }
 }
 
 User = withRouter(User);
 
-export default connect(mapStateToProps, {ajaxRequest, loadUserData, clearUserData, userNotFound, fetchingPostsError, displayImage, variousErrors, blogListRemoveError, removeImageAction, removePostAction})(User);
+export default connect(mapStateToProps, {ajaxRequest, loadUserData, clearUserData, userNotFound, fetchingPostsError, displayImage, imageLoadingAction, variousErrors, blogListRemoveError, removeImageAction, removePostAction})(User);
