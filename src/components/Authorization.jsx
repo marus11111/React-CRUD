@@ -29,6 +29,7 @@ class Authorization extends React.Component {
                 </div>
                 {activeForm == 'signIn' && <SignIn/>} 
                 {activeForm == 'signUp' && <SignUp/>}
+                <p>This website uses cookies. By signing up or signing in you are agreeing to receive our cookies.</p>
             </div>
         )
     }

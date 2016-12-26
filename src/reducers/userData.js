@@ -8,7 +8,12 @@ export default (state = {posts: 'pending', editedPost: {}, comments: 'pending'},
                     imageLoading: false
                    };
         case 'REMOVE_IMAGE':
-            return {...state, imageUrl: null};
+            return {...state, 
+                    imageUrl: null,
+                    imageLoading: false
+                   };
+        case 'IMAGE_LOADING':
+            return {...state, imageLoading: action.imageLoading};
         case 'LOAD_USER_DATA':
             console.log(action);
             return {...state, 
@@ -88,8 +93,6 @@ export default (state = {posts: 'pending', editedPost: {}, comments: 'pending'},
             let newComments = before.concat(after);
             return {...state, comments: newComments};
         }
-        case 'IMAGE_LOADING':
-            return {...state, imageLoading: true};
     }
     
     return state;

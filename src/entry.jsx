@@ -8,6 +8,7 @@ import {Router, Route, IndexRoute, hashHistory} from 'react-router';
 import {reducer as formReducer, Field} from 'redux-form';
 import authorizationReducer from './reducers/authorization';
 import userDataReducer from './reducers/userData';
+import hamburgerMenuReducer from './reducers/hamburgerMenu';
 import errorsReducer from './reducers/errors';
 import thunk from 'redux-thunk';
 import Authorization from './components/Authorization.jsx';
@@ -18,11 +19,14 @@ import CreatePost from './components/CreatePost.jsx';
 import EditPost from './components/EditPost.jsx';
 import ajaxRequest from './helpers/ajaxRequest';
 import clearErrors from './actions/ajaxErrors/clearErrors';
+import setWidth from './actions/setWidth';
+import isMenuOpen from './actions/isMenuOpen';
 
 
 const reducers = combineReducers({
     auth: authorizationReducer,
     userData: userDataReducer,
+    hamburgerMenu: hamburgerMenuReducer,
     errors: errorsReducer,
     form: formReducer
 });
@@ -31,6 +35,16 @@ const store = createStore(reducers, applyMiddleware(thunk));
 
 hashHistory.listen(() => {
     store.dispatch(clearErrors());
+    store.dispatch(isMenuOpen(false));
+});
+
+store.dispatch(setWidth(window.innerWidth));
+let resizeDebounce;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeDebounce);
+    resizeDebounce = setTimeout(() => {
+        store.dispatch(setWidth(window.innerWidth));
+    }, 500);
 });
 
 //check cookies and start rendering after it's done

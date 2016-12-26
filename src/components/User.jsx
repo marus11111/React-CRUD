@@ -69,34 +69,47 @@ class User extends Component {
     }
     
     uploadImage(images) {
+        let {ajaxRequest, imageLoadingAction, displayImage, variousErrors} = this.props;
         const upload_preset = 'jyju7fnq';
         let file = images[0];
         
         if (file.size > 512000) {
-            this.props.variousErrors('Maximum file size is 500 kB.');
+            variousErrors('Maximum file size is 500 kB.');
         }
         else {
-            this.props.imageLoadingAction();
-            this.props.ajaxRequest('post', 'imageUpload', {upload_preset, file})
-            .then(res => this.props.displayImage(res.imageUrl))
-            .catch(res => this.props.variousErrors(res.error));    
+            imageLoadingAction(true);
+            ajaxRequest('post', 'imageUpload', {upload_preset, file})
+            .then(res => displayImage(res.imageUrl))
+            .catch(res => {
+                imageLoadingAction(false);
+                variousErrors(res.error); 
+            });
         }
     }
     
     removeImage(e) {
         e.stopPropagation();
-        this.props.ajaxRequest('post', 'removeImage')
-        .then(() => this.props.removeImageAction())
-        .catch(res => this.props.variousErrors(res.error));
+        let {ajaxRequest, removeImageAction, imageLoadingAction, variousErrors} = this.props;
+        
+        imageLoadingAction(true);
+        ajaxRequest('post', 'removeImage')
+        .then(() => removeImageAction())
+        .catch(res => {
+            imageLoadingAction(false);
+            variousErrors(res.error); 
+        });
     }
     
     removePost(postId, from) {
-        let {ajaxRequest, removePostAction, blogListRemoveError, variousErrors} = this.props;
+        let {ajaxRequest, removePostAction, blogListRemoveError, variousErrors, router} = this.props;
         let errorHandler;
         from === 'list' ? errorHandler = blogListRemoveError :
                           errorHandler = variousErrors;
         ajaxRequest('post', 'removePost', {postId})
-        .then(() => removePostAction(postId))
+        .then(() => {
+            removePostAction(postId); 
+            from === 'menu' ? router.push('/') : null;
+        })
         .catch(res => errorHandler(res.error, postId));
     }
     

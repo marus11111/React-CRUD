@@ -1,5 +1,6 @@
-export default () => {
+export default (imageLoading) => {
     return {
-        type: 'IMAGE_LOADING'
+        type: 'IMAGE_LOADING',
+        imageLoading
     }
 }
