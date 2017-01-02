@@ -6,6 +6,7 @@ import {createStore, combineReducers, applyMiddleware} from 'redux';
 import {Provider} from 'react-redux';
 import {Router, Route, IndexRoute, hashHistory} from 'react-router';
 import {reducer as formReducer, Field} from 'redux-form';
+import RichTextEditor from 'react-rte';
 import authorizationReducer from './reducers/authorization';
 import userDataReducer from './reducers/userData';
 import hamburgerMenuReducer from './reducers/hamburgerMenu';
@@ -22,6 +23,7 @@ import clearErrors from './actions/ajaxErrors/clearErrors';
 import setWidth from './actions/setWidth';
 import isMenuOpen from './actions/isMenuOpen';
 
+window.RichTextEditor = RichTextEditor;
 
 const reducers = combineReducers({
     auth: authorizationReducer,
@@ -64,11 +66,4 @@ store.dispatch(ajaxRequest('post', 'cookieAuth'))
         </Provider>,
        document.getElementById('root')
      );
-})
-//dont proceed if user credentials cant be checked
-.catch((error) => {
-    render(
-        <p>{error}An error occured when trying to connect to the server.</p>,
-        document.getElementById('root')
-    )
 })

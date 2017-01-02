@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
 import ciCompare from '../helpers/ciCompare';
+import makeLink from '../helpers/titleLink';
 import blogListRemoveErrorAction from '../actions/ajaxErrors/blogListRemoveError';
 
 class BlogList extends Component {
@@ -53,7 +54,7 @@ class BlogList extends Component {
         else if(posts.length > 0) {
             let children = posts.map((post) => {
                 
-                let titleLink = post.title.toLowerCase().replace(/\s/g, '_');
+                let titleLink = makeLink(post.title);
                 let isRemoveError = blogListRemoveError.ids.some((errorId) => { console.log(errorId, post.id); return errorId === post.id;}); 
                 console.log(blogListRemoveError.ids);
                 let postControls;

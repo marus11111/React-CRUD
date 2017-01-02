@@ -36,7 +36,6 @@ class Comments extends Component {
         let usersEqual = ciCompare(authorizedUser,linkUser);
         let children;
         
-        console.log(fetchingCommentsError);
         if (!Array.isArray(comments)){
             if (comments === 'pending') {
                 children = null;
@@ -77,7 +76,7 @@ class Comments extends Component {
                 )
             });
         }
-        console.log(comments);
+
         return (
             <div>
                 {commentCreationError &&

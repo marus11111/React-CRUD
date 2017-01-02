@@ -6,13 +6,14 @@ import ajaxRequest from '../helpers/ajaxRequest';
 import createPost from '../actions/ajaxSuccess/createPost';
 import variousErrors from '../actions/ajaxErrors/variousErrors';
 import protect from '../HOC/protectedComponent.jsx';
+import RichTextMarkdown from './RichTextMarkdown';
 
 class CreatePost extends Component {
     constructor(props) {
         super(props);
         this.submitHandler = this.submitHandler.bind(this);
     }
-    
+ 
     submitHandler(event){
         event.preventDefault();
         let {title, body, ajaxRequest, createPost, variousErrors, router, params: {user}} = this.props;
@@ -34,8 +35,8 @@ class CreatePost extends Component {
         return ( 
             <div>
                 <form onSubmit={this.submitHandler}>
-                    <Field component='input' type='text' name='title'/>
-                    <Field component='textarea' name='body'/>
+                    <Field component={RichTextMarkdown} name='title'/>
+                    <Field component={RichTextMarkdown} name='body'/>
                     <button type='submit'>Create post</button>
                 </form>
             </div>
@@ -49,7 +50,8 @@ const selector = formValueSelector('createPost');
 const mapStateToProps = (state) => {
     return {
         title: selector(state, 'title'),
-        body: selector(state, 'body')
+        body: selector(state, 'body'),
+        rte: selector(state, 'rte')
     }
 }
 

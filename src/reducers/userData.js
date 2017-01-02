@@ -36,7 +36,7 @@ export default (state = {posts: 'pending', editedPost: {}, comments: 'pending'},
             for (let i=0; i<posts.length; i++) {
                 let {title, body, id} = posts[i];
                 if (action.id == id){
-                    return {...state, editedPost: {title, body}};
+                    return {...state, editedPost: {title, body, id}};
                 }
             }
         } 
