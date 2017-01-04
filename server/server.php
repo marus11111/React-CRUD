@@ -138,49 +138,55 @@ else {
 ////CREATE, EDIT AND REMOVE POSTS////
 ///////////////////////////////////////
 
-if ($reqType == 'createPost') {
+if ($reqType == 'createPost' || $reqType == 'editPost'){
     
-    //get necessary data
-    $authorId = $_COOKIE['id'];
+    //get data from request
     $title = mysqli_real_escape_string($link, $_POST['title']);
     $body = mysqli_real_escape_string($link, $_POST['body']);
-    
-    //insert post to database
-    $query = "INSERT INTO posts (author_id, title, body) VALUES ('$authorId','$title','$body')";
-    $insert = mysqli_query($link, $query);
-    
-    //set msg depending on whether post was successfully inserted or not
-    if($insert) {
-        //get id of inserted post
-        $postId = mysqli_insert_id($link);
-        
-        //set response
-        $msg = array(
-            success => 'Post created.',
-            postId => $postId
-        );
+    preg_match('/(([^\s]+\s*){1,30})/', $body, $snippet);
+    $snippet = $snippet[0];
+
+    if ($reqType == 'createPost') {
+
+        //get author id and set time
+        $authorId = $_COOKIE['id'];
+        $time = time();
+
+        //insert post to database
+        $query = "INSERT INTO posts (author_id, title, body, snippet, timestamp) VALUES ('$authorId','$title','$body', '$snippet', '$time')";
+        $insert = mysqli_query($link, $query);
+
+        //set msg depending on whether post was successfully inserted or not
+        if($insert) {
+            //get id of inserted post
+            $postId = mysqli_insert_id($link);
+
+            //set response
+            $msg = array(
+                success => 'Post created.',
+                postId => $postId
+            );
+        }
+        else {
+            $msg['error'] = 'An error occured. Please try again.';
+        }
     }
-    else {
-        $msg['error'] = 'An error occured. Please try again.';
-    }
-}
-else if ($reqType == 'editPost') {
-    
-    //get necessary data from request
-    $postId = $_POST['postId'];
-    $title = mysqli_real_escape_string($link, $_POST['title']);
-    $body = mysqli_real_escape_string($link, $_POST['body']);
-    
-    //edit post
-    $query = "UPDATE posts SET title = '$title', body = '$body' WHERE id = '$postId' LIMIT 1";
-    $result = mysqli_query($link, $query);
-    
-    //set msg depending on whether post was successfully updated in DB or not
-    if ($result) {
-        $msg['success'] = 'Post edited successfully.';
-    }
-    else {
-        $msg['error'] = 'An error occured. Please try again.';
+    else if ($reqType == 'editPost') {
+
+        //get post id
+        $postId = $_POST['postId'];
+
+        //edit post
+        $query = "UPDATE posts SET title = '$title', body = '$body', snippet = '$snippet' WHERE id = '$postId' LIMIT 1";
+        $result = mysqli_query($link, $query);
+
+        //set msg depending on whether post was successfully updated in DB or not
+        if ($result) {
+            $msg['success'] = 'Post edited successfully.';
+        }
+        else {
+            $msg['error'] = 'An error occured. Please try again.';
+        }
     }
 }
 else if ($reqType == 'removePost') {
@@ -392,7 +398,7 @@ if ($reqType == 'fetchUserData') {
         $msg['userData']['imageUrl'] = $imageUrl;
         
         $userId = $result['id'];
-        $query = "SELECT title, body, id FROM posts WHERE author_id = '$userId'";
+        $query = "SELECT title, body, snippet, timestamp, id FROM posts WHERE author_id = '$userId'";
         $result = mysqli_query($link, $query);
         
         if (gettype($result) != object) {

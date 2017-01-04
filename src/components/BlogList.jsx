@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
+import marked from 'marked';
 import ciCompare from '../helpers/ciCompare';
 import makeLink from '../helpers/titleLink';
+import formatDate from '../helpers/formatDate';
 import blogListRemoveErrorAction from '../actions/ajaxErrors/blogListRemoveError';
 
 class BlogList extends Component {
@@ -54,9 +56,11 @@ class BlogList extends Component {
         else if(posts.length > 0) {
             let children = posts.map((post) => {
                 
+                let cleanTitle = DOMPurify.sanitize(post.title);
+                let cleanSnippet = DOMPurify.sanitize(post.snippet);
                 let titleLink = makeLink(post.title);
-                let isRemoveError = blogListRemoveError.ids.some((errorId) => { console.log(errorId, post.id); return errorId === post.id;}); 
-                console.log(blogListRemoveError.ids);
+                let isRemoveError = blogListRemoveError.ids.some((errorId) => errorId === post.id);
+                let date = formatDate(post.timestamp, 'post');
                 let postControls;
                 
                 return (
@@ -69,7 +73,11 @@ class BlogList extends Component {
                         {isRemoveError &&
                             <p>{blogListRemoveError.error}</p>
                         }
-                        <Link className='nav-link' to={`/${user}/${post.id}/${titleLink}`} onClick={this.stopPropagation}>{post.title}</Link>
+                        <time dateTime={date.iso}>{date.display}</time>
+                        <Link className='nav-link' 
+                              to={`/${user}/${post.id}/${titleLink}`} 
+                              onClick={this.stopPropagation} 
+                              dangerouslySetInnerHTML={{__html: marked(cleanTitle, {sanitize: true})}}/>
                         {usersEqual &&
                             <div className='hidden-controls' ref={div => postControls = div} onClick={this.stopPropagation}>
                                 <Link className='btn btn-primary btn-sm' to={`/${user}/${post.id}/${titleLink}/edit`}>
@@ -80,6 +88,7 @@ class BlogList extends Component {
                                 </button>
                             </div>
                         }
+                        <p dangerouslySetInnerHTML={{__html: marked(cleanSnippet, {sanitize: true})}}/>
                     </li>
                 )
             });

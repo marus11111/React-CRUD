@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {reduxForm, Field, formValueSelector} from 'redux-form';
 import {Link} from 'react-router';
 import ajaxRequest from '../helpers/ajaxRequest';
+import formatDate from '../helpers/formatDate';
 import commentCreationErrorAction from '../actions/ajaxErrors/commentCreationError';
 import commentRemoveErrorAction from '../actions/ajaxErrors/commentRemoveError';
 import displayCreatedComment from '../actions/ajaxSuccess/displayCreatedComment';
@@ -50,18 +51,15 @@ class Comments extends Component {
         else {
             children = comments.map(comment => {
                 let {author, timestamp, body, id} = comment;
-                let months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-                let date = new Date(timestamp * 1000);
-                let minutes = `0${date.getMinutes()}`
-                date = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()} ${date.getHours()}:${minutes.substr(-2)}`;
-                
+                let date = formatDate(timestamp, 'comment');
                 let isRemoveError = commentRemoveError.ids.some((errorId) => errorId === id);
+                
                 return (
                     <li key={id}>
                         {isRemoveError &&
                             <p>{commentRemoveError.error}</p>
                         }
-                        <time>{date}</time>
+                        <time dateTime={date.iso}>{date.display}</time>
                         {author &&
                             <Link to={`/${author}`}>{author}</Link>
                         }

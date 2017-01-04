@@ -1,11 +1,12 @@
 import removeMarkdown from 'remove-markdown';
 
 export default (title) => {
+    console.log(title);
     let linkString = removeMarkdown(title, {
-        stripListLeaders: false,
-        gfm: false})
+        stripListLeaders: true,
+        gfm: true})
     .toLowerCase()
     .replace(/\s/g, '_');
-    console.log(linkString);
+
     return linkString;
 }

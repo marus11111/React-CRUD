@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import marked from 'marked';
 import Comments from './Comments.jsx';
 import ajaxRequest from '../helpers/ajaxRequest';
+import formatDate from '../helpers/formatDate';
 import loadComments from '../actions/ajaxSuccess/loadComments';
 import fetchingCommentsError from '../actions/ajaxErrors/fetchingCommentsError';
-import marked from 'marked';
 
 class PostView extends Component {
     constructor(props) {
@@ -23,15 +24,18 @@ class PostView extends Component {
     }
     
     render() {
-        let post, cleanTitle, cleanBody;
+        let post, cleanTitle, cleanBody, date;
         let {posts, params: {user, postId}} = this.props;
+        
         
         if (Array.isArray(posts)) {
             for (let i = 0; i < posts.length; i++) {
                 if (posts[i].id == postId) {
                     post = posts[i];
-                    cleanTitle = DOMPurify.sanitize(post.title);
-                    cleanBody = DOMPurify.sanitize(post.body);
+                    let {title, body, timestamp} = post;
+                    cleanTitle = DOMPurify.sanitize(title);
+                    cleanBody = DOMPurify.sanitize(body);
+                    date = formatDate(timestamp, 'post');
                     break;
                 }
             }  
@@ -41,8 +45,9 @@ class PostView extends Component {
             <div>
                 {post &&
                     <div>
-                        <h1 dangerouslySetInnerHTML={{__html: marked(post.title, {sanitize: true})}}/>
-                        <p dangerouslySetInnerHTML={{__html: marked(post.body, {sanitize: true})}}/>
+                        <time dateTime={date.iso}>{date.display}</time>
+                        <h1 dangerouslySetInnerHTML={{__html: marked(cleanTitle, {sanitize: true})}}/>
+                        <p dangerouslySetInnerHTML={{__html: marked(cleanBody, {sanitize: true})}}/>
                         <Comments postId={post.id} linkUser={user}/>
                     </div>
                 }

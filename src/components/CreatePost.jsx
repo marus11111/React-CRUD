@@ -17,14 +17,17 @@ class CreatePost extends Component {
     submitHandler(event){
         event.preventDefault();
         let {title, body, ajaxRequest, createPost, variousErrors, router, params: {user}} = this.props;
+        title = title.trim();
+        body = body.trim();
         
         if(!title || !body) {
             variousErrors('Post must contain title and body.');
         }
         else {
-            ajaxRequest('post', `createPost`, {title, body})
+            ajaxRequest('post', `createPost`, {title, body, snippet})
             .then(res => {
-                createPost({title, body, id: res.postId});
+                let {snippet, timestamp, postId} = res;
+                createPost({title, body, snippet, timestamp, id: postId});
                 router.push(`/${user}`);
             })
             .catch(res => variousErrors(res.error));
