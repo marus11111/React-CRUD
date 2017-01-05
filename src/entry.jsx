@@ -4,11 +4,14 @@ import React from 'react';
 import {render} from 'react-dom';
 import {createStore, combineReducers, applyMiddleware} from 'redux';
 import {Provider} from 'react-redux';
-import {Router, Route, IndexRoute, hashHistory} from 'react-router';
+import {Router, Route, IndexRoute} from 'react-router';
+import { createHistory, useBasename } from 'history';
 import {reducer as formReducer, Field} from 'redux-form';
 import RichTextEditor from 'react-rte';
 import authorizationReducer from './reducers/authorization';
-import userDataReducer from './reducers/userData';
+import imageReducer from './reducers/image';
+import postsReducer from './reducers/posts';
+import commentsReducer from './reducers/comments';
 import hamburgerMenuReducer from './reducers/hamburgerMenu';
 import errorsReducer from './reducers/errors';
 import thunk from 'redux-thunk';
@@ -27,7 +30,9 @@ window.RichTextEditor = RichTextEditor;
 
 const reducers = combineReducers({
     auth: authorizationReducer,
-    userData: userDataReducer,
+    image: imageReducer,
+    posts: postsReducer,
+    comments: commentsReducer,
     hamburgerMenu: hamburgerMenuReducer,
     errors: errorsReducer,
     form: formReducer
@@ -35,7 +40,11 @@ const reducers = combineReducers({
 
 const store = createStore(reducers, applyMiddleware(thunk));
 
-hashHistory.listen(() => {
+const browserHistory = useBasename(createHistory)({
+   // basename: '/project2'
+});
+
+browserHistory.listen(() => {
     store.dispatch(clearErrors());
     store.dispatch(isMenuOpen(false));
 });
@@ -49,21 +58,20 @@ window.addEventListener('resize', () => {
     }, 500);
 });
 
-//check cookies and start rendering after it's done
+//check cookies 
 store.dispatch(ajaxRequest('post', 'cookieAuth'))
-.then(() => {
-    render(
-        <Provider store={store}>
-            <Router history={hashHistory}>
-                <Route path='/' component={Authorization}/>
-                <Route path='/:user' component={User}>
-                    <IndexRoute component={BlogList} />
-                    <Route path=':postId/:titleLink' component={PostView} />
-                    <Route path=':postId/:titleLink/edit' protection='redirect' component={EditPost} />
-                    <Route path='create' protection='redirect' component={CreatePost} />
-                </Route>
-            </Router>
-        </Provider>,
-       document.getElementById('root')
-     );
-})
+
+render(
+    <Provider store={store}>
+        <Router history={browserHistory}>
+            <Route path='/' component={Authorization}/>
+            <Route path='/:user' component={User}>
+                <IndexRoute component={BlogList} />
+                <Route path=':postId/:titleLink' component={PostView} />
+                <Route path=':postId/:titleLink/edit' protection='redirect' component={EditPost} />
+                <Route path='create' protection='redirect' component={CreatePost} />
+            </Route>
+        </Router>
+    </Provider>,
+    root       
+ );

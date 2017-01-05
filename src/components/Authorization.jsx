@@ -1,3 +1,5 @@
+//component that displays sign in and sign up forms
+
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router';
@@ -9,11 +11,13 @@ import activateSignUp from '../actions/authorization/activateSignUp';
 
 class Authorization extends React.Component { 
     
+    //if user is logged in, redirect him to his page
     componentDidMount(){        
         let {authorizedUser, router} = this.props;
         authorizedUser ? router.push(`${authorizedUser}`) : null;
     }
     
+    //after user signs in/up, redirect him to his page
     componentWillReceiveProps(nextProps){
         let {authorizedUser, router} = nextProps;
         authorizedUser ? router.push(`${authorizedUser}`) : null;
@@ -21,6 +25,12 @@ class Authorization extends React.Component {
     
     render (){ 
         let {activeForm, activateSignIn, activateSignUp} = this.props;
+        
+        //prevent component showing for fraction of a second before redirecting if user is logged in
+        if(this.props.cookieAuth) {
+            return null;
+        }
+        
         return (
             <div className='container'>
                 <div className='row row-center'>
@@ -35,12 +45,14 @@ class Authorization extends React.Component {
     }
 } 
 
+//makes router available in component's props
 Authorization = withRouter(Authorization);
 
 const mapStateToProps = (state) => {
     return {
         authorizedUser: state.auth.authorizedUser,
-        activeForm: state.auth.activeForm
+        activeForm: state.auth.activeForm,
+        cookieAuth: state.auth.cookieAuth
     }
 }
 

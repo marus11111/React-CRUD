@@ -17,16 +17,22 @@ class CreatePost extends Component {
     submitHandler(event){
         event.preventDefault();
         let {title, body, ajaxRequest, createPost, variousErrors, router, params: {user}} = this.props;
-        title = title.trim();
-        body = body.trim();
+        let titleText, bodyText;
         
-        if(!title || !body) {
+        //strip html tegs and spaces from string to see if there is any text
+        if (title && body){
+            titleText = title.replace(/((<\/?[^>]+(>|$))|(&nbsp;))/g, "");
+            bodyText = body.replace(/((<\/?[^>]+(>|$))|(&nbsp;))/g, ""); 
+        }
+        
+        if(!titleText || !bodyText) {
             variousErrors('Post must contain title and body.');
         }
         else {
-            ajaxRequest('post', `createPost`, {title, body, snippet})
+            ajaxRequest('post', `createPost`, {title, body})
             .then(res => {
                 let {snippet, timestamp, postId} = res;
+                snippet = snippet.replace(/(\r\n)/g, '<br />');
                 createPost({title, body, snippet, timestamp, id: postId});
                 router.push(`/${user}`);
             })
@@ -53,8 +59,7 @@ const selector = formValueSelector('createPost');
 const mapStateToProps = (state) => {
     return {
         title: selector(state, 'title'),
-        body: selector(state, 'body'),
-        rte: selector(state, 'rte')
+        body: selector(state, 'body')
     }
 }
 

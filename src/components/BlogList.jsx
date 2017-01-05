@@ -1,3 +1,5 @@
+//displays list of posts written by the user
+
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
@@ -10,11 +12,16 @@ import blogListRemoveErrorAction from '../actions/ajaxErrors/blogListRemoveError
 class BlogList extends Component {
     constructor(props) {
         super(props);
+        
+        //variable that will store timeout for hiding edit and remove buttons
         this.controlsTimeout;
     }
     
-    
+    //show edit and remove buttons
     showControls = (element) => {
+        
+        //clear timeout so that buttons arent hidden if less than
+        //one second ago function hideContols was called
         clearTimeout(this.controlsTimeout);
         element.style.visibility = 'visible';
         element.style.opacity = 1;
@@ -63,6 +70,8 @@ class BlogList extends Component {
                 let date = formatDate(post.timestamp, 'post');
                 let postControls;
                 
+                console.log(cleanSnippet);
+                
                 return (
                     <li className='list-group-item' 
                         key={post.id} 
@@ -77,9 +86,9 @@ class BlogList extends Component {
                         <Link className='nav-link' 
                               to={`/${user}/${post.id}/${titleLink}`} 
                               onClick={this.stopPropagation} 
-                              dangerouslySetInnerHTML={{__html: marked(cleanTitle, {sanitize: true})}}/>
+                              dangerouslySetInnerHTML={{__html: cleanTitle}}/>
                         {usersEqual &&
-                            <div className='hidden-controls' ref={div => postControls = div} onClick={this.stopPropagation}>
+                            <div className='hidden-controls' ref={div => postControls = div} onClick={this.stopPropagation}>  
                                 <Link className='btn btn-primary btn-sm' to={`/${user}/${post.id}/${titleLink}/edit`}>
                                     <span className='glyphicon glyphicon-edit'></span>
                                 </Link>
@@ -88,7 +97,7 @@ class BlogList extends Component {
                                 </button>
                             </div>
                         }
-                        <p dangerouslySetInnerHTML={{__html: marked(cleanSnippet, {sanitize: true})}}/>
+                        <p dangerouslySetInnerHTML={{__html: cleanSnippet}}/>
                     </li>
                 )
             });

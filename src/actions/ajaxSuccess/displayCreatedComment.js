@@ -1,9 +1,8 @@
-export default (author, timestamp, body, id) => {
+//adds created comment to array on client side so that it's immidiately displayed
+
+export default (comment) => {
     return {
         type: 'DISPLAY_CREATED_COMMENT',
-        author,
-        timestamp,
-        body,
-        id
+        comment
     }
 }

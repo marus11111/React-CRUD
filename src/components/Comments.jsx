@@ -21,7 +21,7 @@ class Comments extends Component {
         }
         else {
             ajaxRequest('post', `createComment`, {body, postId, author})
-            .then(res => displayCreatedComment(author, res.timestamp, body, res.id))
+            .then(res => dislayCreatedComment({author, timestamp: res.timestamp, body, id: res.id}))
             .catch(res => commentCreationErrorAction(res.error)); // opisać że catch w react 'połyka' błędy 
         }
     }

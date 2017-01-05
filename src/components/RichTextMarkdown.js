@@ -7,24 +7,26 @@ class RichTextMarkdown extends Component {
   }
     
  componentDidMount() {
+     console.log(this.props.initialVal);
     this.RichTextEditor = window.RichTextEditor
         this.setState({
-          value: this.props.initialVal ? this.RichTextEditor.createValueFromString(this.props.initialVal, 'markdown') :
+          value: this.props.initialVal ? this.RichTextEditor.createValueFromString(this.props.initialVal, 'html') :
             this.RichTextEditor.createEmptyValue()
         }) 
   }
     
   componentWillReceiveProps(nextProps) {
+      console.log(nextProps.initialVal);
     if (nextProps.initialVal  && this.props.initialVal !== nextProps.initialVal){
         this.setState({
-          value: this.RichTextEditor.createValueFromString(nextProps.initialVal, 'markdown')
+          value: this.RichTextEditor.createValueFromString(nextProps.initialVal, 'html')
         }) 
     }
   }
 
   handleChange = value => {
     this.setState({ value })
-    let markdown = value.toString('markdown')
+    let markdown = value.toString('html')
     if(markdown.length === 2 && markdown.charCodeAt(0) === 8203 && markdown.charCodeAt(1) === 10) {
       markdown = ''
     }

@@ -15,7 +15,12 @@ class EditPost extends Component {
         super(props);
         this.submitHandler = this.submitHandler.bind(this);
     }
-        
+    
+    componentDidMount() {
+        let {setEditedPost, params: {postId}} = this.props;
+        setEditedPost(postId);
+    }
+    
     componentWillReceiveProps(nextProps){
         let {posts, editedPost, setEditedPost, params: {postId}} = nextProps;
         if ((!this.props.editedPost.id || this.props.editedPost.id !== postId) && posts.length > 0){
@@ -25,15 +30,15 @@ class EditPost extends Component {
     
     submitHandler(event){
         event.preventDefault();
-        let {title, body, ajaxRequest, editPost, setEditedPost, variousErrors, router, params: {user, postId}} = this.props;
+        let {title, body, ajaxRequest, editPost, editedPost: {timestamp}, setEditedPost, variousErrors, router, params: {user, postId}} = this.props;
         
         if(!title || !body) {
             variousErrors('Post must contain title and body.');
         }
         else {
             ajaxRequest('post', `editPost`, {postId, title, body})
-            .then(() => {
-                editPost(postId, title, body);
+            .then((res) => {
+                editPost({id: postId, title, body, snippet: res.snippet, timestamp});
                 setEditedPost(postId);
                 let titleLink = makeLink(title);
                 router.push(`/${user}/${postId}/${titleLink}`);
@@ -44,7 +49,7 @@ class EditPost extends Component {
     
     render(){
         let {title, body} = this.props.editedPost;
-        
+        console.log(title, body);
         return ( 
             <div>
                 <form onSubmit={this.submitHandler}>

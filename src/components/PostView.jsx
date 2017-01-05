@@ -46,8 +46,8 @@ class PostView extends Component {
                 {post &&
                     <div>
                         <time dateTime={date.iso}>{date.display}</time>
-                        <h1 dangerouslySetInnerHTML={{__html: marked(cleanTitle, {sanitize: true})}}/>
-                        <p dangerouslySetInnerHTML={{__html: marked(cleanBody, {sanitize: true})}}/>
+                        <h1 dangerouslySetInnerHTML={{__html: cleanTitle}}/>
+                        <p dangerouslySetInnerHTML={{__html: cleanBody}}/>
                         <Comments postId={post.id} linkUser={user}/>
                     </div>
                 }

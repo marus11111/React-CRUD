@@ -6,6 +6,7 @@ require_once('cloudinary/Cloudinary.php');
 require_once('cloudinary/Uploader.php');
 require_once('cloudinary/Api.php');
 
+//check for errors with connection and character set and don't proceed if errors occur
 if (mysqli_connect_error()) {
     echo json_encode(array(error => 'Could not connect to database'));
     exit();
@@ -17,7 +18,7 @@ if (!mysqli_set_charset($link, 'utf8')) {
 } 
 
 //Get request type - sign in, sign up, cookie authorization, 
-//add post, edit post, remove post, load picture, add comment 
+//add post, edit post, remove post, load picture, add comment etc. 
 $reqType = $_POST['requestType'];
 
 //create array, that will contain response
@@ -63,7 +64,7 @@ else if ($reqType == 'signOut') {
 }
 
 //Sign up or sign in attempt
-else {
+else if ($reqType == 'signUp' || $reqType == 'signIn') {
     
     //Get username and password from request
     $providedUsername = mysqli_real_escape_string($link, $_POST['username']);
@@ -161,10 +162,12 @@ if ($reqType == 'createPost' || $reqType == 'editPost'){
             //get id of inserted post
             $postId = mysqli_insert_id($link);
 
-            //set response
+            //send id of post, snippet and timestamp
             $msg = array(
                 success => 'Post created.',
-                postId => $postId
+                postId => $postId,
+                snippet => $snippet,
+                timestamp => $time
             );
         }
         else {
@@ -182,7 +185,12 @@ if ($reqType == 'createPost' || $reqType == 'editPost'){
 
         //set msg depending on whether post was successfully updated in DB or not
         if ($result) {
-            $msg['success'] = 'Post edited successfully.';
+            
+            //send new snippet
+            $msg = array(
+                success => 'Post edited successfully.',
+                snippet => $snippet
+            );
         }
         else {
             $msg['error'] = 'An error occured. Please try again.';
@@ -213,17 +221,24 @@ else if ($reqType == 'removePost') {
 ///////////////////////////////////////
 
 if ($reqType == 'createComment') {
+    
+    //ge data from request and set time
     $postId = $_POST['postId'];
     $author = $_POST['author'];
     $time = time();
     $body = mysqli_real_escape_string($link, $_POST['body']);
     
+    //insert comment into database
     $query = "INSERT INTO comments (post_id, comment_author, timestamp, body) VALUES ('$postId','$author','$time', '$body')";
     $result = mysqli_query($link, $query);
     
+    //set msg depending on whether comment successfully deleted
     if ($result) {
+        
+        //get id of newly created comment
         $commentId = mysqli_insert_id($link);
         
+        //send id and timestamp
         $msg = array(
             success => 'Comment successfully added.',
             timestamp => $time,
@@ -235,27 +250,37 @@ if ($reqType == 'createComment') {
     }
 }
 else if ($reqType == 'fetchComments') {
+    
+    //get post id
     $postId = $_POST['postId'];
     
+    //select comments for given post
     $query = "SELECT comment_author AS author, timestamp, body, id FROM comments WHERE post_id = '$postId'";
     $result = mysqli_query($link, $query);
     
+    //set message
     if (gettype($result) != object) {
         $msg['error'] = 'Error while trying to retrieve comments from database.';
     }
     else {
         $msg['success'] = 'Comments successfully fetched.';
+        
+        //send comments
         while ($row = mysqli_fetch_assoc($result)) {
             $msg['comments'][] = $row;
         }
     }
 }
 else if ($reqType == 'removeComment') {
+    
+    //get id of comment
     $commentId = $_POST['commentId'];
     
+    //remove comment
     $query = "DELETE FROM comments WHERE id = '$commentId' LIMIT 1";
     $result = mysqli_query($link, $query);
     
+    //notify whether comment was removed successfully
     if ($result) {
         $msg['success'] = 'Comment successfully removed.';
     }
@@ -381,10 +406,15 @@ if ($reqType == 'removeImage' || $reqType == 'imageUpload') {
 /////////////////////////////
 
 if ($reqType == 'fetchUserData') {
+    
+    //get provided username
     $user = mysqli_real_escape_string($link, $_POST['user']);
-        
+    
+    //check id=f user exists in database
     $query = "SELECT username, id, img_url FROM users WHERE username COLLATE utf8_polish_ci = '$user' LIMIT 1";
     $result = mysqli_fetch_array(mysqli_query($link, $query));
+    
+    //send error if no data found for provided user, else send data
     if (!$result) {
         $msg['error'] = "Could not retrieve data for user '$user'.";
     }
@@ -394,13 +424,16 @@ if ($reqType == 'fetchUserData') {
             userData => array()
         );
         
+        //send image url
         $imageUrl = $result['img_url'];
         $msg['userData']['imageUrl'] = $imageUrl;
         
+        //get posts written by the user
         $userId = $result['id'];
         $query = "SELECT title, body, snippet, timestamp, id FROM posts WHERE author_id = '$userId'";
         $result = mysqli_query($link, $query);
         
+        //add posts to message or send error if they couldn't be retrieved
         if (gettype($result) != object) {
             $msg['postsError'] = 'Error occured while trying to retrieve posts from database.';
         }

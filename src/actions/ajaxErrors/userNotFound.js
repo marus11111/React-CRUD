@@ -1,5 +1,4 @@
-//sets error that informs user that data for the user he's trying to access
-//couldn't be found
+//sets error that informs user that data for the user he's trying to access couldn't be found
 
 export default (error) => {
     return {
