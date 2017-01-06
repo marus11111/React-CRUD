@@ -8,11 +8,11 @@ const loadPosts = (posts) => {
     }
 }
 
-//sets fetched posts for user that is currently being displayed 
-const image = (imageUrl) => {
+//sets url of image to be diplayed 
+const image = (url) => {
     return {
         type: 'IMAGE',
-        imageUrl
+        url
     }
 }
 
@@ -49,25 +49,15 @@ const noUserData = (error) => {
     }
 }
 
-
-const url = '/project2/server.php';
-
-export default (method, requestType, optionalData) => {
+export default (options) => {
     return dispatch => {
-    
-            let formData = new FormData();
-            let data = {requestType, ...optionalData};
-            for (let key in data) {
-                if (data.hasOwnProperty(key)){
-                    formData.append(key, data[key]);
-                }
-            }
+        
+        let base = '/project2/server/';
+        let url = options.user ? 
+            `${base}${options.user}` :
+            `${base}comments/${options.postId}`;
 
-        axios({
-            method,
-            url, 
-            data: formData 
-        })
+        axios.get(url)
         .then(res => {
             res = res.data;
             if (res.userData) {
@@ -81,35 +71,10 @@ export default (method, requestType, optionalData) => {
                 dispatch(fetchingPostsError(res.postsError));
             }
             else if (res.error) {
-                requestType === 'fetchComments' ? 
-                    dispatch(fetchingCommentsError(res.error)) :
-                    dispatch(noUserData(res.error));
+                options.user ? 
+                    dispatch(noUserData(res.error)) :
+                    dispatch(fetchingCommentsError(res.error));
             }
         })
     }
 }
-
-
-
-/* 
-ostatecznie to bedzie po prostu get url
-trudnością będzie tylko wyciągnięcie odpowiedniego url
-export default (optionalData) => {
-    return dispatch => {
-
-        axios.get(url)
-        .then(res => {
-            res = res.data;
-            if (res.authorize) {
-                dispatch(authorize(res.user));
-            }
-            else if (res.deauthorize) {
-                dispatch(deauthorize());
-            }
-            else if (res.error) {
-                dispatch(signInError(res.error));
-            }
-        }) 
-    }
-}
-*/

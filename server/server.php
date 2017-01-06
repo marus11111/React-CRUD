@@ -1,10 +1,15 @@
 <?php
-require_once('CryptoLib.php');
-require_once('tokens.php');
 require_once('link.php');
-require_once('cloudinary/Cloudinary.php');
-require_once('cloudinary/Uploader.php');
-require_once('cloudinary/Api.php');
+require_once('Cloudinary/Cloudinary.php');
+require_once('Cloudinary/Uploader.php');
+require_once('Cloudinary/Api.php');
+require_once('composer/vendor/autoload.php');
+
+require_once('RequestHandlers/Authorization.php');
+require_once('RequestHandlers/FetchData.php');
+//require_once('RequestHandlers/InsertData.php');
+//require_once('RequestHandlers/DeleteData.php');
+//require_once('RequestHandlers/UpdateData.php');
 
 //check for errors with connection and character set and don't proceed if errors occur
 if (mysqli_connect_error()) {
@@ -17,63 +22,71 @@ if (!mysqli_set_charset($link, 'utf8')) {
     exit();
 } 
 
+
+//create array, that will contain response
+$msg = array();
+
+$dispatcher = \FastRoute\simpleDispatcher(function(\FastRoute\RouteCollector $r) {
+    $r->addRoute('GET', '{user}', ['FetchData', 'userData']);
+    $r->addRoute('GET', 'comments/{postId}', ['FetchData', 'comments']);
+    $r->addRoute('POST', 'cookie', ['Authorization', 'cookieAuth']);
+    $r->addRoute('POST', 'sign-in', ['Authorization', 'signIn']);
+    $r->addRoute('POST', 'sign-out', ['Authorization', 'signOut']);
+});
+
+
+$method = $_SERVER['REQUEST_METHOD'];
+$uri = $_SERVER['REQUEST_URI'];
+$base = '/project2/server/';
+$uri = str_replace($base, '', $uri);
+
+$routeInfo = $dispatcher->dispatch($method, $uri);
+
+switch ($routeInfo[0]) {
+    case \FastRoute\Dispatcher::NOT_FOUND:
+        // ... 404 Not Found
+    case \FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
+        $allowedMethods = $routeInfo[1];
+    case \FastRoute\Dispatcher::FOUND:
+        $className = $routeInfo[1][0];
+        $handler = $routeInfo[1][1];
+        $params = $routeInfo[2];
+        
+        $class = new $className;
+        $class->$handler($msg, $link, $params);
+}
+
+
+
+
+
+
+
+
+
+
+
 //Get request type - sign in, sign up, cookie authorization, 
 //add post, edit post, remove post, load picture, add comment etc. 
 $reqType = $_POST['requestType'];
 
-//create array, that will contain response
-$msg = array();
+
 
 
 /////////////////
 //AUTHORIZATION//
 /////////////////
 
-//Authorize with cookie
-if ($reqType == 'cookieAuth') {
-    $id = $_COOKIE['id'];
-    $token = $_COOKIE['token'];
-    
-    if (!$id || !$token) {
-        $msg['deauthorize'] = 'Invalid cookie or no cookie provided.';
-    }
-    else if(!isTokenValid($link, $id, $token)){
-        $msg['deauthorize'] = 'Invalid token provided.';
-    }
-    else {
-        $query = "SELECT username FROM users WHERE id = '$id' LIMIT 1";
-        $resultArray = mysqli_fetch_assoc(mysqli_query($link, $query));
-        $user = $resultArray['username'];
-        
-        $msg = array(
-            authorize => 'Token is valid.',
-            user => $user
-        );
-    }
-}
 
-//Sign out
-else if ($reqType == 'signOut') {
-    
-    //delete cookies
-    setcookie('id', '', 1);
-    setcookie('token', '', 1);
-    
-    //information to send to client
-    $msg['deauthorize'] = 'Cookies unset.';
-}
 
 //Sign up or sign in attempt
-else if ($reqType == 'signUp' || $reqType == 'signIn') {
+if ($reqType == 'signUp' || $reqType == 'signIn') {
     
-    //Get username and password from request
-    $providedUsername = mysqli_real_escape_string($link, $_POST['username']);
-    $providedPassword = mysqli_real_escape_string($link, $_POST['password']);
     
     //Sign up attempt    
     if ($reqType == 'signUp') {
         
-        //When signing up, perform case insesitive search. 
+        //When signing up, perform case insensitive search. 
         $query = "SELECT username FROM users WHERE username COLLATE utf8_polish_ci ='$providedUsername' LIMIT 1";
         $result = mysqli_query($link, $query);
         
@@ -106,32 +119,6 @@ else if ($reqType == 'signUp' || $reqType == 'signIn') {
             }
         }
     }
-
-    else if ($reqType == 'signIn') {
-        
-        //When signing in, perform default (case sesitive) search. 
-        $query = "SELECT username, password, id FROM users WHERE username = '$providedUsername' LIMIT 1";
-        $result = mysqli_query($link, $query);
-
-        //Get password stored in DB and compare with provided
-        $userData = mysqli_fetch_assoc($result);
-        $isPasswordCorrect = CryptoLib::validateHash($userData['password'], $providedPassword);
-        
-        //Error if no user or password incorrect, else generate token and send success msg
-        if(!mysqli_num_rows($result) || !$isPasswordCorrect) {
-            $msg['error'] = 'Incorrect username or password.';
-        }
-        else {
-            
-            //generates new token and sets cookie everytime user logins
-            generateToken($link, $userData['id']);
-            
-            $msg = array(
-                authorize => 'You are now signed in.',
-                user => $providedUsername
-            );
-        }
-    } 
 }
 
 
@@ -249,28 +236,7 @@ if ($reqType == 'createComment') {
         $msg['error'] = 'An error occured. Please try again.';
     }
 }
-else if ($reqType == 'fetchComments') {
-    
-    //get post id
-    $postId = $_POST['postId'];
-    
-    //select comments for given post
-    $query = "SELECT comment_author AS author, timestamp, body, id FROM comments WHERE post_id = '$postId'";
-    $result = mysqli_query($link, $query);
-    
-    //set message
-    if (gettype($result) != object) {
-        $msg['error'] = 'Error while trying to retrieve comments from database.';
-    }
-    else {
-        $msg['success'] = 'Comments successfully fetched.';
-        
-        //send comments
-        while ($row = mysqli_fetch_assoc($result)) {
-            $msg['comments'][] = $row;
-        }
-    }
-}
+
 else if ($reqType == 'removeComment') {
     
     //get id of comment
@@ -401,49 +367,6 @@ if ($reqType == 'removeImage' || $reqType == 'imageUpload') {
     }
 }
 
-/////////////////////////////
-////FETCH IMAGE AND POSTS////
-/////////////////////////////
-
-if ($reqType == 'fetchUserData') {
-    
-    //get provided username
-    $user = mysqli_real_escape_string($link, $_POST['user']);
-    
-    //check id=f user exists in database
-    $query = "SELECT username, id, img_url FROM users WHERE username COLLATE utf8_polish_ci = '$user' LIMIT 1";
-    $result = mysqli_fetch_array(mysqli_query($link, $query));
-    
-    //send error if no data found for provided user, else send data
-    if (!$result) {
-        $msg['error'] = "Could not retrieve data for user '$user'.";
-    }
-    else {
-        $msg = array(
-            success => true,
-            userData => array()
-        );
-        
-        //send image url
-        $imageUrl = $result['img_url'];
-        $msg['userData']['imageUrl'] = $imageUrl;
-        
-        //get posts written by the user
-        $userId = $result['id'];
-        $query = "SELECT title, body, snippet, timestamp, id FROM posts WHERE author_id = '$userId'";
-        $result = mysqli_query($link, $query);
-        
-        //add posts to message or send error if they couldn't be retrieved
-        if (gettype($result) != object) {
-            $msg['postsError'] = 'Error occured while trying to retrieve posts from database.';
-        }
-        else {
-            while ($row = mysqli_fetch_assoc($result)) {
-                $msg['userData']['posts'][] = $row;
-            } 
-        }   
-    }
-}
 
 echo json_encode($msg, JSON_UNESCAPED_UNICODE);
 

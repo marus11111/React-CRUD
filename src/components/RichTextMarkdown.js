@@ -7,7 +7,6 @@ class RichTextMarkdown extends Component {
   }
     
  componentDidMount() {
-     console.log(this.props.initialVal);
     this.RichTextEditor = window.RichTextEditor
         this.setState({
           value: this.props.initialVal ? this.RichTextEditor.createValueFromString(this.props.initialVal, 'html') :
@@ -16,7 +15,6 @@ class RichTextMarkdown extends Component {
   }
     
   componentWillReceiveProps(nextProps) {
-      console.log(nextProps.initialVal);
     if (nextProps.initialVal  && this.props.initialVal !== nextProps.initialVal){
         this.setState({
           value: this.RichTextEditor.createValueFromString(nextProps.initialVal, 'html')

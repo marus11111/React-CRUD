@@ -24,18 +24,18 @@ const displayImage = (imageUrl) => {
 
 
 
-const url = '/project2/server.php';
+const url = '/project2/server/server.php';
 
 export default (method, requestType, optionalData) => {
     return dispatch => {
     
-            let formData = new FormData();
-            let data = {requestType, ...optionalData};
-            for (let key in data) {
-                if (data.hasOwnProperty(key)){
-                    formData.append(key, data[key]);
-                }
+        let formData = new FormData();
+        let data = {requestType, ...optionalData};
+        for (let key in data) {
+            if (data.hasOwnProperty(key)){
+                formData.append(key, data[key]);
             }
+        }
 
         axios({
             method,

@@ -47,7 +47,7 @@ const routerMidd = routerMiddleware(browserHistory);
 const store = createStore(reducers, applyMiddleware(thunk, routerMidd));
 
 //check cookies
-store.dispatch(authorizationAction('post', 'cookieAuth'));
+store.dispatch(authorizationAction('cookie'));
 
 
 store.dispatch(setWidth(window.innerWidth));

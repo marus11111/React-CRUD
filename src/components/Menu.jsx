@@ -9,7 +9,7 @@ class Menu extends Component {
        
     signOut = (e) => {
         e.preventDefault();
-        this.props.authorization('post', 'signOut');
+        this.props.authorization('signOut');
     }
     
     hamburgerToggle = () => {

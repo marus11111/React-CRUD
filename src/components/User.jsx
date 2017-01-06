@@ -17,7 +17,7 @@ class User extends Component {
         
         this.fetchDataFromLink = (currentProps, nextProps) => {
             let {user} = nextProps ? nextProps.params : currentProps.params;
-            currentProps.fetchData('post', 'fetchUserData', {user});
+            currentProps.fetchData({user});
         }      
         this.fetchDataFromLink(props);
     }
@@ -143,7 +143,7 @@ class User extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        imageUrl: state.image.imageUrl,
+        imageUrl: state.image.url,
         imageLoading: state.image.imageLoading,
         userError: state.errors.userError,
         error: state.errors.error,

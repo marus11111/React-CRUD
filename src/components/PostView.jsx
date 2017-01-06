@@ -8,7 +8,7 @@ class PostView extends Component {
     
     componentDidMount() {
         let {fetchData, params: {postId}} = this.props;
-        fetchData('post', 'fetchComments', {postId});
+        fetchData({postId});
     }
     
     render() {

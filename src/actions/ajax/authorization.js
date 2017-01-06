@@ -35,58 +35,31 @@ const signInError = (error) => {
     }
 }
 
-
-
-
-const url = '/project2/server.php';
-
-export default (method, requestType, optionalData) => {
+export default (type, data) => {
     return dispatch => {
-    
-            let formData = new FormData();
-            let data = {requestType, ...optionalData};
-            for (let key in data) {
-                if (data.hasOwnProperty(key)){
-                    formData.append(key, data[key]);
-                }
-            }
-
-        axios({
-            method,
-            url, 
-            data: formData 
-        })
-        .then(res => {
-            res = res.data;
-            if (res.authorize) {
-                dispatch(authorize(res.user));
-            }
-            else if (res.deauthorize) {
-                dispatch(deauthorize());
-            }
-            else if (res.error) {
-                dispatch(signInError(res.error));
-            }
-        })
         
-        /*
-        docelowo tak ma wyglądać ta funkcja
+        let base = '/project2/server/';
+        let url;
         let formData;
         
-        if(!optionalData) {
-            dispatch(ongoingCookieAuth(true));
-        }
-        else {
-            formData = new FormData();
-            let data = optionalData;
-            for (let key in data) {
-                if (data.hasOwnProperty(key)){
-                    formData.append(key, data[key]);
+        switch (type) {
+            case 'cookie':
+                url = `${base}cookie`;
+                break;
+            case 'signIn':
+                url = `${base}sign-in`;
+                formData = new FormData();
+                for (let key in data) {
+                    if (data.hasOwnProperty(key)){
+                        formData.append(key, data[key]);
+                    }
                 }
-            }
+                break;
+            case 'signOut':
+                url = `${base}sign-out`;
         }
 
-        axios.post(url, formData ? formData : null)
+        axios.post(url, formData)
         .then(res => {
             res = res.data;
             if (res.authorize) {
@@ -98,7 +71,6 @@ export default (method, requestType, optionalData) => {
             else if (res.error) {
                 dispatch(signInError(res.error));
             }
-            !optionalData ? dispatch(ongoingCookieAuth(false)) : null;
-        }) */
+        })
     }
 }

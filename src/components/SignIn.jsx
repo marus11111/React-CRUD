@@ -9,7 +9,7 @@ class SignIn extends Component {
     submitHandler = (event) => {
         event.preventDefault();
         let {username, password, authorization} = this.props;
-        authorization('post', 'signIn', {username, password});
+        authorization('signIn', {username, password});
     }
     
     render(){

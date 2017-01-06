@@ -38,24 +38,15 @@ const signUpError = (error) => {
 
 export {commentCreationError};
 
-const url = '/project2/server.php';
+const url = '/project2/server/server.php';
 
 export default (method, requestType, optionalData) => {
     return dispatch => {
     
-            let formData = new FormData();
-            let data = {requestType, ...optionalData};
-            for (let key in data) {
-                if (data.hasOwnProperty(key)){
-                    formData.append(key, data[key]);
-                }
-            }
+        let data = {requestType, ...optionalData};
+        data = JSON.stringify(data);
 
-        axios({
-            method,
-            url, 
-            data: formData 
-        })
+        axios.post(url, data)
         .then(res => {
             res = res.data;
             if (res.success) {
