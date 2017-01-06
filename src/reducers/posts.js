@@ -1,7 +1,7 @@
 import findIndex from 'core-js/fn/array/find-index';
 import find from 'core-js/fn/array/find';
 
-export default (state = {posts: []}, action) => {
+export default (state = {posts: [], postBeingEdited: {}}, action) => {
     let {posts} = state;
     switch (action.type){
         case 'LOAD_POSTS':

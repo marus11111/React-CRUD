@@ -1,23 +1,15 @@
 import React, {Component} from 'react';
 import {Field, reduxForm, formValueSelector} from 'redux-form';
 import {connect} from 'react-redux';
-import ajaxRequest from '../helpers/ajaxRequest';
-import signInErrorAction from '../actions/ajaxErrors/signInError';
-
-
+import authorization from '../actions/ajax/authorization';
 
 
 class SignIn extends Component {
-    constructor(props) {
-        super(props);
-        this.submitHandler = this.submitHandler.bind(this);
-    }
     
-    submitHandler(event){
+    submitHandler = (event) => {
         event.preventDefault();
-        let {username, password, ajaxRequest} = this.props;
-        ajaxRequest('post', 'signIn', {username, password})
-        .catch(res => this.props.signInErrorAction(res.error));
+        let {username, password, authorization} = this.props;
+        authorization('post', 'signIn', {username, password});
     }
     
     render(){
@@ -50,6 +42,6 @@ const mapStateToProps = (state) => {
         signInError: state.errors.signInError
     } 
 }
-SignIn = connect(mapStateToProps, {ajaxRequest, signInErrorAction})(SignIn);
+SignIn = connect(mapStateToProps, {authorization})(SignIn);
 
 export default SignIn;

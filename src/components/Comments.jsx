@@ -2,34 +2,27 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {reduxForm, Field, formValueSelector} from 'redux-form';
 import {Link} from 'react-router';
-import ajaxRequest from '../helpers/ajaxRequest';
+import create, {commentCreationError as commentCreationErrorAction} from '../actions/ajax/create';
+import remove from '../actions/ajax/remove';
 import formatDate from '../helpers/formatDate';
-import commentCreationErrorAction from '../actions/ajaxErrors/commentCreationError';
-import commentRemoveErrorAction from '../actions/ajaxErrors/commentRemoveError';
-import displayCreatedComment from '../actions/ajaxSuccess/displayCreatedComment';
-import removeCommentAction from '../actions/ajaxSuccess/removeComment';
 import ciCompare from '../helpers/ciCompare';
 
 class Comments extends Component {
 
     submitHandler = (event) => {
         event.preventDefault();
-        let {body, postId, authorizedUser, ajaxRequest, displayCreatedComment, commentCreationErrorAction} = this.props;
+        let {body, postId, authorizedUser, create, commentCreationErrorAction} = this.props;
         let author = authorizedUser ? authorizedUser : '';
         if(!body) {
             commentCreationErrorAction('Comment must contain some text.');
         }
         else {
-            ajaxRequest('post', `createComment`, {body, postId, author})
-            .then(res => dislayCreatedComment({author, timestamp: res.timestamp, body, id: res.id}))
-            .catch(res => commentCreationErrorAction(res.error)); // opisać że catch w react 'połyka' błędy 
+            create('post', `createComment`, {body, postId, author});
         }
     }
     
     removeComment = (commentId) => {
-        this.props.ajaxRequest('post', 'removeComment', {commentId})
-        .then(() => this.props.removeCommentAction(commentId))
-        .catch(res => this.props.commentRemoveErrorAction(res.error, commentId));
+        this.props.remove('post', 'removeComment', {commentId});
     }
     
     render() {
@@ -99,12 +92,12 @@ let mapStateToProps = (state) => {
         commentCreationError: state.errors.commentCreationError,
         commentRemoveError: state.errors.commentRemoveError,
         fetchingCommentsError: state.errors.fetchingCommentsError,
-        comments: state.userData.comments,
+        comments: state.comments.comments,
         authorizedUser: state.auth.authorizedUser
     }
 }
 
-Comments = connect(mapStateToProps, {ajaxRequest, commentCreationErrorAction, displayCreatedComment, removeCommentAction, commentRemoveErrorAction})(Comments);
+Comments = connect(mapStateToProps, {create, commentCreationErrorAction, remove})(Comments);
 Comments = reduxForm ({form: 'addComment'})(Comments);
 
 export default Comments;

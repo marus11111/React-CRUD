@@ -1,19 +1,15 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Link, withRouter} from 'react-router';
-import ajaxRequest from '../helpers/ajaxRequest';
+import authorization from '../actions/ajax/authorization';
 import ciCompare from '../helpers/ciCompare';
 import isMenuOpenAction from '../actions/isMenuOpen';
 
 class Menu extends Component {
-    constructor(props) {
-        super(props);
-        this.signOut = this.signOut.bind(this);
-    }
-    
-    signOut(e) {
+       
+    signOut = (e) => {
         e.preventDefault();
-        this.props.ajaxRequest('post', 'signOut');
+        this.props.authorization('post', 'signOut');
     }
     
     hamburgerToggle = () => {
@@ -103,4 +99,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps, {ajaxRequest, isMenuOpenAction})(withRouter(Menu));
+export default connect(mapStateToProps, {authorization, isMenuOpenAction})(withRouter(Menu));

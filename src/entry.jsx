@@ -5,7 +5,8 @@ import {render} from 'react-dom';
 import {createStore, combineReducers, applyMiddleware} from 'redux';
 import {Provider} from 'react-redux';
 import {Router, Route, IndexRoute} from 'react-router';
-import { createHistory, useBasename } from 'history';
+import {createHistory, useBasename } from 'history';
+import {routerMiddleware} from 'react-router-redux';
 import {reducer as formReducer, Field} from 'redux-form';
 import RichTextEditor from 'react-rte';
 import authorizationReducer from './reducers/authorization';
@@ -21,12 +22,12 @@ import BlogList from './components/BlogList.jsx';
 import PostView from './components/PostView.jsx';
 import CreatePost from './components/CreatePost.jsx';
 import EditPost from './components/EditPost.jsx';
-import ajaxRequest from './helpers/ajaxRequest';
-import clearErrors from './actions/ajaxErrors/clearErrors';
+import authorizationAction from './actions/ajax/authorization';
+import clearErrors from './actions/clearErrors';
 import setWidth from './actions/setWidth';
 import isMenuOpen from './actions/isMenuOpen';
 
-window.RichTextEditor = RichTextEditor;
+window.RichTextEditor = RichTextEditor; //spróbowc zmienić
 
 const reducers = combineReducers({
     auth: authorizationReducer,
@@ -38,28 +39,30 @@ const reducers = combineReducers({
     form: formReducer
 });
 
-const store = createStore(reducers, applyMiddleware(thunk));
-
 const browserHistory = useBasename(createHistory)({
    // basename: '/project2'
+});
+
+const routerMidd = routerMiddleware(browserHistory);
+const store = createStore(reducers, applyMiddleware(thunk, routerMidd));
+
+//check cookies
+store.dispatch(authorizationAction('post', 'cookieAuth'));
+
+
+store.dispatch(setWidth(window.innerWidth));
+let resizeTimeout;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+        store.dispatch(setWidth(window.innerWidth));
+    }, 500);
 });
 
 browserHistory.listen(() => {
     store.dispatch(clearErrors());
     store.dispatch(isMenuOpen(false));
 });
-
-store.dispatch(setWidth(window.innerWidth));
-let resizeDebounce;
-window.addEventListener('resize', () => {
-    clearTimeout(resizeDebounce);
-    resizeDebounce = setTimeout(() => {
-        store.dispatch(setWidth(window.innerWidth));
-    }, 500);
-});
-
-//check cookies 
-store.dispatch(ajaxRequest('post', 'cookieAuth'))
 
 render(
     <Provider store={store}>

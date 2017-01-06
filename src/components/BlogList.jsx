@@ -7,7 +7,6 @@ import marked from 'marked';
 import ciCompare from '../helpers/ciCompare';
 import makeLink from '../helpers/titleLink';
 import formatDate from '../helpers/formatDate';
-import blogListRemoveErrorAction from '../actions/ajaxErrors/blogListRemoveError';
 
 class BlogList extends Component {
     constructor(props) {
@@ -45,8 +44,10 @@ class BlogList extends Component {
     render() {
         let {posts, removePost, authorizedUser, fetchingPostsError, blogListRemoveError, params: {user}} = this.props;
         let usersEqual = ciCompare(authorizedUser, user);
+        
+        console.log(posts);
 
-        if (!Array.isArray(posts)) {
+        if (posts.length === 0) {
             if (posts === 'pending') {
                 return null;
             }
@@ -56,7 +57,7 @@ class BlogList extends Component {
             else if (!posts && usersEqual) {
                 return <p>You haven't written any posts yet.</p>;
             }
-            else if (!posts) {
+            else  {
                 return <p>No posts found.</p>;
             }
         }
@@ -118,7 +119,7 @@ class BlogList extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        posts: state.userData.posts,
+        posts: state.posts.posts,
         fetchingPostsError: state.errors.fetchingPostsError,
         blogListRemoveError: state.errors.blogListRemoveError,
         authorizedUser: state.auth.authorizedUser

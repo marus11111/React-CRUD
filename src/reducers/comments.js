@@ -14,7 +14,7 @@ export default (state = {comments: []}, action) => {
             }
         case 'REMOVE_COMMENT': {
             let {comments} = state;
-            let removeIndex = comments.find((comment) => {
+            let removeIndex = comments.findIndex((comment) => {
                 return action.id === comment.id;
             });
             let before = comments.slice(0, removeIndex);

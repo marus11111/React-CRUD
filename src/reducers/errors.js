@@ -9,14 +9,14 @@ export default (state = {
             return {...state, signInError: error};
         case 'SIGN_UP_ERROR':
             return {...state, signUpError: error};
-        case 'USER_NOT_FOUND':
+        case 'NO_USER_DATA':
             return {...state, userError: error};
         case 'COMMENT_CREATION_ERROR':
             return {...state, commentCreationError: error};
         case 'COMMENT_REMOVE_ERROR':
             return {...state, 
                     commentRemoveError: {error, 
-                                         ids: [...state.commentRemoveError.ids, action.id] // opisać co było jak tutaj było ids.push - nie można mieszać w jednej exspresji ... z push, bo babel zaczyna przerabiać całe expression
+                                         ids: [...state.commentRemoveError.ids, action.id] 
                                         }
                    };
         case 'FETCHING_COMMENTS_ERROR':

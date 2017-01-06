@@ -5,8 +5,8 @@ import {connect} from 'react-redux';
 import {withRouter} from 'react-router';
 import SignIn from './SignIn.jsx';
 import SignUp from './SignUp.jsx';
-import activateSignIn from '../actions/authorization/activateSignIn';
-import activateSignUp from '../actions/authorization/activateSignUp';
+import activateSignIn from '../actions/activateSignIn';
+import activateSignUp from '../actions/activateSignUp';
 
 
 class Authorization extends React.Component { 
@@ -52,7 +52,7 @@ const mapStateToProps = (state) => {
     return {
         authorizedUser: state.auth.authorizedUser,
         activeForm: state.auth.activeForm,
-        cookieAuth: state.auth.cookieAuth
+        ongoingCookieAuth: state.auth.ongoingCookieAuth
     }
 }
 

@@ -1,17 +1,11 @@
 import React, {Component} from 'react';
-import {Link, withRouter} from 'react-router';
+import {Link} from 'react-router';
 import {connect} from 'react-redux';
-import ajaxRequest from '../helpers/ajaxRequest';
-import loadUserData from '../actions/ajaxSuccess/loadUserData';
 import clearUserData from '../actions/clearUserData';
-import userNotFound from '../actions/ajaxErrors/userNotFound';
-import variousErrors from '../actions/ajaxErrors/variousErrors';
-import fetchingPostsError from '../actions/ajaxErrors/fetchingPostsError';
-import blogListRemoveError from '../actions/ajaxErrors/blogListRemoveError';
-import displayImage from '../actions/ajaxSuccess/displayImage';
-import imageLoadingAction from '../actions/imageLoading';
-import removeImageAction from '../actions/ajaxSuccess/removeImage';
-import removePostAction from '../actions/ajaxSuccess/removePost';
+import variousErrors from '../actions/ajax/variousErrors';
+import fetchData from '../actions/ajax/fetchData';
+import update from '../actions/ajax/update';
+import remove from '../actions/ajax/remove';
 import Menu from './Menu.jsx';
 import Dropzone from 'react-dropzone';
 import ciCompare from '../helpers/ciCompare';
@@ -19,25 +13,12 @@ import ciCompare from '../helpers/ciCompare';
 class User extends Component { 
     constructor(props){
         super(props);
+        this.controlsTimeout;
         
         this.fetchDataFromLink = (currentProps, nextProps) => {
             let {user} = nextProps ? nextProps.params : currentProps.params;
-            let {ajaxRequest, loadUserData, fetchingPostsError, userNotFound} = currentProps;
-            ajaxRequest('post', 'fetchUserData', {user})
-            .then(res => {
-                loadUserData(res.userData);
-                res.postsError ? fetchingPostsError(res.postsError) : null;
-            })
-            .catch(res => currentProps.userNotFound(res.error));
+            currentProps.fetchData('post', 'fetchUserData', {user});
         }      
-        this.showControls = this.showControls.bind(this);
-        this.hideControls = this.hideControls.bind(this);
-        this.toggleControls = this.toggleControls.bind(this);
-        this.controlsTimeout;
-        this.uploadImage = this.uploadImage.bind(this);
-        this.removeImage = this.removeImage.bind(this);
-        this.removePost = this.removePost.bind(this);
-        
         this.fetchDataFromLink(props);
     }
     
@@ -51,25 +32,25 @@ class User extends Component {
         this.props.clearUserData();
     }
     
-    showControls() {
+    showControls = () => {
         clearTimeout(this.controlsTimeout);
         this.imageControls.style.visibility = 'visible';
         this.imageControls.style.opacity = 1;
     }
     
-    hideControls() {
+    hideControls = () => {
         this.imageControls.style.opacity = 0;
         this.controlsTimeout = setTimeout(() => {
             this.imageControls.style.visibility = 'hidden';
         }, 1000)
     }
     
-    toggleControls() {
+    toggleControls = () => {
         this.imageControls.style.visibility == 'hidden' ? this.showControls() : this.hideControls();
     }
     
-    uploadImage(images) {
-        let {ajaxRequest, imageLoadingAction, displayImage, variousErrors} = this.props;
+    uploadImage = (images) => {
+        let {update, variousErrors} = this.props;
         const upload_preset = 'jyju7fnq';
         let file = images[0];
         
@@ -77,40 +58,17 @@ class User extends Component {
             variousErrors('Maximum file size is 500 kB.');
         }
         else {
-            imageLoadingAction(true);
-            ajaxRequest('post', 'imageUpload', {upload_preset, file})
-            .then(res => displayImage(res.imageUrl))
-            .catch(res => {
-                imageLoadingAction(false);
-                variousErrors(res.error); 
-            });
+            update('post', 'imageUpload', {upload_preset, file});
         }
     }
     
-    removeImage(e) {
+    removeImage = (e) => {
         e.stopPropagation();
-        let {ajaxRequest, removeImageAction, imageLoadingAction, variousErrors} = this.props;
-        
-        imageLoadingAction(true);
-        ajaxRequest('post', 'removeImage')
-        .then(() => removeImageAction())
-        .catch(res => {
-            imageLoadingAction(false);
-            variousErrors(res.error); 
-        });
+        this.props.remove('post', 'removeImage');
     }
     
-    removePost(postId, from) {
-        let {ajaxRequest, removePostAction, blogListRemoveError, variousErrors, router} = this.props;
-        let errorHandler;
-        from === 'list' ? errorHandler = blogListRemoveError :
-                          errorHandler = variousErrors;
-        ajaxRequest('post', 'removePost', {postId})
-        .then(() => {
-            removePostAction(postId); 
-            from === 'menu' ? router.push('/') : null;
-        })
-        .catch(res => errorHandler(res.error, postId));
+    removePost = (postId, from) => {
+        this.props.remove('post', 'removePost', {postId, from});
     }
     
     render() {
@@ -185,14 +143,12 @@ class User extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        imageUrl: state.userData.imageUrl,
+        imageUrl: state.image.imageUrl,
+        imageLoading: state.image.imageLoading,
         userError: state.errors.userError,
         error: state.errors.error,
-        authorizedUser: state.auth.authorizedUser,
-        imageLoading: state.userData.imageLoading
+        authorizedUser: state.auth.authorizedUser
     }
 }
 
-User = withRouter(User);
-
-export default connect(mapStateToProps, {ajaxRequest, loadUserData, clearUserData, userNotFound, fetchingPostsError, displayImage, imageLoadingAction, variousErrors, blogListRemoveError, removeImageAction, removePostAction})(User);
+export default connect(mapStateToProps, {fetchData, update, remove, clearUserData, variousErrors})(User);

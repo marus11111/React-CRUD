@@ -1,26 +1,14 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import marked from 'marked';
 import Comments from './Comments.jsx';
-import ajaxRequest from '../helpers/ajaxRequest';
+import fetchData from '../actions/ajax/fetchData';
 import formatDate from '../helpers/formatDate';
-import loadComments from '../actions/ajaxSuccess/loadComments';
-import fetchingCommentsError from '../actions/ajaxErrors/fetchingCommentsError';
 
 class PostView extends Component {
-    constructor(props) {
-        super(props);
-        this.RichTextEditor = window.RichTextEditor;
-    }
     
     componentDidMount() {
-        let {ajaxRequest, loadComments, fetchingCommentsError, params: {postId}} = this.props;
-        ajaxRequest('post', 'fetchComments', {postId})
-        .then(res => loadComments(res.comments))
-        .catch(res => {
-            fetchingCommentsError(res.error);
-            loadComments(res.comments); //undefined - in order to chane pending status and inform app that it' not pending anymore
-        });
+        let {fetchData, params: {postId}} = this.props;
+        fetchData('post', 'fetchComments', {postId});
     }
     
     render() {
@@ -63,8 +51,8 @@ class PostView extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        posts: state.userData.posts
+        posts: state.posts.posts
     }
 }
 
-export default connect(mapStateToProps, {ajaxRequest, loadComments, fetchingCommentsError})(PostView);
+export default connect(mapStateToProps, {fetchData})(PostView);

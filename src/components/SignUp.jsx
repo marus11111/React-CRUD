@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
 import {Field, reduxForm, formValueSelector} from 'redux-form';
 import {connect} from 'react-redux';
-import ajaxRequest from '../helpers/ajaxRequest';
-import signUpErrorAction from '../actions/ajaxErrors/signUpError';
+import create from '../actions/ajax/create';
 
 const validateUsername = value => {
     let errors = []
@@ -76,15 +75,10 @@ const customInput = ({input, meta: {touched, error}, type, placeholder, classNam
 }
 
 class SignUp extends Component {
-    constructor(props) {
-        super(props);
-        this.createUser = this.createUser.bind(this);
-    }
     
-    createUser(event){
-        let {username, password, ajaxRequest} = this.props;
-        ajaxRequest('post', 'signUp', {username, password})
-        .catch(res => this.props.signUpErrorAction(res.error));
+    createUser = (event) => {
+        let {username, password, create} = this.props;
+        create('post', 'signUp', {username, password});
     }
     
     render(){
@@ -118,6 +112,6 @@ const mapStateToProps = (state) => {
         signUpError: state.errors.signUpError
     } 
 }
-SignUp = connect(mapStateToProps, {ajaxRequest, signUpErrorAction})(SignUp);
+SignUp = connect(mapStateToProps, {create})(SignUp);
 
 export default SignUp;

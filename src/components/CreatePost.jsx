@@ -1,22 +1,16 @@
 import React, {Component} from 'react';
 import {Field, reduxForm, formValueSelector} from 'redux-form';
 import {connect} from 'react-redux';
-import {withRouter} from 'react-router';
-import ajaxRequest from '../helpers/ajaxRequest';
-import createPost from '../actions/ajaxSuccess/createPost';
-import variousErrors from '../actions/ajaxErrors/variousErrors';
+import create from '../actions/ajax/create';
+import variousErrors from '../actions/ajax/variousErrors';
 import protect from '../HOC/protectedComponent.jsx';
 import RichTextMarkdown from './RichTextMarkdown';
 
 class CreatePost extends Component {
-    constructor(props) {
-        super(props);
-        this.submitHandler = this.submitHandler.bind(this);
-    }
- 
-    submitHandler(event){
+     
+    submitHandler = (event) => {
         event.preventDefault();
-        let {title, body, ajaxRequest, createPost, variousErrors, router, params: {user}} = this.props;
+        let {title, body, create, variousErrors, params: {user}} = this.props;
         let titleText, bodyText;
         
         //strip html tegs and spaces from string to see if there is any text
@@ -29,14 +23,7 @@ class CreatePost extends Component {
             variousErrors('Post must contain title and body.');
         }
         else {
-            ajaxRequest('post', `createPost`, {title, body})
-            .then(res => {
-                let {snippet, timestamp, postId} = res;
-                snippet = snippet.replace(/(\r\n)/g, '<br />');
-                createPost({title, body, snippet, timestamp, id: postId});
-                router.push(`/${user}`);
-            })
-            .catch(res => variousErrors(res.error));
+            create('post', `createPost`, {title, body, user});
         }
     }
     
@@ -63,6 +50,6 @@ const mapStateToProps = (state) => {
     }
 }
 
-CreatePost = connect(mapStateToProps, {ajaxRequest, createPost, variousErrors})(CreatePost);
+CreatePost = connect(mapStateToProps, {create, variousErrors})(CreatePost);
 
-export default protect(withRouter(CreatePost));
+export default protect(CreatePost);
