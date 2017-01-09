@@ -35,35 +35,28 @@ const signInError = (error) => {
     }
 }
 
+export {authorize};
+
 export default (type, data) => {
     return dispatch => {
         
-        let base = '/project2/server/';
-        let url;
+        let url = `/project2/server/${type}`;
         let formData;
         
-        switch (type) {
-            case 'cookie':
-                url = `${base}cookie`;
-                break;
-            case 'signIn':
-                url = `${base}sign-in`;
-                formData = new FormData();
-                for (let key in data) {
-                    if (data.hasOwnProperty(key)){
-                        formData.append(key, data[key]);
-                    }
+        if (type === 'signIn') {
+            formData = new FormData();
+            for (let key in data) {
+                if (data.hasOwnProperty(key)){
+                    formData.append(key, data[key]);
                 }
-                break;
-            case 'signOut':
-                url = `${base}sign-out`;
+            }
         }
 
         axios.post(url, formData)
         .then(res => {
             res = res.data;
             if (res.authorize) {
-                dispatch(authorize(res.user));
+                dispatch(authorize(res.authorize));
             }
             else if (res.deauthorize) {
                 dispatch(deauthorize());

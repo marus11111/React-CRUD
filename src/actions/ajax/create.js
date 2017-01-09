@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {authorize} from './authorization';
 import variousErrors from './variousErrors';
 import {push} from 'react-router-redux';
 
@@ -38,31 +39,37 @@ const signUpError = (error) => {
 
 export {commentCreationError};
 
-const url = '/project2/server/server.php';
-
-export default (method, requestType, optionalData) => {
+export default (type, data) => {
     return dispatch => {
+        
+        let url = `/project2/server/${type}`;
     
-        let data = {requestType, ...optionalData};
-        data = JSON.stringify(data);
+        let formData = new FormData();
+        for (let key in data) {
+            if (data.hasOwnProperty(key)){
+                formData.append(key, data[key]);
+            }
+        }
 
-        axios.post(url, data)
+        axios.post(url,formData)
         .then(res => {
             res = res.data;
             if (res.success) {
-                switch (requestType) {
+                switch (type) {
                     case 'signUp':
-                        dispatch(authorize(res.user));
+                        dispatch(authorize(res.authorize));
+                        break;
                     case 'createPost': {
-                        let {title, body, user} = optionalData;
+                        let {title, body, user} = data;
                         let {snippet, timestamp, postId} = res;
                         snippet = snippet.replace(/(\r\n)/g, '<br />');
                         let newPost = {title, body, snippet, timestamp, id: postId};
                         dispatch(addPost(newPost));
                         dispatch(push(`/${user}`));
+                        break;
                     }               
                     case 'createComment': {
-                        let {author, body} = optionalData;
+                        let {author, body} = data;
                         let {timestamp, id} = res;
                         let newComment = {author, timestamp, body, id};
                         dispatch(addComment(newComment));
@@ -70,11 +77,13 @@ export default (method, requestType, optionalData) => {
                 }
             }
             else if (res.error) {
-                switch (requestType) {
+                switch (type) {
                     case 'signUp':
                         dispatch(signUpError(res.error));
+                        break;
                     case 'createPost':
                         dispatch(variousErrors(res.error));
+                        break;
                     case 'createComment':
                         dispatch(commentCreationError(res.error));
                 }

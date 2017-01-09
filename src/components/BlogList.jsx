@@ -44,8 +44,6 @@ class BlogList extends Component {
     render() {
         let {posts, removePost, authorizedUser, fetchingPostsError, blogListRemoveError, params: {user}} = this.props;
         let usersEqual = ciCompare(authorizedUser, user);
-        
-        console.log(posts);
 
         if (posts.length === 0) {
             if (posts === 'pending') {
@@ -70,8 +68,6 @@ class BlogList extends Component {
                 let isRemoveError = blogListRemoveError.ids.some((errorId) => errorId === post.id);
                 let date = formatDate(post.timestamp, 'post');
                 let postControls;
-                
-                console.log(cleanSnippet);
                 
                 return (
                     <li className='list-group-item' 

@@ -78,7 +78,7 @@ class SignUp extends Component {
     
     createUser = (event) => {
         let {username, password, create} = this.props;
-        create('post', 'signUp', {username, password});
+        create('signUp', {username, password});
     }
     
     render(){

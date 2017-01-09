@@ -23,7 +23,7 @@ class CreatePost extends Component {
             variousErrors('Post must contain title and body.');
         }
         else {
-            create('post', `createPost`, {title, body, user});
+            create(`createPost`, {title, body, user});
         }
     }
     

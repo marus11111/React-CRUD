@@ -21,8 +21,8 @@ class Authorization {
             $user = $resultArray['username'];
 
             $msg = array(
-                authorize => 'Token is valid.',
-                user => $user
+                success => 'Token is valid.',
+                authorize => $user
             );
         }   
     }
@@ -52,8 +52,8 @@ class Authorization {
             generateToken($link, $userData['id']);
             
             $msg = array(
-                authorize => 'You are now signed in.',
-                user => $providedUsername
+                success => 'You are now signed in.',
+                authorize => $providedUsername
             );
         }
     }

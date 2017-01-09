@@ -7,9 +7,9 @@ require_once('composer/vendor/autoload.php');
 
 require_once('RequestHandlers/Authorization.php');
 require_once('RequestHandlers/FetchData.php');
-//require_once('RequestHandlers/InsertData.php');
-//require_once('RequestHandlers/DeleteData.php');
-//require_once('RequestHandlers/UpdateData.php');
+require_once('RequestHandlers/Create.php');
+//require_once('RequestHandlers/Remove.php');
+//require_once('RequestHandlers/Update.php');
 
 //check for errors with connection and character set and don't proceed if errors occur
 if (mysqli_connect_error()) {
@@ -30,8 +30,11 @@ $dispatcher = \FastRoute\simpleDispatcher(function(\FastRoute\RouteCollector $r)
     $r->addRoute('GET', '{user}', ['FetchData', 'userData']);
     $r->addRoute('GET', 'comments/{postId}', ['FetchData', 'comments']);
     $r->addRoute('POST', 'cookie', ['Authorization', 'cookieAuth']);
-    $r->addRoute('POST', 'sign-in', ['Authorization', 'signIn']);
-    $r->addRoute('POST', 'sign-out', ['Authorization', 'signOut']);
+    $r->addRoute('POST', 'signIn', ['Authorization', 'signIn']);
+    $r->addRoute('POST', 'signOut', ['Authorization', 'signOut']);
+    $r->addRoute('POST', 'signUp', ['Create', 'signUp']);
+    $r->addRoute('POST', 'createPost', ['Create', 'createPost']);
+    $r->addRoute('POST', 'createComment', ['Create', 'createComment']);
 });
 
 
@@ -61,128 +64,38 @@ switch ($routeInfo[0]) {
 
 
 
-
-
-
-
-
-//Get request type - sign in, sign up, cookie authorization, 
-//add post, edit post, remove post, load picture, add comment etc. 
-$reqType = $_POST['requestType'];
-
-
-
-
-/////////////////
-//AUTHORIZATION//
-/////////////////
-
-
-
-//Sign up or sign in attempt
-if ($reqType == 'signUp' || $reqType == 'signIn') {
-    
-    
-    //Sign up attempt    
-    if ($reqType == 'signUp') {
-        
-        //When signing up, perform case insensitive search. 
-        $query = "SELECT username FROM users WHERE username COLLATE utf8_polish_ci ='$providedUsername' LIMIT 1";
-        $result = mysqli_query($link, $query);
-        
-        //If user exists, echo error, else hash password and create user
-        if(mysqli_num_rows($result)>0){
-            $msg['error'] = 'User already exist. Did you want to sign in?';            
-        }
-        else {
-            
-            $hashedPassword = CryptoLib::hash($providedPassword);
-
-            $query = "INSERT INTO users (username, password) VALUES ('$providedUsername', '$hashedPassword')";
-            $insert = mysqli_query($link, $query);
-            
-            //Check if user created, if not echo error, if yes generate token and send success msg
-            if(!$insert){
-                $msg['error'] = 'Could not create accunt. Please try again.';
-            }
-            else {
-                //Get id of new user - required to set cookie for user
-                $id = mysqli_insert_id($link);
-                                
-                //Generates token and creates cookie
-                generateToken($link, $id);
-                
-                $msg = array(
-                    authorize => 'Account successfully created.',
-                    user => $providedUsername
-                );
-            }
-        }
-    }
-}
-
-
 ///////////////////////////////////////
 ////CREATE, EDIT AND REMOVE POSTS////
 ///////////////////////////////////////
 
-if ($reqType == 'createPost' || $reqType == 'editPost'){
+if ($reqType == 'editPost'){
     
     //get data from request
     $title = mysqli_real_escape_string($link, $_POST['title']);
     $body = mysqli_real_escape_string($link, $_POST['body']);
     preg_match('/(([^\s]+\s*){1,30})/', $body, $snippet);
     $snippet = $snippet[0];
+    
+    //get post id
+    $postId = $_POST['postId'];
 
-    if ($reqType == 'createPost') {
+    //edit post
+    $query = "UPDATE posts SET title = '$title', body = '$body', snippet = '$snippet' WHERE id = '$postId' LIMIT 1";
+    $result = mysqli_query($link, $query);
 
-        //get author id and set time
-        $authorId = $_COOKIE['id'];
-        $time = time();
+    //set msg depending on whether post was successfully updated in DB or not
+    if ($result) {
 
-        //insert post to database
-        $query = "INSERT INTO posts (author_id, title, body, snippet, timestamp) VALUES ('$authorId','$title','$body', '$snippet', '$time')";
-        $insert = mysqli_query($link, $query);
-
-        //set msg depending on whether post was successfully inserted or not
-        if($insert) {
-            //get id of inserted post
-            $postId = mysqli_insert_id($link);
-
-            //send id of post, snippet and timestamp
-            $msg = array(
-                success => 'Post created.',
-                postId => $postId,
-                snippet => $snippet,
-                timestamp => $time
-            );
-        }
-        else {
-            $msg['error'] = 'An error occured. Please try again.';
-        }
+        //send new snippet
+        $msg = array(
+            success => 'Post edited successfully.',
+            snippet => $snippet
+        );
     }
-    else if ($reqType == 'editPost') {
-
-        //get post id
-        $postId = $_POST['postId'];
-
-        //edit post
-        $query = "UPDATE posts SET title = '$title', body = '$body', snippet = '$snippet' WHERE id = '$postId' LIMIT 1";
-        $result = mysqli_query($link, $query);
-
-        //set msg depending on whether post was successfully updated in DB or not
-        if ($result) {
-            
-            //send new snippet
-            $msg = array(
-                success => 'Post edited successfully.',
-                snippet => $snippet
-            );
-        }
-        else {
-            $msg['error'] = 'An error occured. Please try again.';
-        }
+    else {
+        $msg['error'] = 'An error occured. Please try again.';
     }
+
 }
 else if ($reqType == 'removePost') {
     
@@ -206,36 +119,6 @@ else if ($reqType == 'removePost') {
 ///////////////////////////////////////
 ///CREATE, FETCH AND REMOVE COMMENTS///
 ///////////////////////////////////////
-
-if ($reqType == 'createComment') {
-    
-    //ge data from request and set time
-    $postId = $_POST['postId'];
-    $author = $_POST['author'];
-    $time = time();
-    $body = mysqli_real_escape_string($link, $_POST['body']);
-    
-    //insert comment into database
-    $query = "INSERT INTO comments (post_id, comment_author, timestamp, body) VALUES ('$postId','$author','$time', '$body')";
-    $result = mysqli_query($link, $query);
-    
-    //set msg depending on whether comment successfully deleted
-    if ($result) {
-        
-        //get id of newly created comment
-        $commentId = mysqli_insert_id($link);
-        
-        //send id and timestamp
-        $msg = array(
-            success => 'Comment successfully added.',
-            timestamp => $time,
-            id => $commentId
-        );
-    }
-    else {
-        $msg['error'] = 'An error occured. Please try again.';
-    }
-}
 
 else if ($reqType == 'removeComment') {
     

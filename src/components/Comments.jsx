@@ -17,7 +17,7 @@ class Comments extends Component {
             commentCreationErrorAction('Comment must contain some text.');
         }
         else {
-            create('post', `createComment`, {body, postId, author});
+            create(`createComment`, {body, postId, author});
         }
     }
     
