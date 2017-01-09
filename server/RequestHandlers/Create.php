@@ -1,6 +1,6 @@
 <?php
 
-class InsertData {
+class Create {
     
     //sign up attempt
     public function signUp(&$msg, $link) {

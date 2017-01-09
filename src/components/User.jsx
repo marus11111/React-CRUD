@@ -64,11 +64,11 @@ class User extends Component {
     
     removeImage = (e) => {
         e.stopPropagation();
-        this.props.remove('post', 'removeImage');
+        this.props.remove('removeImage');
     }
     
-    removePost = (postId, from) => {
-        this.props.remove('post', 'removePost', {postId, from});
+    removePost = (id, from) => {
+        this.props.remove('removePost', {id, from});
     }
     
     render() {

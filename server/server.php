@@ -8,7 +8,7 @@ require_once('composer/vendor/autoload.php');
 require_once('RequestHandlers/Authorization.php');
 require_once('RequestHandlers/FetchData.php');
 require_once('RequestHandlers/Create.php');
-//require_once('RequestHandlers/Remove.php');
+require_once('RequestHandlers/Remove.php');
 //require_once('RequestHandlers/Update.php');
 
 //check for errors with connection and character set and don't proceed if errors occur
@@ -35,6 +35,9 @@ $dispatcher = \FastRoute\simpleDispatcher(function(\FastRoute\RouteCollector $r)
     $r->addRoute('POST', 'signUp', ['Create', 'signUp']);
     $r->addRoute('POST', 'createPost', ['Create', 'createPost']);
     $r->addRoute('POST', 'createComment', ['Create', 'createComment']);
+    $r->addRoute('DELETE', 'removePost/{postId}', ['Remove', 'removePost']);
+    $r->addRoute('DELETE', 'removeComment/{commentId}', ['Remove', 'removeComment']);
+    $r->addRoute('DELETE', 'removeImage', ['Remove', 'removeImage']);
 });
 
 
@@ -97,46 +100,6 @@ if ($reqType == 'editPost'){
     }
 
 }
-else if ($reqType == 'removePost') {
-    
-    //get id from request
-    $postId = $_POST['postId'];
-
-    //remove post
-    $query = "DELETE FROM posts WHERE id = '$postId' LIMIT 1";
-    $result = mysqli_query($link, $query);
-    
-    //set msg depending on whether post was successfully deleted
-    if ($result) {
-        $msg['success'] = 'Post removed.';
-    }
-    else {
-        $msg['error'] = 'An error occured. Please try again.';
-    }
-}
-
-
-///////////////////////////////////////
-///CREATE, FETCH AND REMOVE COMMENTS///
-///////////////////////////////////////
-
-else if ($reqType == 'removeComment') {
-    
-    //get id of comment
-    $commentId = $_POST['commentId'];
-    
-    //remove comment
-    $query = "DELETE FROM comments WHERE id = '$commentId' LIMIT 1";
-    $result = mysqli_query($link, $query);
-    
-    //notify whether comment was removed successfully
-    if ($result) {
-        $msg['success'] = 'Comment successfully removed.';
-    }
-    else {
-        $msg['error'] = 'An error occured while trying to remove comment. Please try again.';
-    }
-}
 
 
 /////////////////////////////
@@ -155,7 +118,7 @@ if ($reqType == 'removeImage' || $reqType == 'imageUpload') {
     ***REMOVED***
     ));
     
-    //create function that will remove image from cloudinary database
+    //function that will remove image from cloudinary database
     function removeCloudinaryImage($args) {
         
         //use data given as arguments to try to retrieve public id of image (stored in mysql), 
@@ -236,17 +199,7 @@ if ($reqType == 'removeImage' || $reqType == 'imageUpload') {
         } 
     }
     else if ($reqType == 'removeImage') {
-        $success = removeCloudinaryImage(array(
-            idOfUser => $userId,
-            linkToDB => $link,
-            removeFromDB => true    
-        ));
-        if ($success) {
-            $msg['success'] = 'Image successfully removed.';
-        }
-        else {
-            $msg['error'] = 'An error occured when trying to remove image from database.';
-        }
+        
     }
 }
 

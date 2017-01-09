@@ -21,8 +21,8 @@ class Comments extends Component {
         }
     }
     
-    removeComment = (commentId) => {
-        this.props.remove('post', 'removeComment', {commentId});
+    removeComment = (id) => {
+        this.props.remove('removeComment', {id});
     }
     
     render() {

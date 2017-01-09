@@ -45,45 +45,50 @@ const blogListRemoveError = (error, id) => {
 }
 
 
-
-
-const url = '/project2/server/server.php';
-
-export default (method, requestType, optionalData) => {
+export default (type, options) => {
     return dispatch => {
     
-        let data = {requestType, ...optionalData};
-        data = JSON.stringify(data);
+        const base = '/project2/server';
+        let url = options ? 
+            `${base}/${type}/${options.id}` :
+            `${base}/${type}`;
 
-        axios.post(url, data)
+        axios.delete(url)
         .then(res => {
             res = res.data;
             if (res.success) {
-                        console.log(requestType);
-                switch (requestType) {
-                    case 'removePost':
-                        let {postId, from} = optionalData;
-                        dispatch(removePost(postId));
+                switch (type) {
+                    case 'removePost': {
+                        let {id, from} = options;
+                        dispatch(removePost(id));
                         from === 'menu' ? dispatch(push('/')) : null;
+                        break;
+                    }
                     case 'removeImage':                
                         dispatch(removeImage());
-                    case 'removeComment':
-                        let {commentId} = optionalData;
-                        dispatch(removeComment(commentId));
+                        break;
+                    case 'removeComment': {
+                        let {id} = options;
+                        dispatch(removeComment(id));
+                    }
                 }
             }
             else if (res.error) {
-                switch (requestType) {
-                    case 'removePost':
-                        let {postId, from} = optionalData;
+                switch (type) {
+                    case 'removePost': {
+                        let {id, from} = options;
                         from === 'list' ? 
-                            dispatch(blogListRemoveError(res.error, postId)) : 
+                            dispatch(blogListRemoveError(res.error, id)) : 
                             dispatch(variousErrors(res.error));
+                        break;
+                    }
                     case 'removeImage':
                         dispatch(variousErrors(res.error));
-                    case 'removeComment':
-                        let {commentId} = optionalData;
-                        dispatch(commentRemoveError(res.error, commentId));
+                        break;
+                    case 'removeComment': {
+                        let {id} = options;
+                        dispatch(commentRemoveError(res.error, id));
+                    }
                 }
             }
         })
