@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Field, reduxForm, formValueSelector} from 'redux-form';
 import {connect} from 'react-redux';
-import create from '../actions/ajax/create';
+import createOrUpdate from '../actions/ajax/createOrUpdate';
 
 const validateUsername = value => {
     let errors = []
@@ -76,9 +76,9 @@ const customInput = ({input, meta: {touched, error}, type, placeholder, classNam
 
 class SignUp extends Component {
     
-    createUser = (event) => {
-        let {username, password, create} = this.props;
-        create('signUp', {username, password});
+    signUp = (event) => {
+        let {username, password, createOrUpdate} = this.props;
+        createOrUpdate('signUp', {username, password});
     }
     
     render(){
@@ -87,7 +87,7 @@ class SignUp extends Component {
                 <div className='row row-center'>
                     <p className='col-centered'>{this.props.signUpError}</p>
                 </div>
-                <form onSubmit={this.props.handleSubmit(this.createUser)} className='form-group'>
+                <form onSubmit={this.props.handleSubmit(this.signUp)} className='form-group'>
                     <div className='row row-center'>
                         <div className='col-xs-12 col-sm-6 col-md-5 col-lg-4 col-centered'>
                             <Field component={customInput} name='username' type='text' placeholder='Username' className='form-control' validate={[validateUsername]}/>
@@ -112,6 +112,6 @@ const mapStateToProps = (state) => {
         signUpError: state.errors.signUpError
     } 
 }
-SignUp = connect(mapStateToProps, {create})(SignUp);
+SignUp = connect(mapStateToProps, {createOrUpdate})(SignUp);
 
 export default SignUp;

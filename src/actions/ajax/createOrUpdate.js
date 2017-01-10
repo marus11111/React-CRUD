@@ -1,6 +1,9 @@
 import axios from 'axios';
 import {authorize} from './authorization';
 import variousErrors from './variousErrors';
+import setEditedPost from '../setEditedPost';
+import setImage from '../setImage';
+import makeLink from '../../helpers/titleLink';
 import {push} from 'react-router-redux';
 
 
@@ -12,6 +15,14 @@ const addPost = (postObject) => {
     }
 }
 
+//modifies edited post on client side so that the changes are immediatelly visible
+const editPost = (post) => {
+    return {
+        type: 'EDIT_POST',
+        post
+    }
+}
+
 //adds created comment to array on client side so that it's immidiately displayed
 const addComment = (comment) => {
     return {
@@ -19,6 +30,7 @@ const addComment = (comment) => {
         comment
     }
 }
+
 
 //sets errors to be displayed by Comments component
 const commentCreationError = (error) => {
@@ -67,13 +79,27 @@ export default (type, data) => {
                         dispatch(addPost(newPost));
                         dispatch(push(`/${user}`));
                         break;
-                    }               
+                    }   
+                    case 'editPost': {
+                        let {title, body, postId, timestamp, user} = data;
+                        let {snippet} = res;
+                        let modifiedPost = {title, body, snippet, timestamp, id: postId};
+                        dispatch(editPost(modifiedPost));
+                        dispatch(setEditedPost(postId));
+                        let titleLink = makeLink(title);
+                        dispatch(push(`/${user}/${postId}/${titleLink}`));
+                        break;
+                    }
                     case 'createComment': {
                         let {author, body} = data;
                         let {timestamp, id} = res;
                         let newComment = {author, timestamp, body, id};
                         dispatch(addComment(newComment));
+                        break;
                     }
+                    case 'imageUpload':
+                        console.log(type);
+                        dispatch(setImage(res.imageUrl));
                 }
             }
             else if (res.error) {
@@ -82,6 +108,8 @@ export default (type, data) => {
                         dispatch(signUpError(res.error));
                         break;
                     case 'createPost':
+                    case 'editPost':
+                    case 'uploadImage':
                         dispatch(variousErrors(res.error));
                         break;
                     case 'createComment':

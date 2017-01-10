@@ -1,5 +1,6 @@
 import axios from 'axios';
 import variousErrors from './variousErrors';
+import setImage from '../setImage';
 import {push} from 'react-router-redux';
 
 
@@ -8,13 +9,6 @@ const removePost = (id) => {
     return {
         type: 'REMOVE_POST',
         id
-    }
-}
-
-//removes image on client side so that effec is immediate
-const removeImage = () => {
-    return {
-        type: 'REMOVE_IMAGE'
     }
 }
 
@@ -65,7 +59,7 @@ export default (type, options) => {
                         break;
                     }
                     case 'removeImage':                
-                        dispatch(removeImage());
+                        dispatch(setImage(null));
                         break;
                     case 'removeComment': {
                         let {id} = options;

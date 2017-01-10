@@ -1,6 +1,6 @@
 export default (state = {}, action) => {
     switch (action.type){
-        case 'IMAGE':
+        case 'SET_IMAGE':
             return {...state, 
                     url: action.url 
                    };

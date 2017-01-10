@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {reduxForm, Field, formValueSelector} from 'redux-form';
 import {Link} from 'react-router';
-import create, {commentCreationError as commentCreationErrorAction} from '../actions/ajax/create';
+import createOrUpdate, {commentCreationError as commentCreationErrorAction} from '../actions/ajax/createOrUpdate';
 import remove from '../actions/ajax/remove';
 import formatDate from '../helpers/formatDate';
 import ciCompare from '../helpers/ciCompare';
@@ -11,13 +11,13 @@ class Comments extends Component {
 
     submitHandler = (event) => {
         event.preventDefault();
-        let {body, postId, authorizedUser, create, commentCreationErrorAction} = this.props;
+        let {body, postId, authorizedUser, createOrUpdate, commentCreationErrorAction} = this.props;
         let author = authorizedUser ? authorizedUser : '';
         if(!body) {
             commentCreationErrorAction('Comment must contain some text.');
         }
         else {
-            create(`createComment`, {body, postId, author});
+            createOrUpdate(`createComment`, {body, postId, author});
         }
     }
     
@@ -97,7 +97,7 @@ let mapStateToProps = (state) => {
     }
 }
 
-Comments = connect(mapStateToProps, {create, commentCreationErrorAction, remove})(Comments);
+Comments = connect(mapStateToProps, {createOrUpdate, commentCreationErrorAction, remove})(Comments);
 Comments = reduxForm ({form: 'addComment'})(Comments);
 
 export default Comments;

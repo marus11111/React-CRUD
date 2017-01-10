@@ -1,6 +1,8 @@
 <?php
+require_once('cloudinaryRemove.php');
 
-class Create {
+class CreateOrUpdate {
+    use cloudinaryRemove;
     
     //sign up attempt
     public function signUp(&$msg, $link) {
@@ -78,6 +80,36 @@ class Create {
         }
     }
     
+    //edit post
+    public function editPost(&$msg, $link) {
+        
+        //get data from request
+        $title = mysqli_real_escape_string($link, $_POST['title']);
+        $body = mysqli_real_escape_string($link, $_POST['body']);
+        preg_match('/(([^\s]+\s*){1,30})/', $body, $snippet);
+        $snippet = $snippet[0];
+
+        //get post id
+        $postId = $_POST['postId'];
+
+        //edit post
+        $query = "UPDATE posts SET title = '$title', body = '$body', snippet = '$snippet' WHERE id = '$postId' LIMIT 1";
+        $result = mysqli_query($link, $query);
+
+        //set msg depending on whether post was successfully updated in DB or not
+        if ($result) {
+
+            //send new snippet
+            $msg = array(
+                success => 'Post edited successfully.',
+                snippet => $snippet
+            );
+        }
+        else {
+            $msg['error'] = 'An error occured. Please try again.';
+        }
+    }
+    
     //create comment
     public function createComment(&$msg, $link) {
         
@@ -106,6 +138,51 @@ class Create {
         }
         else {
             $msg['error'] = 'An error occured. Please try again.';
+        }
+    }
+    
+    //image upload
+    public function imageUpload(&$msg, $link) {
+        
+        //get id of user
+        $userId = $_COOKIE['id'];
+
+        //upload image to cloudinary
+        $response = \Cloudinary\Uploader::upload($_FILES['file']['tmp_name'], array(
+            "upload_preset" => $_POST['upload_preset']
+        ));
+
+        //get url and public id from response - url is necessary to display image, 
+        //public id to remove it from cloudinary
+        $imageUrl = $response['secure_url']; 
+        $imageId = $response['public_id'];
+
+        //if necessary data wasnt retrieved, send error, else remove old image from cloudinary,
+        //update mysql data and send url to display image
+        if(!$imageUrl || !$imageId){
+            $msg['error'] = 'Could not upload image. Please try again.';
+        }
+        else {
+
+            //remove old image from cloudinary (function checks if it exists)
+            $this->removeCloudinaryImage(array(
+                idOfUser => $userId,
+                linkToDB => $link
+            ));
+
+            //update mysql database
+            $query = "UPDATE users SET img_url = '$imageUrl', img_public_id = '$imageId' WHERE id = '$userId' LIMIT 1";
+            $updateMysql = mysqli_query($link, $query);
+
+            if($updateMysql) {
+                $msg = array(
+                    success => true,
+                    imageUrl => $imageUrl
+                );  
+            } 
+            else {
+                $msg['error'] = 'Could not upload image. Please try again.'; 
+            }
         }
     }
     

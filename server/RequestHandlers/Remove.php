@@ -1,8 +1,8 @@
 <?php
-require_once('removeFromCloudinaryDB.php');
+require_once('cloudinaryRemove.php');
 
 class Remove {
-    use removeFromCloudinaryDB;
+    use cloudinaryRemove;
     
     //remove post
     public function removePost(&$msg, $link, $params) {
@@ -49,14 +49,15 @@ class Remove {
     
     //remove image
     public function removeImage(&$msg, $link) {
-        
+
         //get id of user
         $userId = $_COOKIE['id'];
         
+        //remove image from db
         $remove = $this->removeCloudinaryImage(array(
             idOfUser => $userId,
             linkToDB => $link,
-            removeFromDB => true    
+            removeFromSQL => true    
         ));
         if ($remove) {
             $msg['success'] = 'Image successfully removed.';

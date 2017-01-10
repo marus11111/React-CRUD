@@ -17,7 +17,7 @@ export default (state = {posts: [], postBeingEdited: {}}, action) => {
                 return action.post.id === post.id;
             });
             let before = posts.slice(0, editIndex);
-            let editedPost = [post];
+            let editedPost = [action.post];
             let after = posts.slice(editIndex+1);
             return {...state,
                     posts: before.concat(editedPost.concat(after))

@@ -1,7 +1,9 @@
 <?php 
 
-//function that will remove image from cloudinary database
-trait removeFromCloudinaryDB {
+//method to be shared by 2 classes
+trait cloudinaryRemove {
+     
+    //function that will remove image from cloudinary database
     public function removeCloudinaryImage($args) {
         
         //use data given as arguments to try to retrieve public id of image (stored in mysql), 
@@ -27,10 +29,10 @@ trait removeFromCloudinaryDB {
         
         //If user uploads new image, image url and public id will be updated wth the new values, but if he only 
         //wants to remove an image, it is necessary to remove url and id from mysql database.
-        //Here the function checks whether an argument 'removeFromDB' exists, which is passed if request is only about 
+        //Here the function checks whether an argument 'removeFromSQL' exists, which is passed if request is only about 
         //removing old image and not uploading a new one. If the argument exists, function sets appropriate fields in 
         //mysql database to null
-        if($args['removeFromDB']) {
+        if($args['removeFromSQL']) {
             $query = "UPDATE users SET img_url = NULL, img_public_id = NULL WHERE id = '$idOfUser' LIMIT 1";
             $mysqlRemove = mysqli_query($linkToDB, $query);
             if(!mysqlRemove) {

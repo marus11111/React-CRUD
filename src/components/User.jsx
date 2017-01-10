@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import clearUserData from '../actions/clearUserData';
 import variousErrors from '../actions/ajax/variousErrors';
 import fetchData from '../actions/ajax/fetchData';
-import update from '../actions/ajax/update';
+import createOrUpdate from '../actions/ajax/createOrUpdate';
 import remove from '../actions/ajax/remove';
 import Menu from './Menu.jsx';
 import Dropzone from 'react-dropzone';
@@ -50,7 +50,7 @@ class User extends Component {
     }
     
     uploadImage = (images) => {
-        let {update, variousErrors} = this.props;
+        let {createOrUpdate, variousErrors} = this.props;
         const upload_preset = 'jyju7fnq';
         let file = images[0];
         
@@ -58,7 +58,7 @@ class User extends Component {
             variousErrors('Maximum file size is 500 kB.');
         }
         else {
-            update('post', 'imageUpload', {upload_preset, file});
+            createOrUpdate('imageUpload', {upload_preset, file});
         }
     }
     
@@ -151,4 +151,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps, {fetchData, update, remove, clearUserData, variousErrors})(User);
+export default connect(mapStateToProps, {fetchData, createOrUpdate, remove, clearUserData, variousErrors})(User);

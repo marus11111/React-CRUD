@@ -18,7 +18,7 @@ class PostView extends Component {
         
         if (Array.isArray(posts)) {
             for (let i = 0; i < posts.length; i++) {
-                if (posts[i].id == postId) {
+                if (posts[i].id === postId) {
                     post = posts[i];
                     let {title, body, timestamp} = post;
                     cleanTitle = DOMPurify.sanitize(title);

@@ -9,3 +9,4 @@ src/pics
 server/tokens.php
 server/CryptoLib.php
 server/link.php
+server/Cloudinary/config.php

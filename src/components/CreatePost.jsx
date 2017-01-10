@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Field, reduxForm, formValueSelector} from 'redux-form';
 import {connect} from 'react-redux';
-import create from '../actions/ajax/create';
+import createOrUpdate from '../actions/ajax/createOrUpdate';
 import variousErrors from '../actions/ajax/variousErrors';
 import protect from '../HOC/protectedComponent.jsx';
 import RichTextMarkdown from './RichTextMarkdown';
@@ -10,7 +10,7 @@ class CreatePost extends Component {
      
     submitHandler = (event) => {
         event.preventDefault();
-        let {title, body, create, variousErrors, params: {user}} = this.props;
+        let {title, body, createOrUpdate, variousErrors, params: {user}} = this.props;
         let titleText, bodyText;
         
         //strip html tegs and spaces from string to see if there is any text
@@ -23,7 +23,7 @@ class CreatePost extends Component {
             variousErrors('Post must contain title and body.');
         }
         else {
-            create(`createPost`, {title, body, user});
+            createOrUpdate(`createPost`, {title, body, user});
         }
     }
     
@@ -50,6 +50,6 @@ const mapStateToProps = (state) => {
     }
 }
 
-CreatePost = connect(mapStateToProps, {create, variousErrors})(CreatePost);
+CreatePost = connect(mapStateToProps, {createOrUpdate, variousErrors})(CreatePost);
 
 export default protect(CreatePost);

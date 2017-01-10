@@ -1,18 +1,11 @@
 import axios from 'axios';
+import setImage from '../setImage';
 
 //sets fetched posts for user that is currently being displayed 
 const loadPosts = (posts) => {
     return {
         type: 'LOAD_POSTS',
         posts
-    }
-}
-
-//sets url of image to be diplayed 
-const image = (url) => {
-    return {
-        type: 'IMAGE',
-        url
     }
 }
 
@@ -62,7 +55,7 @@ export default (options) => {
             res = res.data;
             if (res.userData) {
                 dispatch(loadPosts(res.userData.posts));
-                dispatch(image(res.userData.imageUrl));
+                dispatch(setImage(res.userData.imageUrl));
             }
             else if (res.comments) {
                 dispatch(loadComments(res.comments));

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Field, reduxForm, formValueSelector} from 'redux-form';
 import {connect} from 'react-redux';
-import update from '../actions/ajax/update';
+import createOrUpdate from '../actions/ajax/createOrUpdate';
 import variousErrors from '../actions/ajax/variousErrors';
 import setEditedPost from '../actions/setEditedPost';
 import makeLink from '../helpers/titleLink';
@@ -24,13 +24,13 @@ class EditPost extends Component {
     
     submitHandler = (event) => {
         event.preventDefault();
-        let {title, body, update, postBeingEdited: {timestamp}, variousErrors, params: {user, postId}} = this.props;
+        let {title, body, createOrUpdate, postBeingEdited: {timestamp}, variousErrors, params: {user, postId}} = this.props;
         
         if(!title || !body) {
             variousErrors('Post must contain title and body.');
         }
         else {
-            update('post', `editPost`, {postId, title, body, user});
+            createOrUpdate('editPost', {postId, title, body, timestamp, user});
         }
     }
     
@@ -62,6 +62,6 @@ const mapStateToProps = (state, ownProps) => {
     }
 }
 
-EditPost = connect(mapStateToProps, {update, variousErrors, setEditedPost})(EditPost);
+EditPost = connect(mapStateToProps, {createOrUpdate, variousErrors, setEditedPost})(EditPost);
 
 export default protect(EditPost);
