@@ -34,7 +34,7 @@ export default (state = {posts: [], postBeingEdited: {}}, action) => {
                    };
         }
         case 'POSTS_LOADING':
-            return {...state, postsLoading: action.postsLoading};
+            return {...state, loading: action.postsLoading};
         case 'SET_EDITED_POST': {
             let postBeingEdited = posts.find((post) => {
                 return action.id === post.id;  

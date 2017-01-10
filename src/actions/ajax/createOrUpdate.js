@@ -1,7 +1,8 @@
 import axios from 'axios';
 import {authorize} from './authorization';
-import variousErrors from './variousErrors';
+import variousErrors from '../variousErrors';
 import setEditedPost from '../setEditedPost';
+import commentCreationError from '../commentCreationError';
 import setImage from '../setImage';
 import makeLink from '../../helpers/titleLink';
 import {push} from 'react-router-redux';
@@ -31,15 +32,6 @@ const addComment = (comment) => {
     }
 }
 
-
-//sets errors to be displayed by Comments component
-const commentCreationError = (error) => {
-    return {
-        type: 'COMMENT_CREATION_ERROR',
-        error
-    }
-}
-
 //sets errors to be displayed in sign up form
 const signUpError = (error) => {
     return {
@@ -48,11 +40,18 @@ const signUpError = (error) => {
     }
 }
 
-
-export {commentCreationError};
+//informs app whether image is currently being uploaded
+const imageUploading = (bool) => {
+    return {
+        type: 'IMAGE_UPLOADING',
+        imageUploading: bool
+    }
+}
 
 export default (type, data) => {
     return dispatch => {
+        
+        type === 'imageUpload' ? dispatch(imageUploading(true)) : null;
         
         let url = `/project2/server/${type}`;
     
@@ -98,7 +97,6 @@ export default (type, data) => {
                         break;
                     }
                     case 'imageUpload':
-                        console.log(type);
                         dispatch(setImage(res.imageUrl));
                 }
             }
@@ -116,6 +114,10 @@ export default (type, data) => {
                         dispatch(commentCreationError(res.error));
                 }
             }
+            type === 'imageUpload' ? dispatch(imageUploading(false)) : null;
+        })
+        .catch((error)=>{
+            console.log(`createOrUpdate Error: ${error}`);
         })
     }
 }

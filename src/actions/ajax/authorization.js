@@ -40,6 +40,8 @@ export {authorize};
 export default (type, data) => {
     return dispatch => {
         
+        type === 'cookie' ? dispatch(ongoingCookieAuth(true)) : null;
+        
         let url = `/project2/server/${type}`;
         let formData;
         
@@ -51,7 +53,7 @@ export default (type, data) => {
                 }
             }
         }
-
+        
         axios.post(url, formData)
         .then(res => {
             res = res.data;
@@ -64,6 +66,10 @@ export default (type, data) => {
             else if (res.error) {
                 dispatch(signInError(res.error));
             }
+            type === 'cookie' ? dispatch(ongoingCookieAuth(false)) : null;
+        })
+        .catch((error) => {
+            console.log(`authorization Error: ${error}`);
         })
     }
 }

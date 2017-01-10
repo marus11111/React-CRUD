@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import find from 'core-js/fn/array/find';
 import Comments from './Comments.jsx';
 import fetchData from '../actions/ajax/fetchData';
 import formatDate from '../helpers/formatDate';
@@ -8,27 +9,23 @@ class PostView extends Component {
     
     componentDidMount() {
         let {fetchData, params: {postId}} = this.props;
-        fetchData({postId});
+        fetchData('comments', postId);
     }
     
     render() {
-        let post, cleanTitle, cleanBody, date;
         let {posts, params: {user, postId}} = this.props;
+        let cleanTitle, cleanBody, date;
         
-        
-        if (Array.isArray(posts)) {
-            for (let i = 0; i < posts.length; i++) {
-                if (posts[i].id === postId) {
-                    post = posts[i];
-                    let {title, body, timestamp} = post;
-                    cleanTitle = DOMPurify.sanitize(title);
-                    cleanBody = DOMPurify.sanitize(body);
-                    date = formatDate(timestamp, 'post');
-                    break;
-                }
-            }  
+        let post = posts.find((post) => {
+            return `${post.id}` === postId;
+        });
+        if (post) {
+            let {title, body, timestamp} = post;
+            cleanTitle = DOMPurify.sanitize(title);
+            cleanBody = DOMPurify.sanitize(body);
+            date = formatDate(timestamp, 'post');      
         }
-        
+
         return (
             <div>
                 {post &&
@@ -39,7 +36,7 @@ class PostView extends Component {
                         <Comments postId={post.id} linkUser={user}/>
                     </div>
                 }
-                {Array.isArray(posts) && !post &&
+                {!post &&
                     <div>
                         <h1>Post not found</h1>
                     </div>

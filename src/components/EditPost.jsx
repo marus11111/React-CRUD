@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Field, reduxForm, formValueSelector} from 'redux-form';
 import {connect} from 'react-redux';
 import createOrUpdate from '../actions/ajax/createOrUpdate';
-import variousErrors from '../actions/ajax/variousErrors';
+import variousErrors from '../actions/variousErrors';
 import setEditedPost from '../actions/setEditedPost';
 import makeLink from '../helpers/titleLink';
 import protect from '../HOC/protectedComponent.jsx';

@@ -42,13 +42,36 @@ const noUserData = (error) => {
     }
 }
 
-export default (options) => {
+//sets state to inform app that posts are being loaded
+const postsLoading = (bool) => {
+    return {
+        type: 'POSTS_LOADING',
+        postsLoading: bool
+    }
+}
+
+//sets state to inform app that comments are being loaded
+const commentsLoading = (bool) => {
+    return {
+        type: 'COMMENTS_LOADING',
+        commentsLoading: bool
+    }
+}
+
+export default (type, data) => {
     return dispatch => {
         
-        let base = '/project2/server/';
-        let url = options.user ? 
-            `${base}${options.user}` :
-            `${base}comments/${options.postId}`;
+        let base = '/project2/server';
+        let url;
+        
+        if (type === 'user') {
+            url = `${base}/${data}`;
+            dispatch(postsLoading(true));
+        }
+        else {
+            url = `${base}/comments/${data}`;
+            dispatch(commentsLoading(true));
+        }
 
         axios.get(url)
         .then(res => {
@@ -64,10 +87,16 @@ export default (options) => {
                 dispatch(fetchingPostsError(res.postsError));
             }
             else if (res.error) {
-                options.user ? 
+                type === 'user' ? 
                     dispatch(noUserData(res.error)) :
                     dispatch(fetchingCommentsError(res.error));
             }
+            type === 'user' ? 
+                dispatch(postsLoading(false)) : 
+                dispatch(commentsLoading(false)); 
+        })
+        .catch((error) => {
+            console.log(`fetchData Error: ${error}`);
         })
     }
 }

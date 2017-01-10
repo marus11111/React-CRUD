@@ -25,7 +25,7 @@ export default (state = {comments: []}, action) => {
         }
         case 'COMMENTS_LOADING':
             return {...state, 
-                    commentsLoading: action.commentsLoading
+                    loading: action.commentsLoading
                    };
     }
     

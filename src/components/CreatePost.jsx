@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Field, reduxForm, formValueSelector} from 'redux-form';
 import {connect} from 'react-redux';
 import createOrUpdate from '../actions/ajax/createOrUpdate';
-import variousErrors from '../actions/ajax/variousErrors';
+import variousErrors from '../actions/variousErrors';
 import protect from '../HOC/protectedComponent.jsx';
 import RichTextMarkdown from './RichTextMarkdown';
 
@@ -23,7 +23,7 @@ class CreatePost extends Component {
             variousErrors('Post must contain title and body.');
         }
         else {
-            createOrUpdate(`createPost`, {title, body, user});
+            createOrUpdate('createPost', {title, body, user});
         }
     }
     

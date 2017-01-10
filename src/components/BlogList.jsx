@@ -42,17 +42,17 @@ class BlogList extends Component {
     }
     
     render() {
-        let {posts, removePost, authorizedUser, fetchingPostsError, blogListRemoveError, params: {user}} = this.props;
+        let {posts, postsLoading, removePost, authorizedUser, fetchingPostsError, blogListRemoveError, params: {user}} = this.props;
         let usersEqual = ciCompare(authorizedUser, user);
 
         if (posts.length === 0) {
-            if (posts === 'pending') {
+            if (postsLoading) {
                 return null;
             }
             else if (fetchingPostsError) {
                 return <p>{fetchingPostsError}</p>
             }
-            else if (!posts && usersEqual) {
+            else if (usersEqual) {
                 return <p>You haven't written any posts yet.</p>;
             }
             else  {
@@ -116,6 +116,7 @@ class BlogList extends Component {
 const mapStateToProps = (state) => {
     return {
         posts: state.posts.posts,
+        postsLoading: state.posts.loading,
         fetchingPostsError: state.errors.fetchingPostsError,
         blogListRemoveError: state.errors.blogListRemoveError,
         authorizedUser: state.auth.authorizedUser

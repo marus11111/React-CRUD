@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {reduxForm, Field, formValueSelector} from 'redux-form';
 import {Link} from 'react-router';
-import createOrUpdate, {commentCreationError as commentCreationErrorAction} from '../actions/ajax/createOrUpdate';
+import createOrUpdate from '../actions/ajax/createOrUpdate';
+import commentCreationErrorAction from '../actions/commentCreationError';
 import remove from '../actions/ajax/remove';
 import formatDate from '../helpers/formatDate';
 import ciCompare from '../helpers/ciCompare';
@@ -26,22 +27,22 @@ class Comments extends Component {
     }
     
     render() {
-        let {comments, authorizedUser, linkUser, commentCreationError, fetchingCommentsError, commentRemoveError} = this.props;
+        let {comments, commentsLoading, authorizedUser, linkUser, commentCreationError, fetchingCommentsError, commentRemoveError} = this.props;
         let usersEqual = ciCompare(authorizedUser,linkUser);
         let children;
         
-        if (!Array.isArray(comments)){
-            if (comments === 'pending') {
+        if (comments.length === 0){
+            if (commentsLoading) {
                 children = null;
             }
             else if (fetchingCommentsError) {
                 children = <li>{fetchingCommentsError}</li>;
             }
-            else if (!comments) {
+            else {
                 children = <li>No comments yet.</li>;
             } 
         }
-        else {
+        else if (comments.length > 0) {
             children = comments.map(comment => {
                 let {author, timestamp, body, id} = comment;
                 let date = formatDate(timestamp, 'comment');
@@ -89,10 +90,11 @@ let selector = formValueSelector('addComment');
 let mapStateToProps = (state) => {
     return {
         body: selector(state, 'body'),
+        comments: state.comments.comments,
+        commentsLoading: state.comments.loading,
         commentCreationError: state.errors.commentCreationError,
         commentRemoveError: state.errors.commentRemoveError,
         fetchingCommentsError: state.errors.fetchingCommentsError,
-        comments: state.comments.comments,
         authorizedUser: state.auth.authorizedUser
     }
 }

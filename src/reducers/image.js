@@ -4,9 +4,9 @@ export default (state = {}, action) => {
             return {...state, 
                     url: action.url 
                    };
-        case 'IMAGE_LOADING':
+        case 'IMAGE_UPLOADING':
             return {...state, 
-                    loading: action.loading
+                    uploading: action.imageUploading
                    };
     }
     

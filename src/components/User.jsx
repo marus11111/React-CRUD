@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
 import clearUserData from '../actions/clearUserData';
-import variousErrors from '../actions/ajax/variousErrors';
+import variousErrors from '../actions/variousErrors';
 import fetchData from '../actions/ajax/fetchData';
 import createOrUpdate from '../actions/ajax/createOrUpdate';
 import remove from '../actions/ajax/remove';
@@ -17,7 +17,7 @@ class User extends Component {
         
         this.fetchDataFromLink = (currentProps, nextProps) => {
             let {user} = nextProps ? nextProps.params : currentProps.params;
-            currentProps.fetchData({user});
+            currentProps.fetchData('user', user);
         }      
         this.fetchDataFromLink(props);
     }
@@ -64,6 +64,7 @@ class User extends Component {
     
     removeImage = (e) => {
         e.stopPropagation();
+        clearTimeout(this.controlsTimeout);
         this.props.remove('removeImage');
     }
     
@@ -72,7 +73,7 @@ class User extends Component {
     }
     
     render() {
-        let {imageUrl, imageLoading, userError, error, authorizedUser, params: {user}} = this.props;
+        let {imageUrl, imageUploading, userError, error, authorizedUser, params: {user}} = this.props;
         
         if (userError) return <p>{userError}</p>;
         
@@ -115,13 +116,13 @@ class User extends Component {
                                 }
                             </div>
                         }
-                        {!imageUrl && !imageLoading &&
+                        {!imageUrl && !imageUploading &&
                             <div>
                                 <Dropzone multiple={false} accept='image/*' onDrop={this.uploadImage}/>
                                 <p>Drop an image or click to select a file from your computer.<br/>Maximum file size is 500 kB.</p>
                             </div>
                         }
-                        {imageLoading &&
+                        {imageUploading &&
                             <div>
                                 <div className='dot'></div>
                                 <div className='pacman'></div>
@@ -144,7 +145,7 @@ class User extends Component {
 const mapStateToProps = (state) => {
     return {
         imageUrl: state.image.url,
-        imageLoading: state.image.imageLoading,
+        imageUploading: state.image.uploading,
         userError: state.errors.userError,
         error: state.errors.error,
         authorizedUser: state.auth.authorizedUser

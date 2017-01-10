@@ -1,5 +1,5 @@
 import axios from 'axios';
-import variousErrors from './variousErrors';
+import variousErrors from '../variousErrors';
 import setImage from '../setImage';
 import {push} from 'react-router-redux';
 
@@ -85,6 +85,9 @@ export default (type, options) => {
                     }
                 }
             }
+        })
+        .catch((error) => {
+            console.log(`remove Error: ${error}`);
         })
     }
 }
