@@ -1,0 +1,14 @@
+SetEnv COMPOSER_HOME /home/platne/serwer15235/public_html/project2/server/composer
+
+RewriteEngine On
+    RewriteBase /project2/
+    
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-l
+    RewriteRule server/* /project2/server/server.php [L,QSA]
+    
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-l
+    RewriteRule ^.*$ /project2/ [L,QSA]
