@@ -13,7 +13,7 @@ class PostView extends Component {
     }
     
     render() {
-        let {posts, params: {user, postId}} = this.props;
+        let {posts, postsLoading, params: {user, postId}} = this.props;
         let cleanTitle, cleanBody, date;
         
         let post = posts.find((post) => {
@@ -36,7 +36,7 @@ class PostView extends Component {
                         <Comments postId={post.id} linkUser={user}/>
                     </div>
                 }
-                {!post &&
+                {!post && !postsLoading &&
                     <div>
                         <h1>Post not found</h1>
                     </div>
@@ -48,7 +48,8 @@ class PostView extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        posts: state.posts.posts
+        posts: state.posts.posts,
+        postsLoading: state.posts.loading
     }
 }
 

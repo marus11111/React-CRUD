@@ -34,11 +34,11 @@ class Authorization extends React.Component {
         return (
             <div className='container'>
                 <div className='row row-center'>
-                    <button onClick={activateSignIn} className='btn btn-default col-xs-2 col-centered'>Sign In</button>
-                    <button onClick={activateSignUp} className='btn btn-default col-xs-2 col-centered'>Sign Up</button>
+                    <button onClick={activateSignIn} className={`btn col-xs-2 col-centered${activeForm === 'signIn' ? ' active' : ''}`}>Sign In</button>
+                    <button onClick={activateSignUp} className={`btn col-xs-2 col-centered${activeForm === 'signUp' ? ' active' : ''}`}>Sign Up</button>
                 </div>
-                {activeForm == 'signIn' && <SignIn/>} 
-                {activeForm == 'signUp' && <SignUp/>}
+                {activeForm === 'signIn' && <SignIn/>} 
+                {activeForm === 'signUp' && <SignUp/>}
                 <p>This website uses cookies. By signing up or signing in you are agreeing to receive our cookies.</p>
             </div>
         )

@@ -40,7 +40,7 @@ const reducers = combineReducers({
 });
 
 const browserHistory = useBasename(createHistory)({
-    basename: '/project2'
+    //basename: '/project2'
 });
 
 const routerMidd = routerMiddleware(browserHistory);
