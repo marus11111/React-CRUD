@@ -24,10 +24,10 @@ class Authorization extends React.Component {
     }
     
     render (){ 
-        let {activeForm, activateSignIn, activateSignUp} = this.props;
-        
+        let {activeForm, activateSignIn, activateSignUp, ongoingCookieAuth} = this.props;
+
         //prevent component showing for fraction of a second before redirecting if user is logged in
-        if(this.props.ongoingCookieAuth) {
+        if(ongoingCookieAuth) {
             return null;
         }
         

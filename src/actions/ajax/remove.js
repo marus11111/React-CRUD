@@ -1,7 +1,7 @@
 import axios from 'axios';
+import {push} from 'react-router-redux';
 import variousErrors from '../variousErrors';
 import setImage from '../setImage';
-import {push} from 'react-router-redux';
 
 
 //removes post on client side so that effec is immediate

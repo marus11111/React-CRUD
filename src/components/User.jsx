@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
+import Dropzone from 'react-dropzone';
 import clearUserData from '../actions/clearUserData';
 import variousErrors from '../actions/variousErrors';
 import fetchData from '../actions/ajax/fetchData';
 import createOrUpdate from '../actions/ajax/createOrUpdate';
 import remove from '../actions/ajax/remove';
 import Menu from './Menu.jsx';
-import Dropzone from 'react-dropzone';
 import ciCompare from '../helpers/ciCompare';
 
 class User extends Component { 

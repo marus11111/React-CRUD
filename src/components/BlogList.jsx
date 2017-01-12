@@ -3,7 +3,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
-import marked from 'marked';
 import ciCompare from '../helpers/ciCompare';
 import makeLink from '../helpers/titleLink';
 import formatDate from '../helpers/formatDate';

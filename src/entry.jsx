@@ -9,13 +9,13 @@ import {createHistory, useBasename } from 'history';
 import {routerMiddleware} from 'react-router-redux';
 import {reducer as formReducer, Field} from 'redux-form';
 import RichTextEditor from 'react-rte';
+import thunk from 'redux-thunk';
 import authorizationReducer from './reducers/authorization';
 import imageReducer from './reducers/image';
 import postsReducer from './reducers/posts';
 import commentsReducer from './reducers/comments';
 import hamburgerMenuReducer from './reducers/hamburgerMenu';
 import errorsReducer from './reducers/errors';
-import thunk from 'redux-thunk';
 import Authorization from './components/Authorization.jsx';
 import User from './components/User.jsx';
 import BlogList from './components/BlogList.jsx';
@@ -40,7 +40,7 @@ const reducers = combineReducers({
 });
 
 const browserHistory = useBasename(createHistory)({
-   // basename: '/project2'
+    basename: '/project2'
 });
 
 const routerMidd = routerMiddleware(browserHistory);
@@ -76,5 +76,5 @@ render(
             </Route>
         </Router>
     </Provider>,
-    root       
+    document.getElementById('root')       
  );

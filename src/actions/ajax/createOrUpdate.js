@@ -1,11 +1,11 @@
 import axios from 'axios';
+import {push} from 'react-router-redux';
 import {authorize} from './authorization';
 import variousErrors from '../variousErrors';
 import setEditedPost from '../setEditedPost';
 import commentCreationError from '../commentCreationError';
 import setImage from '../setImage';
 import makeLink from '../../helpers/titleLink';
-import {push} from 'react-router-redux';
 
 
 //adds created post to posts on client side so that it's immediately available

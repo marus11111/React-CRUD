@@ -1,11 +1,7 @@
+dist
 node_modules
-package.json
-webpack.config.production.js
-webpack.config.development.js
-postcss.config.js
 stats.json
 photoshop
-src/pics
 server/tokens.php
 server/CryptoLib.php
 server/link.php
