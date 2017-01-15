@@ -4,88 +4,67 @@ import {Link, withRouter} from 'react-router';
 import authorization from '../actions/ajax/authorization';
 import ciCompare from '../helpers/ciCompare';
 import isMenuOpenAction from '../actions/isMenuOpen';
+import remove from '../actions/ajax/remove';
 
 class Menu extends Component {
-       
+           
     signOut = (e) => {
         e.preventDefault();
         this.props.authorization('signOut');
     }
     
-    hamburgerToggle = () => {
-        let open = this.props.isMenuOpen; //true or false 
-        this.props.isMenuOpenAction(!open);
+    menuToggle = () => {
+        let {style, offsetTop, clientHeight} = this.menu;
+        offsetTop < 0 ? style.bottom = `calc(100vh - ${clientHeight}px)` : style.bottom = null;
     }
     
     render() {
-        let {width, isMenuOpen, authorizedUser, removePost, params: {user, titleLink, postId}} = this.props;
+        let {width, isMenuOpen, authorizedUser, remove, params: {user, titleLink, postId}} = this.props;
         let usersEqual = ciCompare(authorizedUser, user);
-        let route;
-        
+                
         let activeChildRoute = this.props.routes[1];
-        if(!activeChildRoute.path) {
-            route = 'home';
-        }
-        else {
-            route = activeChildRoute.path;
-            route === ':postId/:titleLink' ? route = 'postView' : null; 
-        }
-        
-        let hamburger = route === 'postView' && width < 650;
-        let showMenu =  !hamburger || isMenuOpen;
-        let itemClassesSmall = hamburger ? 'col-xs-12 col-sm-12' : 
-                               width < 650 ? 'col-xs-4 col-sm-3' : 'col-xs-2 col-sm-2'; 
-            
+        let route = activeChildRoute.path || 'home';            
         let menuItems = []
-        route != 'home' ? 
-            menuItems.push(
-                <li key='home' className={`nav-item ${itemClassesSmall} col-md-2 col-lg-2`}>
-                    <Link className='nav-link' to={`${user}`}>Home</Link>
-                </li>
-            ) : null;
-        usersEqual && route !== 'create' ? 
-            menuItems.push(
-                <li key='create' className={`nav-item ${itemClassesSmall} col-md-2 col-lg-2`}>
-                    <Link className='nav-link' to={`${user}/create`}>Create post</Link>
-                </li>
-            ) : null;
-        (route == 'postView' && usersEqual) ? 
-            menuItems.push(
-                <li key='edit' className={`nav-item ${itemClassesSmall} col-md-2 col-lg-2`}>
-                    <Link className='nav-link' to={`${user}/${postId}/${titleLink}/edit`}>Edit post</Link>
-                </li>,
-                <li key='remove' className={`nav-item ${itemClassesSmall} col-md-2 col-lg-2`}>
-                    <Link className='nav-link' to='#' onClick={(e) => {e.preventDefault(); removePost(postId, 'menu');}}>Remove post</Link>
-                </li>
-            ) : null;
+        let menuItemClass = 'menu__item';
+        
+        route !== 'home' && menuItems.push(
+            <li key='home' className={`${menuItemClass}`}>
+                <Link className='nav-link' to={`${user}`}>Home</Link>
+            </li>
+        );
+        usersEqual && route !== 'create' && menuItems.push(
+            <li key='create' className={`${menuItemClass}`}>
+                <Link className='nav-link' to={`${user}/create`}>Create post</Link>
+            </li>
+        );
+        route === ':postId/:titleLink' && usersEqual && menuItems.push(
+            <li key='edit' className={`${menuItemClass}`}>
+                <Link className='nav-link' to={`${user}/${postId}/${titleLink}/edit`}>Edit post</Link>
+            </li>,
+            <li key='remove' className={`${menuItemClass}`}>
+                <Link className='nav-link' to='#' onClick={(e) => {e.preventDefault(); remove('removePost', {id: postId, from: 'menu'});}}>Remove post</Link>
+            </li>
+        );
         authorizedUser ? 
             menuItems.push(
-                <li key='sign-out' className={`nav-item ${itemClassesSmall} col-md-2 col-lg-2`}>
+                <li key='sign-out' className={`${menuItemClass}`}>
                     <Link className='nav-link' to='#' onClick={this.signOut}>Sign out</Link>
                 </li>
             ) : 
             menuItems.push(
-                <li key='sign-in' className={`nav-item ${itemClassesSmall} col-md-2 col-lg-2`}>
+                <li key='sign-in' className={`${menuItemClass}`}>
                     <Link className='nav-link' to='/'>Sign in/Sign up</Link>
                 </li>
             );
         
         return (
-            <nav className='navbar navbar-default container-fluid'>
-                {hamburger &&
-                    <button className='navbar-toggle' onClick={this.hamburgerToggle}>
-                        <span className='icon-bar'></span>
-                        <span className='icon-bar'></span>
-                        <span className='icon-bar'></span>
-                    </button>    
-                }
-                {showMenu &&
-                    <div className='row'>
-                        <ul className='navbar-nav nav nav-centered'>
-                            {menuItems}
-                        </ul>
-                    </div>    
-                }
+            <nav key='menu' ref={nav => this.menu = nav} className='menu'>
+                <ul className='menu__list'>
+                    {menuItems}
+                </ul>
+                <button className='menu__button' onClick={this.menuToggle}>
+                    <span className='glyphicon glyphicon-chevron-down'></span>
+                </button>    
             </nav>
         )
     }
@@ -94,9 +73,8 @@ class Menu extends Component {
 const mapStateToProps = (state) => {
     return {
         authorizedUser: state.auth.authorizedUser,
-        isMenuOpen: state.hamburgerMenu.isMenuOpen,
-        width: state.hamburgerMenu.width
+        isMenuOpen: state.menu.isMenuOpen
     }
 }
 
-export default connect(mapStateToProps, {authorization, isMenuOpenAction})(withRouter(Menu));
+export default connect(mapStateToProps, {authorization, remove, isMenuOpenAction})(withRouter(Menu));

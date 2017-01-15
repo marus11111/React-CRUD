@@ -68,12 +68,8 @@ class User extends Component {
         this.props.remove('removeImage');
     }
     
-    removePost = (id, from) => {
-        this.props.remove('removePost', {id, from});
-    }
-    
     render() {
-        let {imageUrl, imageUploading, userError, error, authorizedUser, params: {user}} = this.props;
+        let {imageUrl, imageUploading, userError, error, authorizedUser, params: {user}, children} = this.props;
         
         if (userError) return <p>{userError}</p>;
         
@@ -88,28 +84,24 @@ class User extends Component {
             }
         }
         
-        let children = React.Children.map(this.props.children, (child) => {
-            return React.cloneElement(child, {
-                removePost: this.removePost
-            });
-        });
-        
         return (
-            <div>
+            <div className='parallax--null'>
+                <Menu/>
+                <div className='parallax'>    
                 { (imageUrl || usersEqual) &&
                     <div className='jumbotron' {...eventHandlers}>
                         {imageUrl && 
                             <div>
-                                <img src={imageUrl}></img>
+                                <img src={imageUrl} className='jumbotron__image'></img>
                                 { usersEqual &&
-                                    <div className='hidden-controls' ref={div => this.imageControls = div}>
-                                        <form>
-                                            <label htmlFor='imageUpload' className='btn btn-primary btn-sm' onClick={e => e.stopPropagation()}>
+                                    <div className='jumbotron__buttons__wrapper hidden-controls' ref={div => this.imageControls = div}>
+                                        <form className='jumbotron__buttons'>
+                                            <label htmlFor='imageUpload' className='btn btn-primary' onClick={e => e.stopPropagation()}>
                                                 <span className='glyphicon glyphicon-edit'></span> Change
                                             </label>
                                             <input id='imageUpload' type='file' onChange={() => this.uploadImage(this.imageInput.files)} ref={input => this.imageInput = input}></input>
                                         </form>
-                                        <button className='btn btn-danger btn-sm' onClick={this.removeImage}>
+                                        <button className='btn btn-danger jumbotron__buttons' onClick={this.removeImage}>
                                             <span className='glyphicon glyphicon-trash'></span> Remove
                                         </button>
                                     </div>
@@ -130,13 +122,13 @@ class User extends Component {
                         }
                     </div>
                 }
-                <Menu removePost={this.removePost}/>
                 {error && 
                     <div>
                         <p>{error}</p>
                     </div>
                 }
                 {children}
+                </div>
             </div>
         )
     }

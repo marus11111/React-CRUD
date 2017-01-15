@@ -14,13 +14,13 @@ class Authorization extends React.Component {
     //if user is logged in, redirect him to his page
     componentDidMount(){        
         let {authorizedUser, router} = this.props;
-        authorizedUser ? router.push(`${authorizedUser}`) : null;
+        authorizedUser && router.push(`${authorizedUser}`);
     }
     
     //after user signs in/up, redirect him to his page
     componentWillReceiveProps(nextProps){
         let {authorizedUser, router} = nextProps;
-        authorizedUser ? router.push(`${authorizedUser}`) : null;
+        authorizedUser && router.push(`${authorizedUser}`);
     }
     
     render (){ 

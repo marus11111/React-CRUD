@@ -3,6 +3,7 @@ import {Field, reduxForm, formValueSelector} from 'redux-form';
 import {connect} from 'react-redux';
 import createOrUpdate from '../actions/ajax/createOrUpdate';
 import variousErrors from '../actions/variousErrors';
+import validatePurifyPost from '../helpers/validatePurifyPost';
 import protect from '../HOC/protectedComponent.jsx';
 import RichTextMarkdown from './RichTextMarkdown';
 
@@ -11,20 +12,8 @@ class CreatePost extends Component {
     submitHandler = (event) => {
         event.preventDefault();
         let {title, body, createOrUpdate, variousErrors, params: {user}} = this.props;
-        let titleText, bodyText;
-        
-        //strip html tegs and spaces from string to see if there is any text
-        if (title && body){
-            titleText = title.replace(/((<\/?[^>]+(>|$))|(&nbsp;))/g, "");
-            bodyText = body.replace(/((<\/?[^>]+(>|$))|(&nbsp;))/g, ""); 
-        }
-        
-        if(!titleText || !bodyText) {
-            variousErrors('Post must contain title and body.');
-        }
-        else {
-            createOrUpdate('createPost', {title, body, user});
-        }
+        let validPost = validatePurifyPost(title, body);
+        if (validPost) createOrUpdate('createPost', {title: validPost.title, body: validPost.body, user});
     }
     
     render() {

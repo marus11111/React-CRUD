@@ -14,25 +14,24 @@ class PostView extends Component {
     
     render() {
         let {posts, postsLoading, params: {user, postId}} = this.props;
-        let cleanTitle, cleanBody, date;
+        let title, body, date;
         
         let post = posts.find((post) => {
             return `${post.id}` === postId;
         });
         if (post) {
-            let {title, body, timestamp} = post;
-            cleanTitle = DOMPurify.sanitize(title);
-            cleanBody = DOMPurify.sanitize(body);
-            date = formatDate(timestamp, 'post');      
+            title = post.title;
+            body = post.body;
+            date = formatDate(post.timestamp, 'post');      
         }
 
         return (
-            <div>
+            <div className='postview'>
                 {post &&
                     <div>
-                        <time dateTime={date.iso}>{date.display}</time>
-                        <h1 dangerouslySetInnerHTML={{__html: cleanTitle}}/>
-                        <p dangerouslySetInnerHTML={{__html: cleanBody}}/>
+                        <time dateTime={date.iso} className='postview__date'>{date.display}</time>
+                        <h1 dangerouslySetInnerHTML={{__html: title}} className='postview__title'/>
+                        <p dangerouslySetInnerHTML={{__html: body}} className='postview__body'/>
                         <Comments postId={post.id} linkUser={user}/>
                     </div>
                 }

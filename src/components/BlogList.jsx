@@ -6,6 +6,7 @@ import {Link} from 'react-router';
 import ciCompare from '../helpers/ciCompare';
 import makeLink from '../helpers/titleLink';
 import formatDate from '../helpers/formatDate';
+import remove from '../actions/ajax/remove';
 
 class BlogList extends Component {
     constructor(props) {
@@ -36,12 +37,8 @@ class BlogList extends Component {
         element.style.visibility == 'hidden' ? this.showControls() : this.hideControls();
     }
     
-    stopPropagation = (e) => {
-        e.stopPropagation();
-    }
-    
     render() {
-        let {posts, postsLoading, removePost, authorizedUser, fetchingPostsError, blogListRemoveError, params: {user}} = this.props;
+        let {posts, postsLoading, remove, authorizedUser, fetchingPostsError, blogListRemoveError, params: {user}} = this.props;
         let usersEqual = ciCompare(authorizedUser, user);
 
         if (posts.length === 0) {
@@ -60,9 +57,7 @@ class BlogList extends Component {
         }
         else if(posts.length > 0) {
             let children = posts.map((post) => {
-                
-                let cleanTitle = DOMPurify.sanitize(post.title);
-                let cleanSnippet = DOMPurify.sanitize(post.snippet);
+
                 let titleLink = makeLink(post.title);
                 let isRemoveError = blogListRemoveError.ids.some((errorId) => errorId === post.id);
                 let date = formatDate(post.timestamp, 'post');
@@ -71,9 +66,9 @@ class BlogList extends Component {
                 return (
                     <li className='list-group-item' 
                         key={post.id} 
-                        onMouseEnter={() => usersEqual ? this.showControls(postControls) : null}
-                        onMouseLeave={() => usersEqual ? this.hideControls(postControls) : null}
-                        onClick={() => usersEqual ? this.toggleControls(postControls) : null} 
+                        onMouseEnter={() => usersEqual && this.showControls(postControls)}
+                        onMouseLeave={() => usersEqual && this.hideControls(postControls)}
+                        onClick={() => usersEqual && this.toggleControls(postControls)} 
                         >
                         {isRemoveError &&
                             <p>{blogListRemoveError.error}</p>
@@ -81,28 +76,28 @@ class BlogList extends Component {
                         <time dateTime={date.iso}>{date.display}</time>
                         <Link className='nav-link' 
                               to={`/${user}/${post.id}/${titleLink}`} 
-                              onClick={this.stopPropagation} 
-                              dangerouslySetInnerHTML={{__html: cleanTitle}}/>
+                              onClick={(e) => e.stopPropagation()} 
+                              dangerouslySetInnerHTML={{__html: post.title}}/>
                         {usersEqual &&
-                            <div className='hidden-controls' ref={div => postControls = div} onClick={this.stopPropagation}>  
+                            <div className='hidden-controls' ref={div => postControls = div} onClick={(e) => e.stopPropagation()}>  
                                 <Link className='btn btn-primary btn-sm' to={`/${user}/${post.id}/${titleLink}/edit`}>
                                     <span className='glyphicon glyphicon-edit'></span>
                                 </Link>
-                                <button className='btn btn-danger btn-sm' onClick={() => removePost(post.id, 'list')}>
+                                <button className='btn btn-danger btn-sm' onClick={() => remove('removePost', {id: post.id, from: 'list'})}>
                                     <span className='glyphicon glyphicon-trash'></span>
                                 </button>
                             </div>
                         }
-                        <p dangerouslySetInnerHTML={{__html: cleanSnippet}}/>
+                        <p dangerouslySetInnerHTML={{__html: post.snippet}}/>
                     </li>
                 )
             });
             children = children.reverse();
             
             return (
-                <div className='container'>
+                <div className='container-fluid blog-list'>
                     <div className='row'>
-                        <ul className='list-group nav col-xs-9 col-sm-9 col-md-9 col-lg-9 col-centered'>
+                        <ul className='list-group nav col-lg-12 col-centered'>
                             {children}
                         </ul>
                     </div>
@@ -122,4 +117,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps)(BlogList);
+export default connect(mapStateToProps, {remove})(BlogList);

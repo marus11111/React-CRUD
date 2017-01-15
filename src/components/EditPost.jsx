@@ -5,6 +5,7 @@ import createOrUpdate from '../actions/ajax/createOrUpdate';
 import variousErrors from '../actions/variousErrors';
 import setEditedPost from '../actions/setEditedPost';
 import makeLink from '../helpers/titleLink';
+import validatePurifyPost from '../helpers/validatePurifyPost';
 import protect from '../HOC/protectedComponent.jsx';
 import RichTextMarkdown from './RichTextMarkdown';
 
@@ -25,13 +26,8 @@ class EditPost extends Component {
     submitHandler = (event) => {
         event.preventDefault();
         let {title, body, createOrUpdate, postBeingEdited: {timestamp}, variousErrors, params: {user, postId}} = this.props;
-        
-        if(!title || !body) {
-            variousErrors('Post must contain title and body.');
-        }
-        else {
-            createOrUpdate('editPost', {postId, title, body, timestamp, user});
-        }
+        let validPost = validatePurifyPost(title, body);
+        if (validPost) createOrUpdate('editPost', {postId, title: validPost.title, body: validPost.body, timestamp, user});
     }
     
     render(){

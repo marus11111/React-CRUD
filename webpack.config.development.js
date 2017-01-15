@@ -1,10 +1,12 @@
 var webpack = require('webpack');
-var HtmlPlugin = require('html-webpack-plugin')
+var HtmlPlugin = require('html-webpack-plugin');
+
+var vendorList = ['babel-polyfill', './src/modernizr/modernizr-custom', 'axios', 'react', 'react-dom', 'redux', 'react-redux', 'redux-thunk', 'history', 'react-router', 'react-router-redux', 'redux-form', 'react-rte', 'react-dropzone']
 
 module.exports = {
     entry: {
         script: './src/entry.jsx',
-        vendor: ['axios', 'react', 'react-dom', 'redux', 'react-redux', 'redux-thunk', 'history', 'react-router', 'react-router-redux', 'redux-form', 'react-rte', 'react-dropzone']
+        vendor: vendorList
     },
     output: {
         path: './dist/',
@@ -29,7 +31,6 @@ module.exports = {
                 test: /\.jsx?$/i,
                 exclude: /node_modules/,
                 use: ['babel-loader?' + JSON.stringify({
-                    plugins: ['transform-runtime'],
                     presets: ['es2015', 'stage-0', 'react']
                 })]
             },

@@ -1,5 +1,18 @@
 @import 'loadingPacman';
 
+@keyframes open-menu {
+    0% {
+        bottom: 0;
+    }
+    100% {
+        bottom: calc(100vh - 50px);
+    }
+}
+
+body {
+    background: #f5f4f0;
+}
+
 .row-center {
     text-align: center;
     .col-centered {
@@ -22,19 +35,57 @@
     padding: 0;
 }
 
-.jumbotron {
-    padding: 0;
-    margin: 0;
-    height: 50vh;
-    position: relative;
-    
-    img {
-        position: absolute;
-        height: 100%;
+
+.preserve3d {
+    .parallax {
+        position: relative;
+        top:0;
+        perspective: 1px;
+        perspective-origin: 50% 25vw;
+        height: 100vh;
+        overflow-x: hidden;
+        overflow-y: auto;
+
+        &--null {
+            transform: translateZ(0);
+        }
     }
     
-    .btn {
-        position: relative; 
+    .jumbotron {
+        transform: translateZ(-1px) scale(2);
+        z-index: -1;
+    }
+}
+
+
+.jumbotron {
+    position: relative;
+    width: 100vw;
+    height: 50vw;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    
+    &__image {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        min-height: 100%;
+        min-width: 100%;
+    }
+    
+    &__buttons {
+        width: 100px;
+        height: 30px;
+        margin: 3px 0;
+        &__wrapper {
+            position: absolute;
+            right: 5%;
+            top: 5%;
+            width: 100px;
+            height: 100px;
+        }
     }
     
     input {
@@ -45,11 +96,16 @@
     }
 }
 
-.hidden-controls {
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity 1s;
-    position: absolute;
+.menu {
+    position: fixed;
+    z-index: 1;
+    bottom: calc(100vh - 50px);
+    transition: bottom 0.5s;
+    
+    &__button {
+        width: 50px;
+        height: 50px;
+    }
 }
 
 .nav>li>a {
@@ -57,7 +113,11 @@
 }
 
 .navbar {
+    position: fixed;
+    top: 0;
     min-height: 0;
+    box-shadow: 0 2px 3px 0px rgba(0, 0, 0, 0.5);
+
 }
 
 .navbar-nav {
@@ -66,4 +126,20 @@
 
 .active {
     background-color: green;
+}
+
+.blog-list {
+    position: absolute;
+    top: 50vw;
+    left: 0;
+    right: 0;
+    padding: 0;
+    box-shadow: 0 -2px 3px 0px rgba(0, 0, 0, 0.5);
+    transform: translateZ(0px);
+}
+
+.hidden-controls {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 1s;
 }
