@@ -3,23 +3,35 @@ import {connect} from 'react-redux';
 import {Link, withRouter} from 'react-router';
 import authorization from '../actions/ajax/authorization';
 import ciCompare from '../helpers/ciCompare';
-import isMenuOpenAction from '../actions/isMenuOpen';
 import remove from '../actions/ajax/remove';
+import browserHistory from '../helpers/browserHistory';
 
 class Menu extends Component {
+    constructor(props) {
+        super(props);
+        
+        browserHistory.listen = browserHistory.listen.bind(this);
+        browserHistory.listen(() => {
+            this.menu && this.menuClose();
+        })
+    }
            
     signOut = (e) => {
         e.preventDefault();
         this.props.authorization('signOut');
     }
     
+    menuClose = () => {
+        this.menu.style.bottom = null;
+    }
+    
     menuToggle = () => {
         let {style, offsetTop, clientHeight} = this.menu;
-        offsetTop < 0 ? style.bottom = `calc(100vh - ${clientHeight}px)` : style.bottom = null;
+        offsetTop < 0 ? style.bottom = `calc(100vh - ${clientHeight}px)` : this.menuClose();
     }
     
     render() {
-        let {width, isMenuOpen, authorizedUser, remove, params: {user, titleLink, postId}} = this.props;
+        let {width, authorizedUser, remove, params: {user, titleLink, postId}} = this.props;
         let usersEqual = ciCompare(authorizedUser, user);
                 
         let activeChildRoute = this.props.routes[1];
@@ -48,7 +60,14 @@ class Menu extends Component {
         authorizedUser ? 
             menuItems.push(
                 <li key='sign-out' className={`${menuItemClass}`}>
-                    <Link className='nav-link' to='#' onClick={this.signOut}>Sign out</Link>
+                    <Link 
+                        className='nav-link' to='#' 
+                        onClick={(e) => {
+                            this.signOut(e);
+                            this.menuClose();
+                        }}>
+                        Sign out
+                    </Link>
                 </li>
             ) : 
             menuItems.push(
@@ -72,9 +91,8 @@ class Menu extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        authorizedUser: state.auth.authorizedUser,
-        isMenuOpen: state.menu.isMenuOpen
+        authorizedUser: state.auth.authorizedUser
     }
 }
 
-export default connect(mapStateToProps, {authorization, remove, isMenuOpenAction})(withRouter(Menu));
+export default connect(mapStateToProps, {authorization, remove})(withRouter(Menu));

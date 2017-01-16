@@ -5,7 +5,6 @@ import {render} from 'react-dom';
 import {createStore, combineReducers, applyMiddleware} from 'redux';
 import {Provider} from 'react-redux';
 import {Router, Route, IndexRoute} from 'react-router';
-import {createHistory, useBasename } from 'history';
 import {routerMiddleware} from 'react-router-redux';
 import {reducer as formReducer, Field} from 'redux-form';
 import RichTextEditor from 'react-rte';
@@ -14,7 +13,6 @@ import authorizationReducer from './reducers/authorization';
 import imageReducer from './reducers/image';
 import postsReducer from './reducers/posts';
 import commentsReducer from './reducers/comments';
-import menuReducer from './reducers/menu';
 import errorsReducer from './reducers/errors';
 import Authorization from './components/Authorization.jsx';
 import User from './components/User.jsx';
@@ -24,27 +22,21 @@ import CreatePost from './components/CreatePost.jsx';
 import EditPost from './components/EditPost.jsx';
 import authorizationAction from './actions/ajax/authorization';
 import clearErrors from './actions/clearErrors';
-import isMenuOpen from './actions/isMenuOpen';
+import browserHistory from './helpers/browserHistory';
 
-window.RichTextEditor = RichTextEditor; //spróbowc zmienić
+window.RichTextEditor = RichTextEditor;
+
+browserHistory.listen(() => {
+    store.dispatch(clearErrors());
+});
 
 const reducers = combineReducers({
     auth: authorizationReducer,
     image: imageReducer,
     posts: postsReducer,
     comments: commentsReducer,
-    menu: menuReducer,
     errors: errorsReducer,
     form: formReducer
-});
-
-const browserHistory = useBasename(createHistory)({
-    //basename: '/project2'
-});
-
-browserHistory.listen(() => {
-    store.dispatch(clearErrors());
-    store.dispatch(isMenuOpen(false));
 });
 
 const routerMidd = routerMiddleware(browserHistory);
@@ -67,3 +59,4 @@ render(
     </Provider>,
     document.getElementById('root')       
  );
+
