@@ -8,6 +8,7 @@ import makeLink from '../helpers/titleLink';
 import validatePurifyPost from '../helpers/validatePurifyPost';
 import protect from '../HOC/protectedComponent.jsx';
 import RichTextMarkdown from './RichTextMarkdown';
+import rteTitleConfig from '../options/rteTitleConfig';
 
 class EditPost extends Component {
         
@@ -35,7 +36,7 @@ class EditPost extends Component {
         return ( 
             <div>
                 <form onSubmit={this.submitHandler}>
-                    <Field component={RichTextMarkdown} initialVal={title} name='title'/>
+                    <Field component={RichTextMarkdown} rteConfig={rteTitleConfig} initialVal={title} name='title'/>
                     <Field component={RichTextMarkdown} initialVal={body} name='body'/>
                     <button type='submit'>Edit Post</button>
                 </form>

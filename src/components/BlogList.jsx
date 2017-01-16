@@ -9,54 +9,28 @@ import formatDate from '../helpers/formatDate';
 import remove from '../actions/ajax/remove';
 
 class BlogList extends Component {
-    constructor(props) {
-        super(props);
         
-        //variable that will store timeout for hiding edit and remove buttons
-        this.controlsTimeout;
-    }
-    
-    //show edit and remove buttons
-    showControls = (element) => {
-        
-        //clear timeout so that buttons arent hidden if less than
-        //one second ago function hideContols was called
-        clearTimeout(this.controlsTimeout);
-        element.style.visibility = 'visible';
-        element.style.opacity = 1;
-    }
-    
-    hideControls = (element) => {
-        element.style.opacity = 0;
-        this.controlsTimeout = setTimeout(() => {
-            element.style.visibility = 'hidden';
-        }, 1000)
-    }
-    
-    toggleControls = (element) => {
-        element.style.visibility == 'hidden' ? this.showControls() : this.hideControls();
-    }
-    
     render() {
         let {posts, postsLoading, remove, authorizedUser, fetchingPostsError, blogListRemoveError, params: {user}} = this.props;
         let usersEqual = ciCompare(authorizedUser, user);
+        let children;
 
         if (posts.length === 0) {
             if (postsLoading) {
-                return null;
+                children = null;
             }
             else if (fetchingPostsError) {
-                return <p>{fetchingPostsError}</p>
+                children = <li>{fetchingPostsError}</li>;
             }
             else if (usersEqual) {
-                return <p>You haven't written any posts yet.</p>;
+                children = <li>You haven't written any posts yet.</li>;
             }
             else  {
-                return <p>No posts found.</p>;
+                children = <li>No posts found.</li>;
             }
         }
         else if(posts.length > 0) {
-            let children = posts.map((post) => {
+            children = posts.map((post) => {
 
                 let titleLink = makeLink(post.title);
                 let isRemoveError = blogListRemoveError.ids.some((errorId) => errorId === post.id);
@@ -64,12 +38,7 @@ class BlogList extends Component {
                 let postControls;
                 
                 return (
-                    <li className='list-group-item' 
-                        key={post.id} 
-                        onMouseEnter={() => usersEqual && this.showControls(postControls)}
-                        onMouseLeave={() => usersEqual && this.hideControls(postControls)}
-                        onClick={() => usersEqual && this.toggleControls(postControls)} 
-                        >
+                    <li className='list-group-item' key={post.id}>
                         {isRemoveError &&
                             <p>{blogListRemoveError.error}</p>
                         }
@@ -79,7 +48,7 @@ class BlogList extends Component {
                               onClick={(e) => e.stopPropagation()} 
                               dangerouslySetInnerHTML={{__html: post.title}}/>
                         {usersEqual &&
-                            <div className='hidden-controls' ref={div => postControls = div} onClick={(e) => e.stopPropagation()}>  
+                            <div className='hidden-controls' onClick={(e) => e.stopPropagation()}>  
                                 <Link className='btn btn-primary btn-sm' to={`/${user}/${post.id}/${titleLink}/edit`}>
                                     <span className='glyphicon glyphicon-edit'></span>
                                 </Link>
@@ -93,17 +62,17 @@ class BlogList extends Component {
                 )
             });
             children = children.reverse();
-            
-            return (
-                <div className='container-fluid blog-list'>
-                    <div className='row'>
-                        <ul className='list-group nav col-lg-12 col-centered'>
-                            {children}
-                        </ul>
-                    </div>
-                </div>
-            )
         }
+        
+        return (
+            <div className='container-fluid blog-list'>
+                <div className='row'>
+                    <ul className='list-group nav col-lg-12 col-centered'>
+                        {children}
+                    </ul>
+                </div>
+            </div>
+        )
     }
 }
 

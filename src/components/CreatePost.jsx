@@ -6,6 +6,7 @@ import variousErrors from '../actions/variousErrors';
 import validatePurifyPost from '../helpers/validatePurifyPost';
 import protect from '../HOC/protectedComponent.jsx';
 import RichTextMarkdown from './RichTextMarkdown';
+import rteTitleConfig from '../options/rteTitleConfig';
 
 class CreatePost extends Component {
      
@@ -16,11 +17,11 @@ class CreatePost extends Component {
         if (validPost) createOrUpdate('createPost', {title: validPost.title, body: validPost.body, user});
     }
     
-    render() {
+    render() {        
         return ( 
             <div>
                 <form onSubmit={this.submitHandler}>
-                    <Field component={RichTextMarkdown} name='title'/>
+                    <Field component={RichTextMarkdown} rteConfig={rteTitleConfig} name='title'/>
                     <Field component={RichTextMarkdown} name='body'/>
                     <button type='submit'>Create post</button>
                 </form>

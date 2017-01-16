@@ -22,10 +22,6 @@ class Comments extends Component {
         }
     }
     
-    removeComment = (id) => {
-        this.props.remove('removeComment', {id});
-    }
-    
     render() {
         let {comments, commentsLoading, authorizedUser, linkUser, commentCreationError, fetchingCommentsError, commentRemoveError} = this.props;
         let usersEqual = ciCompare(authorizedUser,linkUser);
@@ -61,7 +57,7 @@ class Comments extends Component {
                             <span>Anonymous</span>
                         }
                         {(authorizedUser === author || usersEqual) &&
-                            <button className='btn btn-sm btn-danger' onClick={() => this.removeComment(id)}><span className='glyphicon glyphicon-trash'></span></button>
+                            <button className='btn btn-sm btn-danger' onClick={() => this.props.remove('removeComment', {id})}><span className='glyphicon glyphicon-trash'></span></button>
                         }
                         <p>{body}</p>
                     </li>

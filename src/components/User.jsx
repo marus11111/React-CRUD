@@ -94,14 +94,14 @@ class User extends Component {
                             <div>
                                 <img src={imageUrl} className='jumbotron__image'></img>
                                 { usersEqual &&
-                                    <div className='jumbotron__buttons__wrapper hidden-controls' ref={div => this.imageControls = div}>
-                                        <form className='jumbotron__buttons'>
+                                    <div className='jumbotron__image__controls' ref={div => this.imageControls = div}>
+                                        <form className='jumbotron__image__single-button'>
                                             <label htmlFor='imageUpload' className='btn btn-primary' onClick={e => e.stopPropagation()}>
                                                 <span className='glyphicon glyphicon-edit'></span> Change
                                             </label>
                                             <input id='imageUpload' type='file' onChange={() => this.uploadImage(this.imageInput.files)} ref={input => this.imageInput = input}></input>
                                         </form>
-                                        <button className='btn btn-danger jumbotron__buttons' onClick={this.removeImage}>
+                                        <button className='btn btn-danger jumbotron__image__single-button' onClick={this.removeImage}>
                                             <span className='glyphicon glyphicon-trash'></span> Remove
                                         </button>
                                     </div>

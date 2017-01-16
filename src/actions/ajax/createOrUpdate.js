@@ -73,7 +73,8 @@ export default (type, data) => {
                     case 'createPost': {
                         let {title, body, user} = data;
                         let {snippet, timestamp, postId} = res;
-                        snippet = snippet.replace(/(\r\n)/g, '<br />');
+                        snippet = snippet.replace(/\\r\\n/g, '');
+                        console.log(snippet);
                         let newPost = {title, body, snippet, timestamp, id: postId};
                         dispatch(addPost(newPost));
                         dispatch(push(`/${user}`));

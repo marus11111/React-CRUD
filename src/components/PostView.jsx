@@ -26,12 +26,14 @@ class PostView extends Component {
         }
 
         return (
-            <div className='postview'>
+            <div className='postview container'>
                 {post &&
-                    <div>
-                        <time dateTime={date.iso} className='postview__date'>{date.display}</time>
-                        <h1 dangerouslySetInnerHTML={{__html: title}} className='postview__title'/>
-                        <p dangerouslySetInnerHTML={{__html: body}} className='postview__body'/>
+                    <div className='row row-center'>
+                        <div className='postview__title__wrapper col-xs-12 col-sm-9 col-lg-7 col-centered'>
+                            <time dateTime={date.iso} className='postview__date'>{date.display}</time>
+                            <h1 dangerouslySetInnerHTML={{__html: title}} className='postview__title'/>
+                        </div>
+                        <p dangerouslySetInnerHTML={{__html: body}} className='postview__body col-xs-12 col-sm-9 col-lg-7 col-centered'/>
                         <Comments postId={post.id} linkUser={user}/>
                     </div>
                 }

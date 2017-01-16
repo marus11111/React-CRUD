@@ -1,16 +1,10 @@
+@import 'options';
 @import 'loadingPacman';
+@import 'postview';
 
-@keyframes open-menu {
-    0% {
-        bottom: 0;
-    }
-    100% {
-        bottom: calc(100vh - 50px);
-    }
-}
 
 body {
-    background: #f5f4f0;
+    background: $bkgCol;
 }
 
 .row-center {
@@ -73,18 +67,22 @@ body {
         transform: translate(-50%, -50%);
         min-height: 100%;
         min-width: 100%;
-    }
-    
-    &__buttons {
-        width: 100px;
-        height: 30px;
-        margin: 3px 0;
-        &__wrapper {
+        
+        &__controls {
             position: absolute;
             right: 5%;
             top: 5%;
             width: 100px;
             height: 100px;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 1s;
+        }
+        
+        &__single-button {
+            width: 100px;
+            height: 30px;
+            margin: 3px 0;
         }
     }
     
@@ -136,10 +134,4 @@ body {
     padding: 0;
     box-shadow: 0 -2px 3px 0px rgba(0, 0, 0, 0.5);
     transform: translateZ(0px);
-}
-
-.hidden-controls {
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity 1s;
 }

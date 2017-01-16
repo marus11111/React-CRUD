@@ -1,7 +1,6 @@
 export default (title, body) => {
-    
-    title = DOMPurify.sanitize(title);
-    body = DOMPurify.sanitize(body);
+
+    let post = null;
     
     //strip html tegs and spaces from string to see if there is any text
     let titleText, bodyText;
@@ -10,5 +9,13 @@ export default (title, body) => {
         bodyText = body.replace(/((<\/?[^>]+(>|$))|(&nbsp;))/g, ""); 
     }
     
-    return titleText && bodyText && {title, body};             
+    //purify title and body and strip <p> tag from title
+    if (titleText && bodyText) {
+        title = DOMPurify.sanitize(title);
+        title = title.replace(/^<p>/,'').replace(/<\/p>$/,'');
+        body = DOMPurify.sanitize(body);
+        post = {title, body};
+    }
+    
+    return post;             
 }
