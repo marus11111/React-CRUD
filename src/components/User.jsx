@@ -1,19 +1,17 @@
 import React, {Component} from 'react';
-import {Link} from 'react-router';
 import {connect} from 'react-redux';
 import Dropzone from 'react-dropzone';
-import clearUserData from '../actions/clearUserData';
 import variousErrors from '../actions/variousErrors';
+import clearUserData from '../actions/clearUserData';
 import fetchData from '../actions/ajax/fetchData';
 import createOrUpdate from '../actions/ajax/createOrUpdate';
-import remove from '../actions/ajax/remove';
 import Menu from './Menu.jsx';
+import ImageDisplay from './ImageDisplay.jsx';
 import ciCompare from '../helpers/ciCompare';
 
 class User extends Component { 
     constructor(props){
         super(props);
-        this.controlsTimeout;
         
         this.fetchDataFromLink = (currentProps, nextProps) => {
             let {user} = nextProps ? nextProps.params : currentProps.params;
@@ -32,23 +30,6 @@ class User extends Component {
         this.props.clearUserData();
     }
     
-    showControls = () => {
-        clearTimeout(this.controlsTimeout);
-        this.imageControls.style.visibility = 'visible';
-        this.imageControls.style.opacity = 1;
-    }
-    
-    hideControls = () => {
-        this.imageControls.style.opacity = 0;
-        this.controlsTimeout = setTimeout(() => {
-            this.imageControls.style.visibility = 'hidden';
-        }, 1000)
-    }
-    
-    toggleControls = () => {
-        this.imageControls.style.visibility == 'hidden' ? this.showControls() : this.hideControls();
-    }
-    
     uploadImage = (images) => {
         let {createOrUpdate, variousErrors} = this.props;
         const upload_preset = 'jyju7fnq';
@@ -62,12 +43,6 @@ class User extends Component {
         }
     }
     
-    removeImage = (e) => {
-        e.stopPropagation();
-        clearTimeout(this.controlsTimeout);
-        this.props.remove('removeImage');
-    }
-    
     render() {
         let {imageUrl, imageUploading, userError, error, authorizedUser, params: {user}, children} = this.props;
         
@@ -75,42 +50,24 @@ class User extends Component {
         
         let usersEqual = ciCompare(authorizedUser, user);
         
-        let eventHandlers = {};
-        if (imageUrl && usersEqual) {
-            eventHandlers = {
-                onMouseEnter: this.showControls,
-                onMouseLeave: this.hideControls,
-                onClick: this.toggleControls
-            }
-        }
-        
         return (
             <div className='parallax--null'>
                 <Menu/>
                 <div className='parallax'>    
                 { (imageUrl || usersEqual) &&
-                    <div className='jumbotron' {...eventHandlers}>
+                    <div className='jumbotron'>
                         {imageUrl && 
-                            <div>
-                                <img src={imageUrl} className='jumbotron__image'></img>
-                                { usersEqual &&
-                                    <div className='jumbotron__image__controls' ref={div => this.imageControls = div}>
-                                        <form className='jumbotron__image__single-button'>
-                                            <label htmlFor='imageUpload' className='btn btn-primary' onClick={e => e.stopPropagation()}>
-                                                <span className='glyphicon glyphicon-edit'></span> Change
-                                            </label>
-                                            <input id='imageUpload' type='file' onChange={() => this.uploadImage(this.imageInput.files)} ref={input => this.imageInput = input}></input>
-                                        </form>
-                                        <button className='btn btn-danger jumbotron__image__single-button' onClick={this.removeImage}>
-                                            <span className='glyphicon glyphicon-trash'></span> Remove
-                                        </button>
-                                    </div>
-                                }
-                            </div>
+                            <ImageDisplay 
+                                uploadImage={this.uploadImage} 
+                                imageUrl={imageUrl}
+                                usersEqual={usersEqual}/>
                         }
                         {!imageUrl && !imageUploading &&
                             <div>
-                                <Dropzone multiple={false} accept='image/*' onDrop={this.uploadImage}/>
+                                <Dropzone 
+                                    multiple={false} 
+                                    accept='image/*' 
+                                    onDrop={this.uploadImage}/>
                                 <p>Drop an image or click to select a file from your computer.<br/>Maximum file size is 500 kB.</p>
                             </div>
                         }
@@ -144,4 +101,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps, {fetchData, createOrUpdate, remove, clearUserData, variousErrors})(User);
+export default connect(mapStateToProps, {fetchData, createOrUpdate, variousErrors, clearUserData})(User);
