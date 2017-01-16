@@ -1,0 +1,36 @@
+.jumbotron {
+    position: relative;
+    width: 100vw;
+    height: 50vw;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    
+    &__image {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        
+        &__controls {
+            visibility: hidden;
+            position: absolute;
+            right: 5%;
+            top: 5%;
+            width: 100px;
+        }
+        
+        &__single-button {
+            width: 100px;
+            margin: 3px 0;
+        }
+    }
+    
+    input {
+        position: absolute;
+        z-index: -1;
+        width: 0.1px;
+        height: 0.1px;
+        opacity: 0;
+    }
+}

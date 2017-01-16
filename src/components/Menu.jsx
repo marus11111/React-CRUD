@@ -22,12 +22,13 @@ class Menu extends Component {
     }
     
     menuClose = () => {
-        this.menu.style.bottom = null;
+        this.menu.className = this.menu.className.replace(' menu--open', '');
     }
     
     menuToggle = () => {
-        let {style, offsetTop, clientHeight} = this.menu;
-        offsetTop < 0 ? style.bottom = `calc(100vh - ${clientHeight}px)` : this.menuClose();
+        /menu--open/.test(this.menu.className) ? 
+            this.menuClose() : 
+            this.menu.className += ' menu--open';
     }
     
     render() {
@@ -37,7 +38,7 @@ class Menu extends Component {
         let activeChildRoute = this.props.routes[1];
         let route = activeChildRoute.path || 'home';            
         let menuItems = []
-        let menuItemClass = 'menu__item';
+        let menuItemClass = 'menu__item nav-item';
         
         route !== 'home' && menuItems.push(
             <li key='home' className={`${menuItemClass}`}>
@@ -78,7 +79,7 @@ class Menu extends Component {
         
         return (
             <nav key='menu' ref={nav => this.menu = nav} className='menu'>
-                <ul className='menu__list'>
+                <ul className='menu__list nav'>
                     {menuItems}
                 </ul>
                 <button className='menu__button' onClick={this.menuToggle}>

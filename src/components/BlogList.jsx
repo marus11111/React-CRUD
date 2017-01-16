@@ -7,9 +7,10 @@ import ciCompare from '../helpers/ciCompare';
 import makeLink from '../helpers/titleLink';
 import formatDate from '../helpers/formatDate';
 import remove from '../actions/ajax/remove';
+import {showControls, hideControls, toggleControls} from '../helpers/hiddenControls';
 
-class BlogList extends Component {
-        
+class BlogList extends Component {   
+    
     render() {
         let {posts, postsLoading, remove, authorizedUser, fetchingPostsError, blogListRemoveError, params: {user}} = this.props;
         let usersEqual = ciCompare(authorizedUser, user);
@@ -35,10 +36,16 @@ class BlogList extends Component {
                 let titleLink = makeLink(post.title);
                 let isRemoveError = blogListRemoveError.ids.some((errorId) => errorId === post.id);
                 let date = formatDate(post.timestamp, 'post');
-                let postControls;
+                let hiddenControls;
                 
                 return (
-                    <li className='list-group-item' key={post.id}>
+                    <li 
+                        className='blog-list__item' 
+                        key={post.id} 
+                        onMouseEnter={() => usersEqual && showControls(hiddenControls)}
+                        onMouseLeave={() => usersEqual && hideControls(hiddenControls)}
+                        onClick={() => usersEqual && toggleControls(hiddenControls)}
+                        >
                         {isRemoveError &&
                             <p>{blogListRemoveError.error}</p>
                         }
@@ -48,11 +55,11 @@ class BlogList extends Component {
                               onClick={(e) => e.stopPropagation()} 
                               dangerouslySetInnerHTML={{__html: post.title}}/>
                         {usersEqual &&
-                            <div className='hidden-controls' onClick={(e) => e.stopPropagation()}>  
-                                <Link className='btn btn-primary btn-sm' to={`/${user}/${post.id}/${titleLink}/edit`}>
+                            <div className='blog-list__controls' onClick={(e) => e.stopPropagation()} ref={div => hiddenControls = div}>  
+                                <Link className='btn btn-sm blog-list__single-button' to={`/${user}/${post.id}/${titleLink}/edit`}>
                                     <span className='glyphicon glyphicon-edit'></span>
                                 </Link>
-                                <button className='btn btn-danger btn-sm' onClick={() => remove('removePost', {id: post.id, from: 'list'})}>
+                                <button className='btn btn-sm blog-list__single-button' onClick={() => remove('removePost', {id: post.id, from: 'list'})}>
                                     <span className='glyphicon glyphicon-trash'></span>
                                 </button>
                             </div>
