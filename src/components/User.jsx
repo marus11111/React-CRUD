@@ -44,48 +44,64 @@ class User extends Component {
     }
     
     render() {
-        let {imageUrl, imageUploading, userError, error, authorizedUser, params: {user}, children} = this.props;
-        
-        if (userError) return <p>{userError}</p>;
-        
+        let {imageUrl, imageUploading, userError, error, authorizedUser, params: {user}} = this.props;
         let usersEqual = ciCompare(authorizedUser, user);
         
+        let children = React.Children.map(this.props.children, (child) => {
+            return React.cloneElement(child, {
+                authorizedUser,
+                usersEqual,
+                imageUrl
+            });
+        });
+        
+        console.log(userError);
+        
         return (
-            <div className='parallax--null'>
-                <Menu/>
-                <div className='parallax'>    
-                { (imageUrl || usersEqual) &&
-                    <div className='jumbotron'>
-                        {imageUrl && 
-                            <ImageDisplay 
-                                uploadImage={this.uploadImage} 
-                                imageUrl={imageUrl}
-                                usersEqual={usersEqual}/>
-                        }
-                        {!imageUrl && !imageUploading &&
-                            <div>
-                                <Dropzone 
-                                    multiple={false} 
-                                    accept='image/*' 
-                                    onDrop={this.uploadImage}/>
-                                <p>Drop an image or click to select a file from your computer.<br/>Maximum file size is 500 kB.</p>
+            <div>
+                {userError &&
+                    <p>{userError}</p>
+                }
+                {!userError &&  
+                    <div className='parallax--null'>
+                        <Menu 
+                            authorizedUser={authorizedUser}
+                            usersEqual={usersEqual}/>
+                        <div className='parallax'>    
+                        { (imageUrl || usersEqual) &&
+                            <div className='jumbotron'>
+                                {imageUrl && 
+                                    <ImageDisplay 
+                                        uploadImage={this.uploadImage} 
+                                        imageUrl={imageUrl}
+                                        usersEqual={usersEqual}/>
+                                }
+                                {!imageUrl && !imageUploading &&
+                                    <div>
+                                        <Dropzone 
+                                            multiple={false} 
+                                            accept='image/*' 
+                                            onDrop={this.uploadImage}/>
+                                        <p>Drop an image or click to select a file from your computer.<br/>Maximum file size is 500 kB.</p>
+                                    </div>
+                                }
+                                {imageUploading &&
+                                    <div>
+                                        <div className='dot'></div>
+                                        <div className='pacman'></div>
+                                    </div>
+                                }
                             </div>
                         }
-                        {imageUploading &&
+                        {error && 
                             <div>
-                                <div className='dot'></div>
-                                <div className='pacman'></div>
+                                <p>{error}</p>
                             </div>
                         }
+                        {children}
+                        </div>
                     </div>
                 }
-                {error && 
-                    <div>
-                        <p>{error}</p>
-                    </div>
-                }
-                {children}
-                </div>
             </div>
         )
     }

@@ -13,17 +13,22 @@
         background-size: cover;
         
         &__controls {
-            visibility: hidden;
             position: absolute;
             right: 5%;
-            top: 5%;
-            width: 100px;
+            bottom: 5%;
+            width: 220px;
         }
         
         &__single-button {
+            display: inline-block;
             width: 100px;
-            margin: 3px 0;
+            margin: 0 5px;
         }
+    }
+    
+    form {
+        display: inline-block;
+        width: 110px;
     }
     
     input {

@@ -118,7 +118,7 @@ export default (type, data) => {
             type === 'imageUpload' ? dispatch(imageUploading(false)) : null;
         })
         .catch((error)=>{
-            console.log(`createOrUpdate Error: ${error}`);
+            throw new Error(`ajax createOrUpdate: ${error}`);
         })
     }
 }

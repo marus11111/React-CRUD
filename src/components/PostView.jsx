@@ -13,7 +13,7 @@ class PostView extends Component {
     }
     
     render() {
-        let {posts, postsLoading, params: {user, postId}} = this.props;
+        let {authorizedUser, usersEqual, imageUrl, posts, postsLoading, params: {user, postId}} = this.props;
         let title, body, date;
         
         let post = posts.find((post) => {
@@ -24,17 +24,25 @@ class PostView extends Component {
             body = post.body;
             date = formatDate(post.timestamp, 'post');      
         }
+        
+        let titleClass = (usersEqual || imageUrl) ? 
+            'col-sm-9 col-lg-7 col-centered' :
+            'postview__title__wrapper--no-image';
 
         return (
             <div className='postview container'>
                 {post &&
                     <div className='row row-center'>
-                        <div className='postview__title__wrapper col-xs-12 col-sm-9 col-lg-7 col-centered'>
+                        <div className={`postview__title__wrapper col-xs-12 ${titleClass}`}>
                             <time dateTime={date.iso} className='postview__date'>{date.display}</time>
                             <h1 dangerouslySetInnerHTML={{__html: title}} className='postview__title'/>
                         </div>
                         <p dangerouslySetInnerHTML={{__html: body}} className='postview__body col-xs-12 col-sm-9 col-lg-7 col-centered'/>
-                        <Comments postId={post.id} linkUser={user}/>
+                        <Comments 
+                            postId={post.id} 
+                            linkUser={user}
+                            authorizedUser={authorizedUser}
+                            usersEqual={usersEqual}/>
                     </div>
                 }
                 {!post && !postsLoading &&

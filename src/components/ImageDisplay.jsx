@@ -27,7 +27,7 @@ class ImageDisplay extends Component {
                 >
                 <div className='jumbotron__image' style={imageStyle}></div>
                 { usersEqual &&
-                    <div className='jumbotron__image__controls' ref={div => imageControls = div}>
+                    <div className='jumbotron__image__controls hidden-controls' ref={div => imageControls = div}>
                         <form>
                             <label htmlFor='imageUpload' className='btn jumbotron__image__single-button' onClick={e => e.stopPropagation()}>
                                 <span className='glyphicon glyphicon-edit'></span> Change

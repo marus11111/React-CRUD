@@ -19,8 +19,8 @@ time, mark, audio, video {
 	margin: 0;
 	padding: 0;
 	border: 0;
+    font-family: $fontFamily;
 	font-size: 100%;
-	font: inherit;
 	vertical-align: baseline;
 }
 /* HTML5 display-role reset for older browsers */
@@ -30,6 +30,7 @@ footer, header, hgroup, menu, nav, section {
 }
 body {
 	line-height: 1;
+    background: $mainColor;
 }
 ol, ul {
 	list-style: none;
@@ -45,4 +46,26 @@ q:before, q:after {
 table {
 	border-collapse: collapse;
 	border-spacing: 0;
+}
+
+.btn {
+    border-radius: 0;
+    background-color: $secondaryColor;
+    color: $secFontCol;
+    border: 2px solid transparent;
+    transition: color 0.5s, border 0.5s, background-color 0.5s;
+    
+    &:hover {
+        color: $mainFontCol;
+        border: 2px solid $mainFontCol;
+        background-color: $mainColor;
+    }
+}
+
+.row-center {
+    text-align: center;
+    .col-centered {
+        float: none;
+        display: inline-block;
+    }
 }

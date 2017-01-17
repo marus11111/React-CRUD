@@ -3,7 +3,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
-import ciCompare from '../helpers/ciCompare';
 import makeLink from '../helpers/titleLink';
 import formatDate from '../helpers/formatDate';
 import remove from '../actions/ajax/remove';
@@ -12,8 +11,7 @@ import {showControls, hideControls, toggleControls} from '../helpers/hiddenContr
 class BlogList extends Component {   
     
     render() {
-        let {posts, postsLoading, remove, authorizedUser, fetchingPostsError, blogListRemoveError, params: {user}} = this.props;
-        let usersEqual = ciCompare(authorizedUser, user);
+        let {posts, postsLoading, remove, usersEqual, imageUrl, fetchingPostsError, blogListRemoveError, params: {user}} = this.props;
         let children;
 
         if (posts.length === 0) {
@@ -55,7 +53,7 @@ class BlogList extends Component {
                               onClick={(e) => e.stopPropagation()} 
                               dangerouslySetInnerHTML={{__html: post.title}}/>
                         {usersEqual &&
-                            <div className='blog-list__controls' onClick={(e) => e.stopPropagation()} ref={div => hiddenControls = div}>  
+                            <div className='blog-list__controls hidden-controls' onClick={(e) => e.stopPropagation()} ref={div => hiddenControls = div}>  
                                 <Link className='btn btn-sm blog-list__single-button' to={`/${user}/${post.id}/${titleLink}/edit`}>
                                     <span className='glyphicon glyphicon-edit'></span>
                                 </Link>
@@ -72,7 +70,7 @@ class BlogList extends Component {
         }
         
         return (
-            <div className='container-fluid blog-list'>
+            <div className={`container-fluid blog-list ${!usersEqual && !imageUrl && 'blog-list--no-image'}`}>
                 <div className='row'>
                     <ul className='list-group nav col-lg-12 col-centered'>
                         {children}
@@ -89,7 +87,6 @@ const mapStateToProps = (state) => {
         postsLoading: state.posts.loading,
         fetchingPostsError: state.errors.fetchingPostsError,
         blogListRemoveError: state.errors.blogListRemoveError,
-        authorizedUser: state.auth.authorizedUser
     }
 }
 

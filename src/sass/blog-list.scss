@@ -1,0 +1,27 @@
+.blog-list {
+    position: absolute;
+    top: 50vw;
+    left: 0;
+    right: 0;
+    padding: 0;
+    background-color: $mainColor;
+    box-shadow: 0 -2px 3px 0px rgba(0, 0, 0, 0.5);
+    transform: translateZ(0px);
+    
+    &__item {
+        text-align: center;
+    }
+    
+    &__controls {
+        position: absolute;
+        width: 30px;
+    }
+    
+    &__single-button {
+        margin: 5px;
+    }
+    
+    &--no-image {
+        top: 50px;
+    }
+}

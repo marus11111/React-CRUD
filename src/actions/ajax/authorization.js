@@ -69,7 +69,7 @@ export default (type, data) => {
             type === 'cookie' ? dispatch(ongoingCookieAuth(false)) : null;
         })
         .catch((error) => {
-            console.log(`authorization Error: ${error}`);
+            throw new Error(`ajax authorization: ${error}`);
         })
     }
 }

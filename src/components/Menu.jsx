@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Link, withRouter} from 'react-router';
 import authorization from '../actions/ajax/authorization';
-import ciCompare from '../helpers/ciCompare';
 import remove from '../actions/ajax/remove';
 import browserHistory from '../helpers/browserHistory';
 
@@ -32,9 +31,8 @@ class Menu extends Component {
     }
     
     render() {
-        let {width, authorizedUser, remove, params: {user, titleLink, postId}} = this.props;
-        let usersEqual = ciCompare(authorizedUser, user);
-                
+        let {width, authorizedUser, usersEqual, remove, params: {user, titleLink, postId}} = this.props;
+        
         let activeChildRoute = this.props.routes[1];
         let route = activeChildRoute.path || 'home';            
         let menuItems = []
@@ -90,10 +88,4 @@ class Menu extends Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        authorizedUser: state.auth.authorizedUser
-    }
-}
-
-export default connect(mapStateToProps, {authorization, remove})(withRouter(Menu));
+export default connect(null, {authorization, remove})(withRouter(Menu));

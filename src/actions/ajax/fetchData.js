@@ -96,7 +96,7 @@ export default (type, data) => {
                 dispatch(commentsLoading(false)); 
         })
         .catch((error) => {
-            console.log(`fetchData Error: ${error}`);
+            throw new Error(`ajax fetchData: ${error}`);
         })
     }
 }

@@ -6,7 +6,6 @@ import createOrUpdate from '../actions/ajax/createOrUpdate';
 import commentCreationErrorAction from '../actions/commentCreationError';
 import remove from '../actions/ajax/remove';
 import formatDate from '../helpers/formatDate';
-import ciCompare from '../helpers/ciCompare';
 
 class Comments extends Component {
 
@@ -23,8 +22,7 @@ class Comments extends Component {
     }
     
     render() {
-        let {comments, commentsLoading, authorizedUser, linkUser, commentCreationError, fetchingCommentsError, commentRemoveError} = this.props;
-        let usersEqual = ciCompare(authorizedUser,linkUser);
+        let {comments, commentsLoading, authorizedUser, usersEqual, linkUser, commentCreationError, fetchingCommentsError, commentRemoveError} = this.props;
         let children;
         
         if (comments.length === 0){
@@ -90,8 +88,7 @@ let mapStateToProps = (state) => {
         commentsLoading: state.comments.loading,
         commentCreationError: state.errors.commentCreationError,
         commentRemoveError: state.errors.commentRemoveError,
-        fetchingCommentsError: state.errors.fetchingCommentsError,
-        authorizedUser: state.auth.authorizedUser
+        fetchingCommentsError: state.errors.fetchingCommentsError
     }
 }
 

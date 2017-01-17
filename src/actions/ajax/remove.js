@@ -87,7 +87,7 @@ export default (type, options) => {
             }
         })
         .catch((error) => {
-            console.log(`remove Error: ${error}`);
+            throw new Error(`ajax remove: ${error}`);
         })
     }
 }
