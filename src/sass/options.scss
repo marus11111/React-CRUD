@@ -1,13 +1,20 @@
 //main background
-$mainColor: white;
+$mainColor: #f5f4f0;
 
 //title, menu buttons
-$secondaryColor: rgba(0,0,0,0.85);
+$secondaryColor: rgba(2,0,15,0.85);
 
 //post text, button text on hover
-$mainFontCol: rgba(0,0,0,0.85);
+$mainFontCol: rgba(2,0,15,0.85);
 
 //button text, menu text
-$secFontCol: white;
+$secFontCol: #f5f4f0;
 
 $fontFamily: Open-Sans, sans-serif;
+
+$borderRadius: 0.25em;
+
+$shadow: 0 -2px 3px 0px rgba(0, 0, 0, 0.5);
+
+//line-height
+$lineH: 1.5;

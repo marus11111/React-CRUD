@@ -51,8 +51,8 @@ class CreateOrUpdate {
         //get data from request
         $title = mysqli_real_escape_string($link, $_POST['title']);
         $body = mysqli_real_escape_string($link, $_POST['body']);
-        preg_match('/(([^\s]+\s*){1,30})/', $body, $snippet);
-        $snippet = $snippet[0];
+        preg_match('/(([^\s]+\s*){1,50})/', $body, $snippet);
+        $snippet = $snippet[0].'...';
         
         //get author id and set timestamp
         $authorId = $_COOKIE['id'];
@@ -86,8 +86,8 @@ class CreateOrUpdate {
         //get data from request
         $title = mysqli_real_escape_string($link, $_POST['title']);
         $body = mysqli_real_escape_string($link, $_POST['body']);
-        preg_match('/(([^\s]+\s*){1,30})/', $body, $snippet);
-        $snippet = $snippet[0];
+        preg_match('/(([^\s]+\s*){1,50})/', $body, $snippet);
+        $snippet = $snippet[0].'...';
 
         //get post id
         $postId = $_POST['postId'];

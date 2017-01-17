@@ -47,8 +47,8 @@ class BlogList extends Component {
                         {isRemoveError &&
                             <p>{blogListRemoveError.error}</p>
                         }
-                        <time dateTime={date.iso}>{date.display}</time>
-                        <Link className='nav-link' 
+                        <time className='blog-list__item__date' dateTime={date.iso}>{date.display}</time>
+                        <Link className='nav-link blog-list__item__title' 
                               to={`/${user}/${post.id}/${titleLink}`} 
                               onClick={(e) => e.stopPropagation()} 
                               dangerouslySetInnerHTML={{__html: post.title}}/>
@@ -62,7 +62,7 @@ class BlogList extends Component {
                                 </button>
                             </div>
                         }
-                        <p dangerouslySetInnerHTML={{__html: post.snippet}}/>
+                        <p className='blog-list__item__snippet' dangerouslySetInnerHTML={{__html: post.snippet}}/>
                     </li>
                 )
             });
@@ -71,10 +71,12 @@ class BlogList extends Component {
         
         return (
             <div className={`container-fluid blog-list ${!usersEqual && !imageUrl && 'blog-list--no-image'}`}>
-                <div className='row'>
-                    <ul className='list-group nav col-lg-12 col-centered'>
-                        {children}
-                    </ul>
+                <div className='row-center'>
+                    <div className='col-xs-12'>
+                        <ul className='nav col-xs-12 col-sm-9 col-md-6 col-centered'>
+                            {children}
+                        </ul>
+                    </div>
                 </div>
             </div>
         )

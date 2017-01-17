@@ -26,7 +26,7 @@ class PostView extends Component {
         }
         
         let titleClass = (usersEqual || imageUrl) ? 
-            'col-sm-9 col-lg-7 col-centered' :
+            'col-sm-9 col-md-7 col-centered' :
             'postview__title__wrapper--no-image';
 
         return (
@@ -37,7 +37,7 @@ class PostView extends Component {
                             <time dateTime={date.iso} className='postview__date'>{date.display}</time>
                             <h1 dangerouslySetInnerHTML={{__html: title}} className='postview__title'/>
                         </div>
-                        <p dangerouslySetInnerHTML={{__html: body}} className='postview__body col-xs-12 col-sm-9 col-lg-7 col-centered'/>
+                        <p dangerouslySetInnerHTML={{__html: body}} className='postview__body col-xs-12 col-sm-9 col-md-7 col-centered'/>
                         <Comments 
                             postId={post.id} 
                             linkUser={user}

@@ -2,32 +2,57 @@
     position: relative;
     width: 100%;
     background-color: $mainColor;
+    box-shadow: $shadow;
+    padding-top: 2em;
+    line-height: $lineH;
+    
+    p {
+        margin-bottom: 1em;
+    }
     
     &__date {
         display: inline-block;
         position: absolute;
-        top: -0.5em;
-        width: 30%;
-        paadding: 0.25em;
-        font-size: 1em;
-        line-height: 1.5em;
+        top: 0;
+        transform: translate(-50%, -50%);
+        width: 12em;
+        padding: 0.25em;
+        font-size: 0.6em;
+        line-height: $lineH;
         font-weight: 400;
-        text-transform: uppercase;
         color: $secFontCol;
-        background-color: $secondaryColor;
+        border: 2px solid $secFontCol;
+        border-radius: $borderRadius;
+        
+        //applying background color only on top half of element, so 
+        //that semi-trnsparent background dont overlap 
+        &:before {
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: -1;
+            width: 100%;
+            height: 50%;
+            content: '';
+            background-color: $secondaryColor;
+            border-radius: $borderRadius $borderRadius 0 0;
+            
+        }
     }
     
     &__title {
-        font-size: 3em;
-        line-height: 4.5em;
+        font-size: 1.5em;
+        line-height: $lineH;
         font-weight: 700;
         
         &__wrapper {
             position: absolute;
             bottom: 100%;
+            padding: 1.3em 2em;
             text-align: center;
             color: $secFontCol;
             background-color: $secondaryColor;
+            border-radius: $borderRadius $borderRadius 0 0;
             
             &--no-image {
                 position: relative;
@@ -38,6 +63,6 @@
     }
     
     &__body{
-        text-align: left;
+        text-align: justify;
     }
 }

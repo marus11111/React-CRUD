@@ -13,6 +13,7 @@ class CreatePost extends Component {
     submitHandler = (event) => {
         event.preventDefault();
         let {title, body, createOrUpdate, variousErrors, params: {user}} = this.props;
+        console.log(body);
         let validPost = validatePurifyPost(title, body);
         if (validPost) createOrUpdate('createPost', {title: validPost.title, body: validPost.body, user});
     }

@@ -74,7 +74,6 @@ export default (type, data) => {
                         let {title, body, user} = data;
                         let {snippet, timestamp, postId} = res;
                         snippet = snippet.replace(/\\r\\n/g, '');
-                        console.log(snippet);
                         let newPost = {title, body, snippet, timestamp, id: postId};
                         dispatch(addPost(newPost));
                         dispatch(push(`/${user}`));
@@ -83,6 +82,7 @@ export default (type, data) => {
                     case 'editPost': {
                         let {title, body, postId, timestamp, user} = data;
                         let {snippet} = res;
+                        snippet = snippet.replace(/\\r\\n/g, '');
                         let modifiedPost = {title, body, snippet, timestamp, id: postId};
                         dispatch(editPost(modifiedPost));
                         dispatch(setEditedPost(postId));

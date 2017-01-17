@@ -49,7 +49,7 @@ table {
 }
 
 .btn {
-    border-radius: 0;
+    border-radius: $borderRadius;
     background-color: $secondaryColor;
     color: $secFontCol;
     border: 2px solid transparent;

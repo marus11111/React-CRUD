@@ -54,9 +54,7 @@ class User extends Component {
                 imageUrl
             });
         });
-        
-        console.log(userError);
-        
+      
         return (
             <div>
                 {userError &&
