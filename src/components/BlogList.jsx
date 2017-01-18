@@ -2,7 +2,7 @@
 
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Link} from 'react-router';
+import {Link, withRouter} from 'react-router';
 import makeLink from '../helpers/titleLink';
 import formatDate from '../helpers/formatDate';
 import remove from '../actions/ajax/remove';
@@ -11,7 +11,7 @@ import {showControls, hideControls, toggleControls} from '../helpers/hiddenContr
 class BlogList extends Component {   
     
     render() {
-        let {posts, postsLoading, remove, usersEqual, imageUrl, fetchingPostsError, blogListRemoveError, params: {user}} = this.props;
+        let {posts, postsLoading, remove, usersEqual, imageUrl, fetchingPostsError, blogListRemoveError, router, params: {user}} = this.props;
         let children;
 
         if (posts.length === 0) {
@@ -48,10 +48,11 @@ class BlogList extends Component {
                             <p>{blogListRemoveError.error}</p>
                         }
                         <time className='blog-list__item__date' dateTime={date.iso}>{date.display}</time>
-                        <Link className='nav-link blog-list__item__title' 
-                              to={`/${user}/${post.id}/${titleLink}`} 
-                              onClick={(e) => e.stopPropagation()} 
-                              dangerouslySetInnerHTML={{__html: post.title}}/>
+                        <Link 
+                            className='nav-link blog-list__item__title' 
+                            to={`/${user}/${post.id}/${titleLink}`} 
+                            onClick={(e) => e.stopPropagation()} 
+                            dangerouslySetInnerHTML={{__html: post.title}}/>
                         {usersEqual &&
                             <div className='blog-list__controls hidden-controls' onClick={(e) => e.stopPropagation()} ref={div => hiddenControls = div}>  
                                 <Link className='btn btn-sm blog-list__single-button' to={`/${user}/${post.id}/${titleLink}/edit`}>
@@ -63,6 +64,14 @@ class BlogList extends Component {
                             </div>
                         }
                         <p className='blog-list__item__snippet' dangerouslySetInnerHTML={{__html: post.snippet}}/>
+                        <button 
+                            className='btn blog-list__item__button'
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                router.push(`/${user}/${post.id}/${titleLink}`);
+                            }}>
+                                Continue reading
+                        </button>
                     </li>
                 )
             });
@@ -92,4 +101,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps, {remove})(BlogList);
+export default connect(mapStateToProps, {remove})(withRouter(BlogList));

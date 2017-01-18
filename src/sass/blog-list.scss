@@ -11,12 +11,12 @@
     transform: translateZ(0px);
     
     &__item {
-        text-align: center;
         padding: 2em 0.5em;
         
         //line separating list items
         &:after {
             position: absolute;
+            left: 50%;
             bottom: 0;
             transform: translateX(-50%);
             width: 50%;
@@ -25,28 +25,43 @@
         }
         
         &__date {
-            
+            text-align: center;
+            font-size: 0.6em;
         }
         
         &__title {
-            
+            font-size: 1.4em;
+            max-width: 90%;
         }
         
         &__snippet {
             text-align: justify;
         }
+        
+        &__button {
+            margin: 2.5em 0 0.5em 0;
+        }
     }
     
     &__controls {
-        position: absolute;
-        width: 30px;
+        right: 0;
+        top: 0;
+        width: 95px;
+        margin: 2em 0.5em;
     }
     
     &__single-button {
-        margin: 5px;
+        display: inline-block;
+        margin: 0 5px;
     }
     
     &--no-image {
         top: 50px;
+        box-shadow: none;
+    }
+    
+    .nav>li>a {
+        display: table;
+        margin: 0 auto;
     }
 }

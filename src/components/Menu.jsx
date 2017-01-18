@@ -31,10 +31,8 @@ class Menu extends Component {
     }
     
     render() {
-        let {width, authorizedUser, usersEqual, remove, params: {user, titleLink, postId}} = this.props;
-        
-        let activeChildRoute = this.props.routes[1];
-        let route = activeChildRoute.path || 'home';            
+        let {width, authorizedUser, usersEqual, remove, route, params: {user, titleLink, postId}} = this.props;
+                    
         let menuItems = []
         let menuItemClass = 'menu__item nav-item';
         

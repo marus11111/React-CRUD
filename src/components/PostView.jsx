@@ -24,16 +24,12 @@ class PostView extends Component {
             body = post.body;
             date = formatDate(post.timestamp, 'post');      
         }
-        
-        let titleClass = (usersEqual || imageUrl) ? 
-            'col-sm-9 col-md-7 col-centered' :
-            'postview__title__wrapper--no-image';
 
         return (
             <div className='postview container'>
                 {post &&
                     <div className='row row-center'>
-                        <div className={`postview__title__wrapper col-xs-12 ${titleClass}`}>
+                        <div className={`postview__title__wrapper col-xs-12 col-sm-9 col-md-7 col-centered ${!imageUrl && 'postview__title__wrapper--no-image'}`}>
                             <time dateTime={date.iso} className='postview__date'>{date.display}</time>
                             <h1 dangerouslySetInnerHTML={{__html: title}} className='postview__title'/>
                         </div>

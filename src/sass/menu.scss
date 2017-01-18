@@ -42,30 +42,28 @@
             transform: rotate(180deg);
         }
     }
-}
+    
+    .nav>li>a {
+        transition: transform 0.5s, border-color 0.5s;
+        border-width: 2px 0; 
+        border-style: solid;
+        border-color: transparent;
 
-.nav>li>a {
-    color: inherit;
-    transition: transform 0.5s, border-color 0.5s;
-    border-width: 2px 0; 
-    border-style: solid;
-    border-color: transparent;
-    
-    
-    &:hover {
-        border-color: $secFontCol;
-        background-color: transparent;
-    }
-}
 
-.nav-item {
-    padding: 0 0.5em;
-    
-    &:first-child {
-        padding-top: 0.5em;
+        &:hover {
+            border-color: $secFontCol;
+        }
     }
     
-    &:last-child {
-        padding-bottom: 0.5em;
+    .nav-item {
+        padding: 0 0.5em;
+
+        &:first-child {
+            padding-top: 0.5em;
+        }
+
+        &:last-child {
+            padding-bottom: 0.5em;
+        }
     }
 }

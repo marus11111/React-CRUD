@@ -44,8 +44,11 @@ class User extends Component {
     }
     
     render() {
-        let {imageUrl, imageUploading, userError, error, authorizedUser, params: {user}} = this.props;
+        let {imageUrl, imageUploading, userError, error, authorizedUser, routes, params: {user}} = this.props;
         let usersEqual = ciCompare(authorizedUser, user);
+        
+        let activeChildRoute = routes[1];
+        let route = activeChildRoute.path || 'home';
         
         let children = React.Children.map(this.props.children, (child) => {
             return React.cloneElement(child, {
@@ -64,9 +67,10 @@ class User extends Component {
                     <div className='parallax--null'>
                         <Menu 
                             authorizedUser={authorizedUser}
-                            usersEqual={usersEqual}/>
+                            usersEqual={usersEqual}
+                            route={route}/>
                         <div className='parallax'>    
-                        { (imageUrl || usersEqual) &&
+                        { (imageUrl || (usersEqual && route === 'home')) &&
                             <div className='jumbotron'>
                                 {imageUrl && 
                                     <ImageDisplay 

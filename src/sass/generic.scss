@@ -49,11 +49,16 @@ table {
 }
 
 .btn {
-    border-radius: $borderRadius;
-    background-color: $secondaryColor;
     color: $secFontCol;
     border: 2px solid transparent;
+    border-radius: $borderRadius;
+    background-color: $secondaryColor;
     transition: color 0.5s, border 0.5s, background-color 0.5s;
+    
+    &:active, &:focus {
+        color: $secFontCol;
+        outline: 0;
+    }
     
     &:hover {
         color: $mainFontCol;
@@ -67,5 +72,13 @@ table {
     .col-centered {
         float: none;
         display: inline-block;
+    }
+}
+
+.nav>li>a {
+    color: inherit;
+       
+    &:hover {
+        background-color: transparent;
     }
 }
