@@ -13,18 +13,33 @@ class CreatePost extends Component {
     submitHandler = (event) => {
         event.preventDefault();
         let {title, body, createOrUpdate, variousErrors, params: {user}} = this.props;
-        console.log(body);
         let validPost = validatePurifyPost(title, body);
-        if (validPost) createOrUpdate('createPost', {title: validPost.title, body: validPost.body, user});
+        validPost ? 
+            createOrUpdate('createPost', {title: validPost.title, body: validPost.body, user}) : 
+            variousErrors('Post must contain title and body');
     }
     
     render() {        
         return ( 
-            <div>
-                <form onSubmit={this.submitHandler}>
-                    <Field component={RichTextMarkdown} rteConfig={rteTitleConfig} name='title'/>
-                    <Field component={RichTextMarkdown} name='body'/>
-                    <button type='submit'>Create post</button>
+            <div className='rich-text row row-center'>
+                <form 
+                    className='col-xs-12 col=sm-9 col-md-7 col-centered'
+                    onSubmit={this.submitHandler}>
+                    <Field 
+                        placeholder='Title'
+                        component={RichTextMarkdown} 
+                        rteConfig={rteTitleConfig} 
+                        name='title'/>
+                    <Field 
+                        placeholder='Body'
+                        className='rich-text__body'
+                        component={RichTextMarkdown} 
+                        name='body'/>
+                    <button 
+                        className='btn'
+                        type='submit'>
+                        Create post
+                    </button>
                 </form>
             </div>
         )

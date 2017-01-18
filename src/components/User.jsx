@@ -80,11 +80,13 @@ class User extends Component {
                                 }
                                 {!imageUrl && !imageUploading &&
                                     <div>
-                                        <Dropzone 
+                                        <p className='jumbotron__dropzone__text'>Drop an image or click to select a file from your computer.<br/>Maximum file size is 500 kB.</p>
+                                        <Dropzone
+                                            className='jumbotron__dropzone'
+                                            activeClassName='jumbotron__dropzone--active'
                                             multiple={false} 
                                             accept='image/*' 
                                             onDrop={this.uploadImage}/>
-                                        <p>Drop an image or click to select a file from your computer.<br/>Maximum file size is 500 kB.</p>
                                     </div>
                                 }
                                 {imageUploading &&
@@ -95,12 +97,14 @@ class User extends Component {
                                 }
                             </div>
                         }
-                        {error && 
-                            <div>
-                                <p>{error}</p>
+                            <div className='children-wrap container-fluid'>
+                                {error && 
+                                    <div>
+                                        <p>{error}</p>
+                                    </div>
+                                }
+                                {children}
                             </div>
-                        }
-                        {children}
                         </div>
                     </div>
                 }

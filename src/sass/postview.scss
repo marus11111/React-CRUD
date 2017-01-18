@@ -1,9 +1,5 @@
 .postview {
-    position: relative;
-    width: 100%;
     background-color: $mainColor;
-    box-shadow: $shadow;
-    padding-top: 2em;
     line-height: $lineH;
     
     p {
@@ -48,7 +44,10 @@
         
         &__wrapper {
             position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
             bottom: 100%;
+            width: 100%;
             padding: 1.3em 2em;
             text-align: center;
             color: $secFontCol;
@@ -66,5 +65,6 @@
     
     &__body{
         text-align: justify;
+        margin-top: 2em;
     }
 }

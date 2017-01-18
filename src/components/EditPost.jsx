@@ -19,7 +19,8 @@ class EditPost extends Component {
     
     componentWillReceiveProps(nextProps){
         let {posts, postBeingEdited, setEditedPost, params: {postId}} = nextProps;
-        if ((!this.props.postBeingEdited.id || this.props.postBeingEdited.id !== postId) && posts.length > 0){
+        let post = postBeingEdited ? postBeingEdited : {};
+        if ((!post.id || post.id !== postId) && posts.length > 0){
             setEditedPost(postId);
         }
     }
@@ -28,17 +29,34 @@ class EditPost extends Component {
         event.preventDefault();
         let {title, body, createOrUpdate, postBeingEdited: {timestamp}, variousErrors, params: {user, postId}} = this.props;
         let validPost = validatePurifyPost(title, body);
-        if (validPost) createOrUpdate('editPost', {postId, title: validPost.title, body: validPost.body, timestamp, user});
+        validPost ? 
+            createOrUpdate('editPost', {postId, title: validPost.title, body: validPost.body, timestamp, user}) : 
+            variousErrors('Post must contain title and body');
     }
     
     render(){
-        let {title, body} = this.props.postBeingEdited;
+        let post = this.props.postBeingEdited;
+        let {title, body} = post ? post : {};
         return ( 
-            <div>
-                <form onSubmit={this.submitHandler}>
-                    <Field component={RichTextMarkdown} rteConfig={rteTitleConfig} initialVal={title} name='title'/>
-                    <Field component={RichTextMarkdown} initialVal={body} name='body'/>
-                    <button type='submit'>Edit Post</button>
+            <div className='rich-text row row-center'>
+                <form 
+                    className='col-xs-12 col=sm-9 col-md-7 col-centered'
+                    onSubmit={this.submitHandler}>
+                    <Field 
+                        component={RichTextMarkdown} 
+                        rteConfig={rteTitleConfig} 
+                        initialVal={title} 
+                        name='title'/>
+                    <Field 
+                        className='rich-text__body'
+                        component={RichTextMarkdown} 
+                        initialVal={body} 
+                        name='body'/>
+                    <button 
+                        className='btn'
+                        type='submit'>
+                        Edit Post
+                    </button>
                 </form>
             </div>
         )

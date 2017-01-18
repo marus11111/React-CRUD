@@ -79,14 +79,10 @@ class BlogList extends Component {
         }
         
         return (
-            <div className={`container-fluid blog-list ${!usersEqual && !imageUrl && 'blog-list--no-image'}`}>
-                <div className='row-center'>
-                    <div className='col-xs-12'>
-                        <ul className='nav col-xs-12 col-sm-9 col-md-6 col-centered'>
-                            {children}
-                        </ul>
-                    </div>
-                </div>
+            <div className={`row row-center blog-list ${!usersEqual && !imageUrl && 'blog-list--no-image'}`}>
+                <ul className='nav col-xs-12 col-sm-9 col-md-7 col-centered'>
+                    {children}
+                </ul>
             </div>
         )
     }
