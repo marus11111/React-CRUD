@@ -5,10 +5,10 @@
     background-color: $mainColor;
     
     &__item {
-        padding: 2em 0.5em;
+        padding: 2rem 0.5rem;
         
         //line separating list items
-        &:after {
+        &:not(:last-child):after {
             position: absolute;
             left: 50%;
             bottom: 0;
@@ -20,11 +20,11 @@
         
         &__date {
             text-align: center;
-            font-size: 0.6em;
+            font-size: 0.6rem;
         }
         
         &__title {
-            font-size: 1.4em;
+            font-size: 1.4rem;
             max-width: 90%;
         }
         
@@ -33,20 +33,20 @@
         }
         
         &__button {
-            margin: 2.5em 0 0.5em 0;
+            margin: 2.5rem 0 0.5rem 0;
         }
-    }
-    
-    &__controls {
-        right: 0;
-        top: 0;
-        width: 95px;
-        margin: 2em 0.5em;
-    }
-    
-    &__single-button {
-        display: inline-block;
-        margin: 0 5px;
+        
+        &__controls {
+            right: 0;
+            top: 0;
+            width: 95px;
+            margin: 2rem 0.5rem;
+        }
+
+        &__single-button {
+            display: inline-block;
+            margin: 0 5px;
+        }
     }
     
     &--no-image {

@@ -47,30 +47,43 @@ class BlogList extends Component {
                         {isRemoveError &&
                             <p>{blogListRemoveError.error}</p>
                         }
-                        <time className='blog-list__item__date' dateTime={date.iso}>{date.display}</time>
+                        <time 
+                            className='blog-list__item__date' 
+                            dateTime={date.iso}>
+                            {date.display}
+                        </time>
                         <Link 
                             className='nav-link blog-list__item__title' 
                             to={`/${user}/${post.id}/${titleLink}`} 
                             onClick={(e) => e.stopPropagation()} 
                             dangerouslySetInnerHTML={{__html: post.title}}/>
                         {usersEqual &&
-                            <div className='blog-list__controls hidden-controls' onClick={(e) => e.stopPropagation()} ref={div => hiddenControls = div}>  
-                                <Link className='btn btn-sm blog-list__single-button' to={`/${user}/${post.id}/${titleLink}/edit`}>
+                            <div 
+                                className='blog-list__item__controls hidden-controls' 
+                                onClick={(e) => e.stopPropagation()} 
+                                ref={div => hiddenControls = div}>  
+                                <Link 
+                                    className='btn btn-sm blog-list__item__single-button' 
+                                    to={`/${user}/${post.id}/${titleLink}/edit`}>
                                     <span className='glyphicon glyphicon-edit'></span>
                                 </Link>
-                                <button className='btn btn-sm blog-list__single-button' onClick={() => remove('removePost', {id: post.id, from: 'list'})}>
+                                <button 
+                                    className='btn btn-sm blog-list__item__single-button' 
+                                    onClick={() => remove('removePost', {id: post.id, from: 'list'})}>
                                     <span className='glyphicon glyphicon-trash'></span>
                                 </button>
                             </div>
                         }
-                        <p className='blog-list__item__snippet' dangerouslySetInnerHTML={{__html: post.snippet}}/>
+                        <p 
+                            className='blog-list__item__snippet' 
+                            dangerouslySetInnerHTML={{__html: post.snippet}}/>
                         <button 
                             className='btn blog-list__item__button'
                             onClick={(e) => {
                                 e.stopPropagation();
                                 router.push(`/${user}/${post.id}/${titleLink}`);
                             }}>
-                                Continue reading
+                            Continue reading
                         </button>
                     </li>
                 )

@@ -18,12 +18,28 @@ class SignIn extends Component {
                 <div className='row row-center'>
                     <p className='col-centered'>{this.props.signInError}</p>
                 </div>
-                <form onSubmit={this.submitHandler} className='form-group'>
+                <form 
+                    className='form-group'
+                    onSubmit={this.submitHandler}> 
                     <div className='row row-center'>
                         <div className='col-xs-12 col-sm-6 col-md-5 col-lg-4 col-centered'>
-                            <Field component='input' name='username' type='text' placeholder='Username' className='form-control'/>
-                            <Field component='input' name='password' type='password' placeholder='Password' className='form-control'/>
-                            <button type='submit' className='btn btn-primary'>Sign In</button>
+                            <Field 
+                                className='form-control'
+                                component='input' 
+                                name='username' 
+                                type='text' 
+                                placeholder='Username'/> 
+                            <Field 
+                                className='form-control'
+                                component='input' 
+                                name='password' 
+                                type='password' 
+                                placeholder='Password'/> 
+                            <button 
+                                className='btn btn-primary'
+                                type='submit'> 
+                                Sign In
+                            </button>
                         </div>
                     </div>
                 </form>

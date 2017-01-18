@@ -30,10 +30,18 @@ class PostView extends Component {
                 {post &&
                     <div className='col-xs-12 col-sm-9 col-md-7 col-centered'>
                         <div className={`postview__title__wrapper ${!imageUrl && 'postview__title__wrapper--no-image'}`}>
-                            <time dateTime={date.iso} className='postview__date'>{date.display}</time>
-                            <h1 dangerouslySetInnerHTML={{__html: title}} className='postview__title'/>
+                            <time 
+                                className='postview__date'
+                                dateTime={date.iso}> 
+                                {date.display}
+                            </time>
+                            <h1 
+                                className='postview__title'
+                                dangerouslySetInnerHTML={{__html: title}}/> 
                         </div>
-                        <p dangerouslySetInnerHTML={{__html: body}} className='postview__body'/>
+                        <p 
+                            className='postview__body'
+                            dangerouslySetInnerHTML={{__html: body}}/> 
                         <Comments 
                             postId={post.id} 
                             linkUser={user}

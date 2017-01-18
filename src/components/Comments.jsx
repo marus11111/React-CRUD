@@ -43,34 +43,61 @@ class Comments extends Component {
                 let isRemoveError = commentRemoveError.ids.some((errorId) => errorId === id);
                 
                 return (
-                    <li key={id}>
+                    <li 
+                        className='comments__item'
+                        key={id}>
                         {isRemoveError &&
                             <p>{commentRemoveError.error}</p>
                         }
-                        <time dateTime={date.iso}>{date.display}</time>
+                        <time 
+                            className='comments__item__date' 
+                            dateTime={date.iso}>
+                            {date.display}
+                        </time>
                         {author &&
-                            <Link to={`/${author}`}>{author}</Link>
+                            <div>
+                                <Link 
+                                    className='comments__item__author' 
+                                    to={`/${author}`}>
+                                    {author}
+                                </Link><span> wrote:</span>
+                            </div>
                         }
                         {!author &&
                             <span>Anonymous</span>
                         }
                         {(authorizedUser === author || usersEqual) &&
-                            <button className='btn btn-sm btn-danger' onClick={() => this.props.remove('removeComment', {id})}><span className='glyphicon glyphicon-trash'></span></button>
+                            <button 
+                                className='btn  comments__item__button' 
+                                onClick={() => this.props.remove('removeComment', {id})}>
+                                <span className='glyphicon glyphicon-trash'></span>
+                            </button>
                         }
-                        <p>{body}</p>
+                        <p className='comments__item__body'>{body}</p>
                     </li>
                 )
             });
         }
 
         return (
-            <div>
+            <div className='comments col-xs-10 col-centered'>
                 {commentCreationError &&
                     <p>{commentCreationError}</p>
                 }
+                <p>Leave a comment.</p>
+                {!authorizedUser &&
+                    <p>You're not signed in. Comment author will be shown as Anonymous.</p>
+                }
                 <form onSubmit={this.submitHandler}>
-                    <Field component='textarea' name='body'/>
-                    <button type='submit'>Create comment</button>
+                    <Field 
+                        className='comments__textarea' 
+                        component='textarea' 
+                        name='body'/>
+                    <button 
+                        className='btn'
+                        type='submit'>
+                        Comment
+                    </button>
                 </form>
                 <ul>
                     {children}

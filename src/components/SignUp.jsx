@@ -87,13 +87,37 @@ class SignUp extends Component {
                 <div className='row row-center'>
                     <p className='col-centered'>{this.props.signUpError}</p>
                 </div>
-                <form onSubmit={this.props.handleSubmit(this.signUp)} className='form-group'>
+                <form 
+                    className='form-group'
+                    onSubmit={this.props.handleSubmit(this.signUp)}> 
                     <div className='row row-center'>
                         <div className='col-xs-12 col-sm-6 col-md-5 col-lg-4 col-centered'>
-                            <Field component={customInput} name='username' type='text' placeholder='Username' className='form-control' validate={[validateUsername]}/>
-                            <Field component={customInput} name='password' type='password' placeholder='Password' className='form-control' validate={[validatePassword]}/>
-                            <Field component={customInput} name='confirmation' type='password' placeholder='Confirm password' className='form-control' validate={[validateConfirmation]}/>
-                            <button type='submit' className='btn btn-primary'>Sign Up</button>
+                            <Field 
+                                className='form-control' 
+                                component={customInput} 
+                                name='username' 
+                                type='text' 
+                                placeholder='Username' 
+                                validate={[validateUsername]}/>
+                            <Field 
+                                className='form-control' 
+                                component={customInput} 
+                                name='password' 
+                                type='password' 
+                                placeholder='Password' 
+                                validate={[validatePassword]}/>
+                            <Field 
+                                className='form-control' 
+                                component={customInput} 
+                                name='confirmation' 
+                                type='password' 
+                                placeholder='Confirm password' 
+                                validate={[validateConfirmation]}/>
+                            <button 
+                                className='btn btn-primary'
+                                type='submit'> 
+                                Sign Up
+                            </button>
                         </div>
                     </div>
                 </form>

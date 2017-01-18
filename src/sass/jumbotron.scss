@@ -1,10 +1,13 @@
 .jumbotron {
     position: relative;
-    width: 100vw;
-    height: 40vw;
+    height: 50vh;
     padding: 0;
     margin: 0;
     overflow: hidden;
+    
+    @include landscape {
+        height: 40vw;
+    }
     
     &__image {
         position: absolute;

@@ -37,26 +37,53 @@ class Menu extends Component {
         let menuItemClass = 'menu__item nav-item';
         
         route !== 'home' && menuItems.push(
-            <li key='home' className={`${menuItemClass}`}>
-                <Link className='nav-link' to={`${user}`}>Home</Link>
+            <li 
+                className={`${menuItemClass}`}
+                key='home' >
+                <Link 
+                    className='nav-link' 
+                    to={`${user}`}>
+                    Home
+                </Link>
             </li>
         );
         usersEqual && route !== 'create' && menuItems.push(
-            <li key='create' className={`${menuItemClass}`}>
-                <Link className='nav-link' to={`${user}/create`}>Create post</Link>
+            <li 
+                className={`${menuItemClass}`}
+                key='create' >
+                <Link 
+                    className='nav-link' 
+                    to={`${user}/create`}>
+                    Create post
+                </Link>
             </li>
         );
         route === ':postId/:titleLink' && usersEqual && menuItems.push(
-            <li key='edit' className={`${menuItemClass}`}>
-                <Link className='nav-link' to={`${user}/${postId}/${titleLink}/edit`}>Edit post</Link>
+            <li 
+                className={`${menuItemClass}`}
+                key='edit'> 
+                <Link 
+                    className='nav-link' 
+                    to={`${user}/${postId}/${titleLink}/edit`}>
+                    Edit post
+                </Link>
             </li>,
-            <li key='remove' className={`${menuItemClass}`}>
-                <Link className='nav-link' to='#' onClick={(e) => {e.preventDefault(); remove('removePost', {id: postId, from: 'menu'});}}>Remove post</Link>
+            <li 
+                className={`${menuItemClass}`}
+                key='remove'> 
+                <Link 
+                    className='nav-link' 
+                    to='#' 
+                    onClick={(e) => {e.preventDefault(); remove('removePost', {id: postId, from: 'menu'});}}>
+                    Remove post
+                </Link>
             </li>
         );
         authorizedUser ? 
             menuItems.push(
-                <li key='sign-out' className={`${menuItemClass}`}>
+                <li 
+                    className={`${menuItemClass}`}
+                    key='sign-out'> 
                     <Link 
                         className='nav-link' to='#' 
                         onClick={(e) => {
@@ -68,17 +95,28 @@ class Menu extends Component {
                 </li>
             ) : 
             menuItems.push(
-                <li key='sign-in' className={`${menuItemClass}`}>
-                    <Link className='nav-link' to='/'>Sign in/Sign up</Link>
+                <li 
+                    className={`${menuItemClass}`}
+                    key='sign-in'> 
+                    <Link 
+                        className='nav-link' 
+                        to='/'>
+                        Sign in/Sign up
+                    </Link>
                 </li>
             );
         
         return (
-            <nav key='menu' ref={nav => this.menu = nav} className='menu'>
+            <nav 
+                className='menu'
+                key='menu' 
+                ref={nav => this.menu = nav}> 
                 <ul className='menu__list nav'>
                     {menuItems}
                 </ul>
-                <button className='menu__button' onClick={this.menuToggle}>
+                <button 
+                    className='menu__button' 
+                    onClick={this.menuToggle}>
                     <span className='glyphicon glyphicon-chevron-down'></span>
                 </button>    
             </nav>
