@@ -61,7 +61,9 @@ class User extends Component {
         return (
             <div>
                 {userError &&
-                    <p>{userError}</p>
+                    <div className='row row-center'>
+                        <p className='col-xs-12 col-centered error'>{userError}</p>
+                    </div>
                 }
                 {!userError &&  
                     <div className='parallax--null'>
@@ -99,8 +101,8 @@ class User extends Component {
                         }
                             <div className='children-wrap container-fluid'>
                                 {error && 
-                                    <div>
-                                        <p>{error}</p>
+                                    <div className='row row-center'>
+                                        <p className='col-xs-12 col-centered error'>{error}</p>
                                     </div>
                                 }
                                 {children}

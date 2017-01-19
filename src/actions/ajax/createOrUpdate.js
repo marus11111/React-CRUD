@@ -95,11 +95,13 @@ export default (type, data) => {
                         let {timestamp, id} = res;
                         let newComment = {author, timestamp, body, id};
                         dispatch(addComment(newComment));
+                        dispatch(commentCreationError(null));
                         break;
                     }
                     case 'imageUpload':
                         dispatch(setImage(res.imageUrl));
                 }
+                dispatch(variousErrors(null));
             }
             else if (res.error) {
                 switch (type) {

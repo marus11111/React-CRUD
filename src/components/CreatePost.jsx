@@ -16,7 +16,7 @@ class CreatePost extends Component {
         let validPost = validatePurifyPost(title, body);
         validPost ? 
             createOrUpdate('createPost', {title: validPost.title, body: validPost.body, user}) : 
-            variousErrors('Post must contain title and body');
+            variousErrors('Post must contain title and body.');
     }
     
     render() {        
@@ -28,7 +28,7 @@ class CreatePost extends Component {
                     <Field 
                         placeholder='Title'
                         component={RichTextMarkdown} 
-                        rteConfig={rteTitleConfig} 
+                        toolbarConfig={rteTitleConfig} 
                         name='title'/>
                     <Field 
                         placeholder='Body'

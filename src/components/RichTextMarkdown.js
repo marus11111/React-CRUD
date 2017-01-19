@@ -33,14 +33,10 @@ class RichTextMarkdown extends Component {
 
   render() {
     const { RichTextEditor, state: { value }, handleChange } = this;
-    let {rteConfig, className, placeholder} = this.props;
-    let config = rteConfig ? {toolbarConfig: rteConfig} : {}; 
     
     return RichTextEditor ? 
         <RichTextEditor 
-            {...config}
-            placeholder={placeholder}
-            className={className}
+            {...this.props}
             value={value}
             onChange={handleChange}/> : <div/>;
   }

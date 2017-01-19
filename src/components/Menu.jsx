@@ -93,8 +93,8 @@ class Menu extends Component {
                         Sign out
                     </Link>
                 </li>
-            ) : 
-            menuItems.push(
+            ) 
+            : menuItems.push(
                 <li 
                     className={`${menuItemClass}`}
                     key='sign-in'> 

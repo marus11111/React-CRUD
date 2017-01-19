@@ -66,6 +66,7 @@ export default (type, options) => {
                         dispatch(removeComment(id));
                     }
                 }
+                dispatch(variousErrors(null));
             }
             else if (res.error) {
                 switch (type) {

@@ -30,10 +30,10 @@ class Comments extends Component {
                 children = null;
             }
             else if (fetchingCommentsError) {
-                children = <li>{fetchingCommentsError}</li>;
+                children = <li className='comments__item'>{fetchingCommentsError}</li>;
             }
             else {
-                children = <li>No comments yet.</li>;
+                children = <li className='comments__item'>No comments yet.</li>;
             } 
         }
         else if (comments.length > 0) {
@@ -47,7 +47,7 @@ class Comments extends Component {
                         className='comments__item'
                         key={id}>
                         {isRemoveError &&
-                            <p>{commentRemoveError.error}</p>
+                            <p className='col-xs-12 error'>{commentRemoveError.error}</p>
                         }
                         <time 
                             className='comments__item__date' 
@@ -82,7 +82,7 @@ class Comments extends Component {
         return (
             <div className='comments col-xs-10 col-centered'>
                 {commentCreationError &&
-                    <p>{commentCreationError}</p>
+                    <p className='col-xs-12 error'>{commentCreationError}</p>
                 }
                 <p>Leave a comment.</p>
                 {!authorizedUser &&

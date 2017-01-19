@@ -10,10 +10,14 @@ $mainFontCol: rgba(2,0,15,0.85);
 //button text, menu text
 $secFontCol: #f5f4f0;
 
+$errorBkgCol: #e2747d;
+$errorFontCol: white;
+
 $fontFamily: Open-Sans, sans-serif;
 
 $borderRadius: 0.25rem;
 
+//shadow falling at the bottom of jumbotron
 $shadow: 0 -2px 3px 0px rgba(0, 0, 0, 0.5);
 
 //line-height
@@ -35,7 +39,7 @@ $postViewDateWidth: 12rem;
     }
 }
 
-@mixin smallPlus {
+@mixin tabletPlus {
     @media screen and (min-width: 768px) {
         @content;
     }

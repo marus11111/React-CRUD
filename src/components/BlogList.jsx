@@ -19,13 +19,13 @@ class BlogList extends Component {
                 children = null;
             }
             else if (fetchingPostsError) {
-                children = <li>{fetchingPostsError}</li>;
+                children = <li className='blog-list__item'>{fetchingPostsError}</li>;
             }
             else if (usersEqual) {
-                children = <li>You haven't written any posts yet.</li>;
+                children = <li className='blog-list__item'>You haven't written any posts yet.</li>;
             }
             else  {
-                children = <li>No posts found.</li>;
+                children = <li className='blog-list__item'>No posts found.</li>;
             }
         }
         else if(posts.length > 0) {
@@ -45,7 +45,7 @@ class BlogList extends Component {
                         onClick={() => usersEqual && toggleControls(hiddenControls)}
                         >
                         {isRemoveError &&
-                            <p>{blogListRemoveError.error}</p>
+                            <p className='col-xs-12 error'>{blogListRemoveError.error}</p>
                         }
                         <time 
                             className='blog-list__item__date' 

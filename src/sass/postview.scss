@@ -15,7 +15,7 @@
         border: 2px solid $secFontCol;
         border-radius: $borderRadius;
         
-        @include smallPlus {
+        @include tabletPlus {
             font-size: 0.6rem;
         }
     }
@@ -38,7 +38,7 @@
             background-color: $secondaryColor;
             border-radius: $borderRadius $borderRadius 0 0;
             
-            @include smallPlus {
+            @include tabletPlus {
                 font-size: 1.3rem 2rem;
             }
             

@@ -31,7 +31,7 @@ footer, header, hgroup, menu, nav, section {
 html {
     font-size: 15px;
     
-    @include smallPlus {
+    @include tabletPlus {
         font-size: 20px;
     }
 }
@@ -93,4 +93,15 @@ table {
 .children-wrap {
     box-shadow: $shadow;
     background-color: $mainColor;
+}
+
+.error {
+    max-width: 500px;
+    height: 50px; 
+    text-align: center;
+    line-height: 50px;
+    margin-top: 1rem;
+    color: $errorFontCol;
+    border-radius: $borderRadius;
+    background-color: $errorBkgCol;
 }

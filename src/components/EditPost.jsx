@@ -31,7 +31,7 @@ class EditPost extends Component {
         let validPost = validatePurifyPost(title, body);
         validPost ? 
             createOrUpdate('editPost', {postId, title: validPost.title, body: validPost.body, timestamp, user}) : 
-            variousErrors('Post must contain title and body');
+            variousErrors('Post must contain title and body.');
     }
     
     render(){
@@ -44,7 +44,7 @@ class EditPost extends Component {
                     onSubmit={this.submitHandler}>
                     <Field 
                         component={RichTextMarkdown} 
-                        rteConfig={rteTitleConfig} 
+                        toolbarConfig={rteTitleConfig} 
                         initialVal={title} 
                         name='title'/>
                     <Field 

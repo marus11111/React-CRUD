@@ -77,20 +77,27 @@ export default (type, data) => {
         .then(res => {
             res = res.data;
             if (res.userData) {
-                dispatch(loadPosts(res.userData.posts));
                 dispatch(setImage(res.userData.imageUrl));
+                
+                //userData may come with just image url and error when it comes to fetching posts
+                if (res.postsError) { 
+                    dispatch(fetchingPostsError(res.postsError))
+                }
+                else {
+                    dispatch(loadPosts(res.userData.posts));
+                    dispatch(fetchingPostsError(null));
+                }
             }
             else if (res.comments) {
                 dispatch(loadComments(res.comments));
-            }
-            else if (res.postsError) {
-                dispatch(fetchingPostsError(res.postsError));
+                dispatch(fetchingCommentsError(null));
             }
             else if (res.error) {
                 type === 'user' ? 
                     dispatch(noUserData(res.error)) :
                     dispatch(fetchingCommentsError(res.error));
             }
+            
             type === 'user' ? 
                 dispatch(postsLoading(false)) : 
                 dispatch(commentsLoading(false)); 

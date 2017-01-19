@@ -3,10 +3,14 @@
         position: relative;
         top:0;
         perspective: 1px;
-        perspective-origin: 50% 20vw;
+        perspective-origin: 50% 25vh;
         height: 100vh;
         overflow-x: hidden;
         overflow-y: auto;
+        
+        @include tabletPlus {
+            perspective-origin: 50% 20vw;
+        }
 
         &--null {
             transform: translateZ(0);
