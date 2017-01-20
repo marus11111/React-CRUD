@@ -44,14 +44,15 @@ class ImageDisplay extends Component {
         <div 
           className='jumbotron__image__controls hidden-controls' 
           ref={div => imageControls = div}>
-          <form>
+          <form className='jumbotron__image__upload-form'>
             <label 
               className='btn jumbotron__image__single-button' 
               htmlFor='imageUpload' 
               onClick={e => e.stopPropagation()}>
               <span className='glyphicon glyphicon-edit'></span> Change
             </label>
-            <input 
+            <input
+              className='jumbotron__image__upload-input'
               id='imageUpload' 
               type='file' 
               onChange={() => uploadImage(this.imageInput.files)} ref={input => this.imageInput = input}>

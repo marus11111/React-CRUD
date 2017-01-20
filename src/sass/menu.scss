@@ -35,6 +35,7 @@
   
   &--open {
     transform: translateY(0);
+    
     .menu__button .glyphicon {
       left: 0; // removing the center fix - after transform glyphicon centers well
       transform-origin: 50% 45%;
@@ -42,7 +43,7 @@
     }
   }
   
-  .nav>li>a {
+  .nav &__link {
     transition: transform 0.5s, border-color 0.5s;
     border-width: 2px 0;
     border-style: solid;

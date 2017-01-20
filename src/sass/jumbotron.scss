@@ -29,6 +29,19 @@
       width: 100px;
       margin: 0 5px;
     }
+    
+    &__upload-form {
+      display: inline-block;
+      width: 110px;
+    }
+
+    &__upload-input {
+      position: absolute;
+      z-index: -1;
+      width: 0.1px;
+      height: 0.1px;
+      opacity: 0;
+    }
   }
   
   &__dropzone {
@@ -48,18 +61,5 @@
     &--active {
       background-color: rgba(105, 148, 219, 0.85);
     }
-  }
-  
-  form {
-    display: inline-block;
-    width: 110px;
-  }
-  
-  input {
-    position: absolute;
-    z-index: -1;
-    width: 0.1px;
-    height: 0.1px;
-    opacity: 0;
   }
 }

@@ -52,7 +52,8 @@ class Menu extends Component {
     } = this.props;
 
     let menuItems = []
-    let menuItemClass = 'menu__item nav-item';
+    let menuItemClass = 'nav-item';
+    let menuItemLinkClass = 'menu__link nav-link'
 
     if (route !== 'home') {
       menuItems.push(
@@ -60,7 +61,7 @@ class Menu extends Component {
           className={`${menuItemClass}`}
           key='home' >
           <Link 
-            className='nav-link' 
+            className={`${menuItemLinkClass}`} 
             to={`${user}`}>
             Home
           </Link>
@@ -73,7 +74,7 @@ class Menu extends Component {
           className={`${menuItemClass}`}
           key='create' >
           <Link 
-            className='nav-link' 
+            className={`${menuItemLinkClass}`} 
             to={`${user}/create`}>
             Create post
           </Link>
@@ -86,7 +87,7 @@ class Menu extends Component {
           className={`${menuItemClass}`}
           key='edit'> 
           <Link 
-            className='nav-link' 
+            className={`${menuItemLinkClass}`} 
             to={`${user}/${postId}/${titleLink}/edit`}>
             Edit post
           </Link>
@@ -95,7 +96,7 @@ class Menu extends Component {
           className={`${menuItemClass}`}
           key='remove'> 
           <Link 
-            className='nav-link' 
+            className={`${menuItemLinkClass}`} 
             to='#' 
             onClick={(e) => {e.preventDefault(); remove('removePost', {id: postId, from: 'menu'});}}>
             Remove post
@@ -109,7 +110,7 @@ class Menu extends Component {
           className={`${menuItemClass}`}
           key='sign-out'> 
           <Link 
-            className='nav-link' to='#' 
+            className={`${menuItemLinkClass}`} to='#' 
             onClick={(e) => {
               this.signOut(e);
               this.menuClose();
@@ -124,7 +125,7 @@ class Menu extends Component {
           className={`${menuItemClass}`}
           key='sign-in'> 
           <Link 
-            className='nav-link' 
+            className={`${menuItemLinkClass}`} 
             to='/'>
             Sign in/Sign up
           </Link>
@@ -137,7 +138,7 @@ class Menu extends Component {
         className='menu'
         key='menu' 
         ref={nav => this.menu = nav}> 
-        <ul className='menu__list nav'>
+        <ul className='nav'>
           {menuItems}
         </ul>
         <button 

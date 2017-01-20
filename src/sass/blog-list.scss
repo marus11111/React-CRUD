@@ -28,6 +28,11 @@
       max-width: 90%;
     }
     
+    .nav &__title {
+      display: table;
+      margin: 0 auto;
+    }
+    
     &__snippet {
       text-align: justify;
     }
@@ -48,12 +53,9 @@
       margin: 0 5px;
     }
   }
+  
   &--no-image {
     top: 50px;
     box-shadow: none;
-  }
-  .nav>li>a {
-    display: table;
-    margin: 0 auto;
   }
 }
