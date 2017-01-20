@@ -1,0 +1,9 @@
+{
+  "js": {
+    "e4x": "true"
+  },
+  "css": {
+    "preserve_newlines": true,
+    "newline-between-rules": true
+  }
+}

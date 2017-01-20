@@ -1,3 +1,6 @@
-import {createHistory, useBasename } from 'history';
+import {
+  createHistory,
+  useBasename
+} from 'history';
 
-export default  useBasename(createHistory)({/*basename: '/project2'*/});
+export default useBasename(createHistory)({ /*basename: '/project2'*/ });

@@ -1,77 +1,77 @@
 .postview {
-    background-color: $mainColor;
-    line-height: $lineH;
+  background-color: $mainColor;
+  line-height: $lineH;
+  
+  &__date {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translate(-50%, -50%);
+    width: 12rem;
+    font-size: 0.8rem;
+    line-height: $postViewDateHeight;
+    font-weight: 400;
+    color: $secFontCol;
+    border: 2px solid $secFontCol;
+    border-radius: $borderRadius;
     
-    &__date {
+    @include tabletPlus {
+      font-size: 0.6rem;
+    }
+  }
+  
+  &__title {
+    display: inline-block;
+    font-size: 1.3rem;
+    line-height: $lineH;
+    font-weight: 700;
+    
+    &__wrapper {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 100%;
+      width: 100%;
+      padding: 1rem;
+      text-align: center;
+      color: $secFontCol;
+      background-color: $secondaryColor;
+      border-radius: $borderRadius $borderRadius 0 0;
+      
+      @include tabletPlus {
+        font-size: 1.3rem 2rem;
+      }
+      
+      //create background beneath top half of date 
+      &:before {
         position: absolute;
         left: 50%;
-        top: 0;
-        transform: translate(-50%, -50%);
-        width: 12rem;
-        font-size: 0.8rem;
-        line-height: $postViewDateHeight;
-        font-weight: 400;
-        color: $secFontCol;
-        border: 2px solid $secFontCol;
+        transform: translateX(-50%);
+        bottom: 100%;
+        width: $postViewDateWidth;
+        height: $postViewDateHeight/2;
+        content: '';
+        border-radius: $borderRadius $borderRadius 0 0;
+        background-color: $secondaryColor;
+      }
+      
+      &--no-image {
+        position: relative;
+        bottom: auto;
+        margin: 60px 0;
         border-radius: $borderRadius;
-        
-        @include tabletPlus {
-            font-size: 0.6rem;
-        }
+      }
     }
+  }
+  
+  &__body {
+    text-align: justify;
+    margin-top: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid $secondaryColor;
     
-    &__title {
-        display: inline-block;
-        font-size: 1.3rem;
-        line-height: $lineH;
-        font-weight: 700;
-        
-        &__wrapper {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            bottom: 100%;
-            width: 100%;
-            padding: 1rem;
-            text-align: center;
-            color: $secFontCol;
-            background-color: $secondaryColor;
-            border-radius: $borderRadius $borderRadius 0 0;
-            
-            @include tabletPlus {
-                font-size: 1.3rem 2rem;
-            }
-            
-            //create background beneath top half of date 
-            &:before {
-                position: absolute;
-                left: 50%;
-                transform: translateX(-50%);
-                bottom: 100%;
-                width: $postViewDateWidth;
-                height: $postViewDateHeight/2;
-                content: '';
-                border-radius: $borderRadius $borderRadius 0 0;
-                background-color: $secondaryColor;            
-            }
-            
-            &--no-image {
-                position: relative;
-                bottom: auto;
-                margin: 60px 0;
-                border-radius: $borderRadius;
-            }
-        }
+    &>p {
+      margin-bottom: 1rem;
     }
-    
-    &__body{
-        text-align: justify;
-        margin-top: 2rem;
-        padding-bottom: 2rem;
-        border-bottom: 2px solid $secondaryColor;
-        
-        &>p {
-            margin-bottom: 1rem;
-        }
-    }
+  }
 }

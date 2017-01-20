@@ -2,7 +2,7 @@
 //previous user profile after navigating to another user
 
 export default () => {
-    return {
-        type: 'CLEAR_USER_DATA'
-    }
+  return {
+    type: 'CLEAR_USER_DATA'
+  }
 }

@@ -1,61 +1,59 @@
 .blog-list {
-    padding: 0;
-    color: $mainFontCol;
-    line-height: $lineH;
-    background-color: $mainColor;
+  padding: 0;
+  color: $mainFontCol;
+  line-height: $lineH;
+  background-color: $mainColor;
+  
+  &__item {
+    padding: 2rem 0.5rem;
     
-    &__item {
-        padding: 2rem 0.5rem;
-        
-        //line separating list items
-        &:not(:last-child):after {
-            position: absolute;
-            left: 50%;
-            bottom: 0;
-            transform: translateX(-50%);
-            width: 50%;
-            content: '';
-            border-top: 1px solid $secondaryColor;
-        }
-        
-        &__date {
-            text-align: center;
-            font-size: 0.6rem;
-        }
-        
-        &__title {
-            font-size: 1.4rem;
-            max-width: 90%;
-        }
-        
-        &__snippet {
-            text-align: justify;
-        }
-        
-        &__button {
-            margin: 2.5rem 0 0.5rem 0;
-        }
-        
-        &__controls {
-            right: 0;
-            top: 0;
-            width: 95px;
-            margin: 2rem 0.5rem;
-        }
-
-        &__single-button {
-            display: inline-block;
-            margin: 0 5px;
-        }
+    //line separating list items
+    &:not(:last-child):after {
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      width: 50%;
+      content: '';
+      border-top: 1px solid $secondaryColor;
     }
     
-    &--no-image {
-        top: 50px;
-        box-shadow: none;
+    &__date {
+      text-align: center;
+      font-size: 0.6rem;
     }
     
-    .nav>li>a {
-        display: table;
-        margin: 0 auto;
+    &__title {
+      font-size: 1.4rem;
+      max-width: 90%;
     }
+    
+    &__snippet {
+      text-align: justify;
+    }
+    
+    &__button {
+      margin: 2.5rem 0 0.5rem 0;
+    }
+    
+    &__controls {
+      right: 0;
+      top: 0;
+      width: 95px;
+      margin: 2rem 0.5rem;
+    }
+    
+    &__single-button {
+      display: inline-block;
+      margin: 0 5px;
+    }
+  }
+  &--no-image {
+    top: 50px;
+    box-shadow: none;
+  }
+  .nav>li>a {
+    display: table;
+    margin: 0 auto;
+  }
 }

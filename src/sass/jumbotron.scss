@@ -1,66 +1,65 @@
 .jumbotron {
-    position: relative;
-    height: 50vh;
-    padding: 0;
-    margin: 0;
-    overflow: hidden;
-    
-    @include landscape {
-        height: 40vw;
+  position: relative;
+  height: 50vh;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  
+  @include landscape {
+    height: 40vw;
+  }
+  
+  &__image {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: {
+      size: cover;
+      position: center;
     }
     
-    &__image {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        background: {
-            size: cover;
-            position: center;
-        }
-        
-        &__controls {
-            right: 5%;
-            top: 5%;
-            width: 220px;
-        }
-        
-        &__single-button {
-            display: inline-block;
-            width: 100px;
-            margin: 0 5px;
-        }
+    &__controls {
+      right: 5%;
+      top: 5%;
+      width: 220px;
     }
     
-    &__dropzone {
-        width: 90%;
-        height: 90%;
-        border: 2px dashed $secondaryColor;
-        border-radius: $borderRadius;
-        
-        @include absoluteCenter;
-        
-        &__text {
-            text-align: center;
-            line-height: $lineH;
-            
-            @include absoluteCenter;
-        }
-        
-        &--active {
-            background-color: rgba(105, 148, 219, 0.85);
-        }
+    &__single-button {
+      display: inline-block;
+      width: 100px;
+      margin: 0 5px;
+    }
+  }
+  
+  &__dropzone {
+    width: 90%;
+    height: 90%;
+    border: 2px dashed $secondaryColor;
+    border-radius: $borderRadius;
+    
+    @include absoluteCenter;
+    
+    &__text {
+      text-align: center;
+      line-height: $lineH;
+      @include absoluteCenter;
     }
     
-    form {
-        display: inline-block;
-        width: 110px;
+    &--active {
+      background-color: rgba(105, 148, 219, 0.85);
     }
-    
-    input {
-        position: absolute;
-        z-index: -1;
-        width: 0.1px;
-        height: 0.1px;
-        opacity: 0;
-    }
+  }
+  
+  form {
+    display: inline-block;
+    width: 110px;
+  }
+  
+  input {
+    position: absolute;
+    z-index: -1;
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+  }
 }

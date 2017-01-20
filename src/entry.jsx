@@ -1,13 +1,30 @@
 import './sass/entry.scss';
-import './pics/winter.jpg'
+import './pics/winter.jpg';
 
 import React from 'react';
-import {render} from 'react-dom';
-import {createStore, combineReducers, applyMiddleware} from 'redux';
-import {Provider} from 'react-redux';
-import {Router, Route, IndexRoute} from 'react-router';
-import {routerMiddleware} from 'react-router-redux';
-import {reducer as formReducer, Field} from 'redux-form';
+import {
+  render
+} from 'react-dom';
+import {
+  createStore,
+  combineReducers,
+  applyMiddleware
+} from 'redux';
+import {
+  Provider
+} from 'react-redux';
+import {
+  Router,
+  Route,
+  IndexRoute
+} from 'react-router';
+import {
+  routerMiddleware
+} from 'react-router-redux';
+import {
+  reducer as formReducer,
+  Field
+} from 'redux-form';
 import thunk from 'redux-thunk';
 import authorizationReducer from './reducers/authorization';
 import imageReducer from './reducers/image';
@@ -25,36 +42,35 @@ import clearErrors from './actions/clearErrors';
 import browserHistory from './helpers/browserHistory';
 
 browserHistory.listen(() => {
-    store.dispatch(clearErrors());
+  store.dispatch(clearErrors());
 });
 
 const reducers = combineReducers({
-    auth: authorizationReducer,
-    image: imageReducer,
-    posts: postsReducer,
-    comments: commentsReducer,
-    errors: errorsReducer,
-    form: formReducer
+  auth: authorizationReducer,
+  image: imageReducer,
+  posts: postsReducer,
+  comments: commentsReducer,
+  errors: errorsReducer,
+  form: formReducer
 });
 
 const routerMidd = routerMiddleware(browserHistory);
 const store = createStore(reducers, applyMiddleware(thunk, routerMidd));
 
-//check cookies
+//check cookies 
 store.dispatch(authorizationAction('cookie'));
 
 render(
-    <Provider store={store}>
-        <Router history={browserHistory}>
-            <Route path='/' component={Authorization}/>
-            <Route path='/:user' component={User}>
-                <IndexRoute component={BlogList} />
-                <Route path=':postId/:titleLink' component={PostView} />
-                <Route path=':postId/:titleLink/edit' protection='redirect' component={EditPost} />
-                <Route path='create' protection='redirect' component={CreatePost} />
-            </Route>
-        </Router>
-    </Provider>,
-    document.getElementById('root')       
- );
-
+  <Provider store={store}>
+    <Router history={browserHistory}>
+      <Route path='/' component={Authorization}/>
+      <Route path='/:user' component={User}>
+        <IndexRoute component={BlogList} />
+        <Route path=':postId/:titleLink' component={PostView} />
+        <Route path=':postId/:titleLink/edit' protection='redirect' component={EditPost} />
+        <Route path='create' protection='redirect' component={CreatePost} />
+      </Route>
+    </Router>
+  </Provider>,
+  document.getElementById('root')
+);

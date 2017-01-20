@@ -1,27 +1,27 @@
 @keyframes show-controls {
-    0% {
-        visibility: hidden;
-        opacity: 0;
-    }
-    1%{
-        visibility: visible;
-        opacity: 0;
-    }
-    100% {
-        visibility: visible;
-        opacity: 1;
-    }
+  0% {
+    visibility: hidden;
+    opacity: 0;
+  }
+  1% {
+    visibility: visible;
+    opacity: 0;
+  }
+  100% {
+    visibility: visible;
+    opacity: 1;
+  }
 }
 
 .hidden-controls {
-    visibility: hidden;
-    position: absolute;
+  visibility: hidden;
+  position: absolute;
 }
 
 .show-controls {
-    animation: show-controls 1s forwards;
+  animation: show-controls 1s forwards;
 }
 
 .hide-controls {
-    animation: show-controls 1s reverse forwards;
+  animation: show-controls 1s reverse forwards;
 }

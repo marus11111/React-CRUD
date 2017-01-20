@@ -1,8 +1,8 @@
 export default (title) => {
-    title = title
+  title = title
     .replace(/<\/?[^>]+(>|$)/g, "")
     .replace(/\s|\.|,|!|\?|&|;|:|@/g, '-')
     .toLowerCase();
 
-    return title;
+  return title;
 }

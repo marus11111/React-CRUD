@@ -1,0 +1,17 @@
+{
+  "bb.beautify.languages": {
+    "css": "css",
+    "ejs": "html",
+    "handlebars": "html",
+    "html": "html",
+    "javascript": "js",
+    "jsx": "js",
+    "json": "js",
+    "less": "css",
+    "php": "html",
+    "scss": "css",
+    "svg": "html",
+    "vue": "html",
+    "xml": "html"
+  }
+}

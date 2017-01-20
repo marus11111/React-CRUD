@@ -40,7 +40,7 @@ html {
     }
 }
 body {
-    background-color: $mainColor;
+    background-color: $mainColor; 
 }
 ol, ul {
 	list-style: none;
@@ -58,58 +58,64 @@ table {
 	border-spacing: 0;
 }
 
+////////////////end of reset
+
 .btn {
+  color: $secFontCol;
+  border: 2px solid transparent;
+  border-radius: $borderRadius;
+  background-color: $secondaryColor;
+  transition: color 0.5s, border 0.5s, background-color 0.5s;
+  
+  &:active,
+  &:focus {
     color: $secFontCol;
-    border: 2px solid transparent;
-    border-radius: $borderRadius;
-    background-color: $secondaryColor;
-    transition: color 0.5s, border 0.5s, background-color 0.5s;
-    
-    &:active, &:focus {
-        color: $secFontCol;
-    }
-    
-    &:hover {
-        color: $mainFontCol;
-        border: 2px solid $mainFontCol;
-        background-color: $mainColor;
-    }
+  }
+  
+  &:hover {
+    color: $mainFontCol;
+    border: 2px solid $mainFontCol;
+    background-color: $mainColor;
+  }
 }
 
-.btn, input {
-    &:active, &:focus, &:active:focus {
-        outline: 0;
-    }
+.btn,
+input {
+  &:active,
+  &:focus,
+  &:active:focus {
+    outline: 0;
+  }
 }
 
 .row-center {
-    text-align: center;
-    .col-centered {
-        float: none;
-        display: inline-block;
-    }
+  text-align: center;
+  
+  .col-centered {
+    float: none;
+    display: inline-block;
+  }
 }
 
 .nav>li>a {
-    color: inherit;
-       
-    &:hover {
-        background-color: transparent;
-    }
+  color: inherit;
+  &:hover {
+    background-color: transparent;
+  }
 }
 
 .children-wrap {
-    box-shadow: $topShadow;
-    background-color: $mainColor;
+  box-shadow: $topShadow;
+  background-color: $mainColor;
 }
 
 .error {
-    max-width: 500px;
-    height: 50px; 
-    text-align: center;
-    line-height: 50px;
-    margin-top: 1rem;
-    color: $errorFontCol;
-    border-radius: $borderRadius;
-    background-color: $errorBkgCol;
+  max-width: 500px;
+  height: 50px;
+  text-align: center;
+  line-height: 50px;
+  margin-top: 1rem;
+  color: $errorFontCol;
+  border-radius: $borderRadius;
+  background-color: $errorBkgCol;
 }

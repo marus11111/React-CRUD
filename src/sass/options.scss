@@ -1,49 +1,33 @@
-//main background
-$mainColor: #f5f4f0;
 
-//title, menu buttons
-$secondaryColor: rgba(2,0,15,0.85);
-
-//post text, button text on hover
-$mainFontCol: rgba(2,0,15,0.85);
-
-//button text, menu text
-$secFontCol: #f5f4f0;
-
+$mainColor: #f5f4f0; //main background
+$secondaryColor: rgba(2, 0, 15, 0.85); //title, menu buttons
+$mainFontCol: rgba(2, 0, 15, 0.85); //post text, button text on hover
+$secFontCol: #f5f4f0; //button text, menu text
 $errorBkgCol: #e2747d;
 $errorFontCol: white;
-
 $fontFamily: Open-Sans, sans-serif;
-
 $borderRadius: 0.25rem;
-
-//shadow falling at the bottom of jumbotron
-$topShadow: 0 -2px 3px 0 rgba(0, 0, 0, 0.5);
-
-//shadow on sign in/sign up page
-$rightShadow: 2px 0 3px 0 rgba(0, 0, 0, 0.5);
-
-//line-height
-$lineH: 1.5;
-
+$topShadow: 0 -2px 3px 0 rgba(0, 0, 0, 0.5); //shadow falling at the bottom of jumbotron
+$rightShadow: 2px 0 3px 0 rgba(0, 0, 0, 0.5); //shadow on sign in/sign up page
+$lineH: 1.5; //line-height
 $postViewDateHeight: 1.4rem;
 $postViewDateWidth: 12rem;
 
 @mixin absoluteCenter {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 @mixin landscape {
-    @media screen and (orientation: landscape) {
-        @content;
-    }
+  @media screen and (orientation: landscape) {
+    @content;
+  }
 }
 
 @mixin tabletPlus {
-    @media screen and (min-width: 768px) {
-        @content;
-    }
+  @media screen and (min-width: 768px) {
+    @content;
+  }
 }

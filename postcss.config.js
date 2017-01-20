@@ -1,5 +1,3 @@
-
-
 //postcss: [clean(), mqPacker(), autoprefixer({add:true, browsers: ['last 5 versions']})]
 
 var autoprefixer = require('autoprefixer');
@@ -15,4 +13,3 @@ module.exports = {
     clean()
   ]
 };
-
