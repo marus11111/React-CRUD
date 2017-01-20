@@ -7,7 +7,7 @@ import setEditedPost from '../actions/setEditedPost';
 import makeLink from '../helpers/titleLink';
 import validatePurifyPost from '../helpers/validatePurifyPost';
 import protect from '../HOC/protectedComponent.jsx';
-import RichTextMarkdown from './RichTextMarkdown';
+import RichTextMarkdown from '../HOC/RichTextMarkdown';
 import rteTitleConfig from '../options/rteTitleConfig';
 
 class EditPost extends Component {
@@ -20,7 +20,7 @@ class EditPost extends Component {
     componentWillReceiveProps(nextProps){
         let {posts, postBeingEdited, setEditedPost, params: {postId}} = nextProps;
         let post = postBeingEdited ? postBeingEdited : {};
-        if ((!post.id || post.id !== postId) && posts.length > 0){
+        if (post.id !== postId && posts.length > 0){
             setEditedPost(postId);
         }
     }

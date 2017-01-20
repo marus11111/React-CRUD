@@ -57,7 +57,7 @@ const validateConfirmation = (value, allValues) => {
     return errors.length > 0 ? errors : undefined;
 }
 
-const customInput = ({input, meta: {touched, error}, type, placeholder, className }) => {
+const customInput = ({input, meta: {dirty, touched, error}, type, placeholder, className, confirmPass}) => {
     
     let errorList;
     if (error) {
@@ -69,7 +69,7 @@ const customInput = ({input, meta: {touched, error}, type, placeholder, classNam
     return (
         <div>
             <input {...input} type={type} placeholder={placeholder} className={className}></input>
-            {touched && error && <ul>{errorList}</ul>}
+            {((dirty && !confirmPass) || touched) && error && <ul className='authorization__val-errors'>{errorList}</ul>}
         </div>
     )
 }
@@ -82,43 +82,42 @@ class SignUp extends Component {
     }
     
     render(){
+        let {signUpError} = this.props;
+        
         return (
             <div>
-                <div className='row row-center'>
-                    <p className='col-centered'>{this.props.signUpError}</p>
-                </div>
-                <form 
-                    className='form-group'
-                    onSubmit={this.props.handleSubmit(this.signUp)}> 
-                    <div className='row row-center'>
-                        <div className='col-xs-12 col-sm-6 col-md-5 col-lg-4 col-centered'>
-                            <Field 
-                                className='form-control' 
-                                component={customInput} 
-                                name='username' 
-                                type='text' 
-                                placeholder='Username' 
-                                validate={[validateUsername]}/>
-                            <Field 
-                                className='form-control' 
-                                component={customInput} 
-                                name='password' 
-                                type='password' 
-                                placeholder='Password' 
-                                validate={[validatePassword]}/>
-                            <Field 
-                                className='form-control' 
-                                component={customInput} 
-                                name='confirmation' 
-                                type='password' 
-                                placeholder='Confirm password' 
-                                validate={[validateConfirmation]}/>
-                            <button 
-                                className='btn btn-primary'
-                                type='submit'> 
-                                Sign Up
-                            </button>
-                        </div>
+                {signUpError &&
+                    <p className='col-xs-12 col-sm-9 col-lg-7 col-centered error'>{signUpError}</p>
+                }
+                <form onSubmit={this.props.handleSubmit(this.signUp)}> 
+                    <div className='col-xs-12 col-sm-9 col-lg-7 col-centered'>
+                        <Field 
+                            className='authorization__input' 
+                            component={customInput} 
+                            name='username' 
+                            type='text' 
+                            placeholder='Username' 
+                            validate={[validateUsername]}/>
+                        <Field 
+                            className='authorization__input' 
+                            component={customInput} 
+                            name='password' 
+                            type='password' 
+                            placeholder='Password' 
+                            validate={[validatePassword]}/>
+                        <Field 
+                            className='authorization__input' 
+                            component={customInput} 
+                            name='confirmation' 
+                            type='password' 
+                            placeholder='Confirm password' 
+                            validate={[validateConfirmation]}
+                            confirmPass={true}/>
+                        <button 
+                            className='btn authorization__button'
+                            type='submit'> 
+                            Sign Up
+                        </button>
                     </div>
                 </form>
             </div>

@@ -1,4 +1,5 @@
 import './sass/entry.scss';
+import './pics/winter.jpg'
 
 import React from 'react';
 import {render} from 'react-dom';
@@ -7,7 +8,6 @@ import {Provider} from 'react-redux';
 import {Router, Route, IndexRoute} from 'react-router';
 import {routerMiddleware} from 'react-router-redux';
 import {reducer as formReducer, Field} from 'redux-form';
-import RichTextEditor from 'react-rte';
 import thunk from 'redux-thunk';
 import authorizationReducer from './reducers/authorization';
 import imageReducer from './reducers/image';
@@ -23,8 +23,6 @@ import EditPost from './components/EditPost.jsx';
 import authorizationAction from './actions/ajax/authorization';
 import clearErrors from './actions/clearErrors';
 import browserHistory from './helpers/browserHistory';
-
-window.RichTextEditor = RichTextEditor;
 
 browserHistory.listen(() => {
     store.dispatch(clearErrors());

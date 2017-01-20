@@ -32,22 +32,24 @@ class Authorization extends React.Component {
         }
         
         return (
-            <div className='container'>
+            <div className='container authorization'>
                 <div className='row row-center'>
-                    <button 
-                        className={`btn col-xs-2 col-centered${activeForm === 'signIn' ? ' active' : ''}`}
-                        onClick={activateSignIn}>
-                        Sign In
-                    </button>
-                    <button 
-                        className={`btn col-xs-2 col-centered${activeForm === 'signUp' ? ' active' : ''}`}
-                        onClick={activateSignUp}>
-                        Sign Up
-                    </button>
-                </div>
-                {activeForm === 'signIn' && <SignIn/>} 
-                {activeForm === 'signUp' && <SignUp/>}
-                <p>This website uses cookies. By signing up or signing in you are agreeing to receive our cookies.</p>
+                    <p className='col-centered authorization__cookies'>This website uses cookies. <br />By signing up or signing in you are agreeing to receive our cookies.</p>
+                    <div>
+                        <button 
+                            className={`btn authorization__switch ${activeForm === 'signIn' ? 'authorization__switch--active' : ''}`}
+                            onClick={activateSignIn}>
+                            Sign In
+                        </button>
+                        <button 
+                            className={`btn authorization__switch ${activeForm === 'signUp' ? 'authorization__switch--active' : ''}`}
+                            onClick={activateSignUp}>
+                            Sign Up
+                        </button>
+                    </div>
+                    {activeForm === 'signIn' && <SignIn/>} 
+                    {activeForm === 'signUp' && <SignUp/>}
+                    </div>
             </div>
         )
     }

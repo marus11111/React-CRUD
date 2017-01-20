@@ -29,15 +29,18 @@ footer, header, hgroup, menu, nav, section {
 	display: block;
 }
 html {
+    width: 100%;
+    height: 100%;
     font-size: 15px;
+	line-height: 1;
+    overflow-x: hidden;
     
     @include tabletPlus {
         font-size: 20px;
     }
 }
 body {
-	line-height: 1;
-    background: $mainColor;
+    background-color: $mainColor;
 }
 ol, ul {
 	list-style: none;
@@ -64,13 +67,18 @@ table {
     
     &:active, &:focus {
         color: $secFontCol;
-        outline: 0;
     }
     
     &:hover {
         color: $mainFontCol;
         border: 2px solid $mainFontCol;
         background-color: $mainColor;
+    }
+}
+
+.btn, input {
+    &:active, &:focus, &:active:focus {
+        outline: 0;
     }
 }
 
@@ -91,7 +99,7 @@ table {
 }
 
 .children-wrap {
-    box-shadow: $shadow;
+    box-shadow: $topShadow;
     background-color: $mainColor;
 }
 

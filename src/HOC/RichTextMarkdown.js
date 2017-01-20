@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import RichTextEditor from 'react-rte';
 
 class RichTextMarkdown extends Component {
   constructor(props) {
@@ -7,7 +8,7 @@ class RichTextMarkdown extends Component {
   }
     
  componentDidMount() {
-    this.RichTextEditor = window.RichTextEditor
+     this.RichTextEditor = RichTextEditor;
         this.setState({
           value: this.props.initialVal ? this.RichTextEditor.createValueFromString(this.props.initialVal, 'html') :
             this.RichTextEditor.createEmptyValue()
@@ -33,7 +34,7 @@ class RichTextMarkdown extends Component {
 
   render() {
     const { RichTextEditor, state: { value }, handleChange } = this;
-    
+      
     return RichTextEditor ? 
         <RichTextEditor 
             {...this.props}

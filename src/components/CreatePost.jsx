@@ -5,7 +5,7 @@ import createOrUpdate from '../actions/ajax/createOrUpdate';
 import variousErrors from '../actions/variousErrors';
 import validatePurifyPost from '../helpers/validatePurifyPost';
 import protect from '../HOC/protectedComponent.jsx';
-import RichTextMarkdown from './RichTextMarkdown';
+import RichTextMarkdown from '../HOC/RichTextMarkdown';
 import rteTitleConfig from '../options/rteTitleConfig';
 
 class CreatePost extends Component {

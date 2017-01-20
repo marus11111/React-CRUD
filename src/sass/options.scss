@@ -18,7 +18,10 @@ $fontFamily: Open-Sans, sans-serif;
 $borderRadius: 0.25rem;
 
 //shadow falling at the bottom of jumbotron
-$shadow: 0 -2px 3px 0px rgba(0, 0, 0, 0.5);
+$topShadow: 0 -2px 3px 0 rgba(0, 0, 0, 0.5);
+
+//shadow on sign in/sign up page
+$rightShadow: 2px 0 3px 0 rgba(0, 0, 0, 0.5);
 
 //line-height
 $lineH: 1.5;
