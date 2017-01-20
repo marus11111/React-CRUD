@@ -42,7 +42,7 @@ export {
 export default (type, data) => {
   return dispatch => {
 
-    type === 'cookie' ? dispatch(ongoingCookieAuth(true)) : null;
+    if (type === 'cookie') dispatch(ongoingCookieAuth(true));
 
     let url = `/project2/server/${type}`;
     let formData;
@@ -66,7 +66,7 @@ export default (type, data) => {
         } else if (res.error) {
           dispatch(signInError(res.error));
         }
-        type === 'cookie' ? dispatch(ongoingCookieAuth(false)) : null;
+        if (type === 'cookie') dispatch(ongoingCookieAuth(false));
       })
       .catch((error) => {
         throw new Error(`ajax authorization: ${error}`);

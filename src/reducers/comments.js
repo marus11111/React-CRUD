@@ -25,11 +25,14 @@ export default (state = {
         let removeIndex = comments.findIndex((comment) => {
           return action.id === comment.id;
         });
-        let before = comments.slice(0, removeIndex);
-        let after = comments.slice(removeIndex + 1);
-        return {...state,
-          comments: before.concat(after)
-        };
+        if (removeIndex >= 0) {
+          let before = comments.slice(0, removeIndex);
+          let after = comments.slice(removeIndex + 1);
+          return {...state,
+            comments: before.concat(after)
+          };
+        }
+        break;
       }
     case 'COMMENTS_LOADING':
       return {...state,

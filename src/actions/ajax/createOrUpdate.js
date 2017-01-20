@@ -52,10 +52,21 @@ const imageUploading = (bool) => {
   }
 }
 
+//variable that will be informing function whether post or comment creation is
+//currently being processed so that it can prevent double insertion
+let processingCreate = false;
+
 export default (type, data) => {
   return dispatch => {
 
-    type === 'imageUpload' ? dispatch(imageUploading(true)) : null;
+    //inform app that image is beaing processed so that it can show loading animation
+    if (type === 'imageUpload') dispatch(imageUploading(true));
+
+    //prevent double insertion of posts and comments
+    if (type === 'createPost' || type === 'createComment') {
+      if (processingCreate) return;
+      processingCreate = true;
+    }
 
     let url = `/project2/server/${type}`;
 
@@ -66,6 +77,7 @@ export default (type, data) => {
       }
     }
 
+    //make request and then handle data appropriately dpending on request type and reponse
     axios.post(url, formData)
       .then(res => {
         res = res.data;
@@ -162,7 +174,8 @@ export default (type, data) => {
               dispatch(commentCreationError(res.error));
           }
         }
-        type === 'imageUpload' ? dispatch(imageUploading(false)) : null;
+        if (type === 'imageUpload') dispatch(imageUploading(false));
+        if (type === 'createPost' || type === 'createComment') processingCreate = false;
       })
       .catch((error) => {
         throw new Error(`ajax createOrUpdate: ${error}`);

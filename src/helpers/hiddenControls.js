@@ -1,11 +1,11 @@
 const showControls = (element) => {
-  element.className = element.className.replace(' hide-controls', '');
+  element.className = element.className.replace(/\s{1}hide-controls/g, '');
   void element.offsetWidth;
   element.className += ' show-controls';
 }
 
 const hideControls = (element) => {
-  element.className = element.className.replace(' show-controls', '');
+  element.className = element.className.replace(/\s{1}show-controls/g, '');
   void element.offsetWidth;
   element.className += ' hide-controls';
 }

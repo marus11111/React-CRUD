@@ -34,11 +34,14 @@ export default (state = {
         let removeIndex = posts.findIndex((post) => {
           return action.id === post.id;
         });
-        let before = posts.slice(0, removeIndex);
-        let after = posts.slice(removeIndex + 1);
-        return {...state,
-          posts: before.concat(after)
-        };
+        if (removeIndex >= 0) {
+          let before = posts.slice(0, removeIndex);
+          let after = posts.slice(removeIndex + 1);
+          return {...state,
+            posts: before.concat(after)
+          };
+        }
+        break;
       }
     case 'POSTS_LOADING':
       return {...state,
