@@ -70,7 +70,11 @@
     padding-bottom: 2rem;
     border-bottom: 2px solid $secondaryColor;
     
-    &>p, &>h1, &>h2, &>h3, &>pre {
+    &>p,
+    &>h1,
+    &>h2,
+    &>h3,
+    &>pre {
       margin-bottom: 1rem;
     }
   }

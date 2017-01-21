@@ -79,7 +79,7 @@ class EditPost extends Component {
       body
     } = post ? post : {};
     return (
-      <div className='rich-text row row-center'>
+      <div className='row row-center rich-text'>
         <form 
           className='col-xs-12 col=sm-9 col-md-7 col-centered'
           onSubmit={this.submitHandler}>

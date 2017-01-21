@@ -4,6 +4,10 @@
   line-height: $lineH;
   background-color: $mainColor;
   
+  & .nav {
+    padding-left: 15px; //restoring bootstrap col padding which is zeroed by nav class
+  }
+  
   &__item {
     padding: 2rem 0.5rem;
     
@@ -28,13 +32,19 @@
       max-width: 90%;
     }
     
-    .nav &__title {
+    & &__title { //need 2 classes to overwrite bootstraps .nav>li>a
       display: table;
       margin: 0 auto;
     }
     
     &__snippet {
       text-align: justify;
+      
+      &>h1,
+      &>h2,
+      &>h3, {
+        font-size: 1rem;
+      }
     }
     
     &__button {

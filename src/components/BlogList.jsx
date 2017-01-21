@@ -43,7 +43,7 @@ class BlogList extends Component {
       } else if (fetchingPostsError) {
         children = <li className='blog-list__item'>{fetchingPostsError}</li>;
       } else if (usersEqual) {
-        children = <li className='blog-list__item'>You haven't written any posts yet.</li>;
+        children = <li className='blog-list__item'>Choose "create post" from menu to write your first post.</li>;
       } else {
         children = <li className='blog-list__item'>No posts found.</li>;
       }
@@ -111,7 +111,7 @@ class BlogList extends Component {
     }
 
     return (
-      <div className={`row row-center blog-list ${!usersEqual && !imageUrl && 'blog-list--no-image'}`}>
+      <div className={`row row-center blog-list${(!usersEqual && !imageUrl) ? ' blog-list--no-image' : ''}`}>
         <ul className='nav col-xs-12 col-sm-9 col-md-7 col-centered'>
           {children}
         </ul>

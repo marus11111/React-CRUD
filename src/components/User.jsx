@@ -120,7 +120,7 @@ class User extends Component {
               }
             </div>
             }
-            <div className='children-wrap container-fluid'>
+            <div className='container-fluid children-wrap'>
               {error && 
               <div className='row row-center'>
                 <p className='col-xs-12 col-centered error'>{error}</p>

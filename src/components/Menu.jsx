@@ -53,7 +53,7 @@ class Menu extends Component {
 
     let menuItems = []
     let menuItemClass = 'nav-item';
-    let menuItemLinkClass = 'menu__link nav-link'
+    let menuItemLinkClass = 'nav-link menu__link'
 
     if (route !== 'home') {
       menuItems.push(

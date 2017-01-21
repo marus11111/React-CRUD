@@ -98,7 +98,7 @@ class Comments extends Component {
             }
             {(authorizedUser === author || usersEqual) &&
             <button 
-              className='btn  comments__item__button' 
+              className='btn comments__item__button' 
               onClick={() => this.props.remove('removeComment', {id})}>
               <span className='glyphicon glyphicon-trash'></span>
             </button>
@@ -107,10 +107,11 @@ class Comments extends Component {
           </li>
         )
       });
+      children = children.reverse();
     }
 
     return (
-      <div className='comments col-xs-10 col-centered'>
+      <div className='col-xs-10 col-centered comments'>
         {commentCreationError &&
         <p className='col-xs-12 error'>{commentCreationError}</p>
         }
