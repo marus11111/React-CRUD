@@ -6,7 +6,7 @@ var HtmlPlugin = require('html-webpack-plugin');
 module.exports = {
   entry: {
     script: './src/entry.jsx',
-    vendor: ['babel-polyfill', './src/modernizr/modernizr-custom', 'axios', 'react', 'react-dom', 'redux', 'react-redux', 'redux-thunk', 'history', 'react-router', 'react-router-redux', 'redux-form', 'react-rte', 'react-dropzone']
+    vendor: ['babel-polyfill', './src/js/modernizr/modernizr-custom', 'axios', 'react', 'react-dom', 'redux', 'react-redux', 'redux-thunk', 'history', 'react-router', 'react-router-redux', 'redux-form', 'react-rte', 'react-dropzone']
   },
   output: {
     path: './dist/',
@@ -26,8 +26,7 @@ module.exports = {
       {
         test: /\.scss$/i,
         loader: ExtractTextPlugin.extract({
-          loader: ['css-loader', 'postcss-loader', 'sass-loader'],
-          publicPath: "/dist"
+          loader: ['css-loader', 'postcss-loader', 'sass-loader']
         })
             },
       {
@@ -56,5 +55,4 @@ module.exports = {
       }
     })
     ]
-
 }

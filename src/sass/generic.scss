@@ -119,4 +119,29 @@ input {
   color: $errorFontCol;
   border-radius: $borderRadius;
   background-color: $errorBkgCol;
+  
+  &--no-js {
+    display: none;
+    width: 500px;
+    height: 100px;
+    line-height: 100px;
+    margin: 2rem auto;
+  }
+}
+
+//animation just to initially hide no-js error so that it doesnt flicker before js will remove clss from html tag
+@keyframes hide {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.no-js {
+  .error--no-js {
+    display: block;
+    animation: hide 0.5s;
+  }
 }

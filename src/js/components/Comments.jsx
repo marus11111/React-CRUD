@@ -83,19 +83,18 @@ class Comments extends Component {
               className='comments__item__date' 
               dateTime={date.iso}>
               {date.display}
-            </time>
+            </time><br />
             {author &&
-            <div>
-              <Link 
-                className='comments__item__author' 
-                to={`/${author}`}>
-                {author}
-              </Link><span> wrote:</span>
-            </div>
+            <Link 
+              className='comments__item__author' 
+              to={`/${author}`}>
+              {author}
+            </Link>
             }
             {!author &&
-            <span>Anonymous</span>
+            <span className='comments__item__author'>Anonymous</span>
             }
+            <span> wrote:</span>
             {(authorizedUser === author || usersEqual) &&
             <button 
               className='btn comments__item__button' 

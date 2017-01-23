@@ -1,5 +1,4 @@
-import './sass/entry.scss';
-import './pics/winter.jpg';
+import './entry.scss';
 
 import React from 'react';
 import {
@@ -26,20 +25,24 @@ import {
   Field
 } from 'redux-form';
 import thunk from 'redux-thunk';
-import authorizationReducer from './reducers/authorization';
-import imageReducer from './reducers/image';
-import postsReducer from './reducers/posts';
-import commentsReducer from './reducers/comments';
-import errorsReducer from './reducers/errors';
-import Authorization from './components/Authorization.jsx';
-import User from './components/User.jsx';
-import BlogList from './components/BlogList.jsx';
-import PostView from './components/PostView.jsx';
-import CreatePost from './components/CreatePost.jsx';
-import EditPost from './components/EditPost.jsx';
-import authorizationAction from './actions/ajax/authorization';
-import clearErrors from './actions/clearErrors';
-import browserHistory from './helpers/browserHistory';
+import authorizationReducer from './js/reducers/authorization';
+import imageReducer from './js/reducers/image';
+import postsReducer from './js/reducers/posts';
+import commentsReducer from './js/reducers/comments';
+import errorsReducer from './js/reducers/errors';
+import Authorization from './js/components/Authorization.jsx';
+import User from './js/components/User.jsx';
+import BlogList from './js/components/BlogList.jsx';
+import PostView from './js/components/PostView.jsx';
+import CreatePost from './js/components/CreatePost.jsx';
+import EditPost from './js/components/EditPost.jsx';
+import authorizationAction from './js/actions/ajax/authorization';
+import clearErrors from './js/actions/clearErrors';
+import browserHistory from './js/helpers/browserHistory';
+
+//
+let html = document.documentElement;
+html.className = html.className.replace(/\s?no-js\s?/, '');
 
 browserHistory.listen(() => {
   store.dispatch(clearErrors());

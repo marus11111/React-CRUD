@@ -1,7 +1,7 @@
 var webpack = require('webpack');
 var HtmlPlugin = require('html-webpack-plugin');
 
-var vendorList = ['babel-polyfill', './src/modernizr/modernizr-custom', 'axios', 'react', 'react-dom', 'redux', 'react-redux', 'redux-thunk', 'history', 'react-router', 'react-router-redux', 'redux-form', 'react-rte', 'react-dropzone']
+var vendorList = ['babel-polyfill', './src/js/modernizr/modernizr-custom', 'axios', 'react', 'react-dom', 'redux', 'react-redux', 'redux-thunk', 'history', 'react-router', 'react-router-redux', 'redux-form', 'react-rte', 'react-dropzone']
 
 module.exports = {
   entry: {
