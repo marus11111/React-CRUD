@@ -1,11 +1,11 @@
 var webpack = require('webpack');
 var HtmlPlugin = require('html-webpack-plugin');
 
-var vendorList = ['babel-polyfill', './src/js/modernizr/modernizr-custom', 'axios', 'react', 'react-dom', 'redux', 'react-redux', 'redux-thunk', 'history', 'react-router', 'react-router-redux', 'redux-form', 'react-rte', 'react-dropzone']
+var vendorList = ['babel-polyfill', './frontend/js/modernizr/modernizr-custom', 'axios', 'react', 'react-dom', 'redux', 'react-redux', 'redux-thunk', 'history', 'react-router', 'react-router-redux', 'redux-form', 'react-rte', 'react-dropzone']
 
 module.exports = {
   entry: {
-    script: './src/entry.jsx',
+    script: './frontend/entry.jsx',
     vendor: vendorList
   },
   output: {
@@ -46,7 +46,7 @@ module.exports = {
   },
   plugins: [
         new HtmlPlugin({
-      template: './src/index.html'
+      template: './frontend/index.html'
     }),
         new webpack.optimize.CommonsChunkPlugin({
       names: 'vendor'

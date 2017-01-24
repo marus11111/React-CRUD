@@ -2,11 +2,12 @@ var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 var HtmlPlugin = require('html-webpack-plugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: {
-    script: './src/entry.jsx',
-    vendor: ['babel-polyfill', './src/js/modernizr/modernizr-custom', 'axios', 'react', 'react-dom', 'redux', 'react-redux', 'redux-thunk', 'history', 'react-router', 'react-router-redux', 'redux-form', 'react-rte', 'react-dropzone']
+    script: './frontend/entry.jsx',
+    vendor: ['babel-polyfill', './frontend/js/modernizr/modernizr-custom', 'axios', 'react', 'react-dom', 'redux', 'react-redux', 'redux-thunk', 'history', 'react-router', 'react-router-redux', 'redux-form', 'react-rte', 'react-dropzone']
   },
   output: {
     path: './dist/',
@@ -37,7 +38,7 @@ module.exports = {
   },
   plugins: [
         new HtmlPlugin({
-      template: './src/index.html'
+      template: './frontend/index.html'
     }),
         new ExtractTextPlugin('style.[contenthash].css'),
         new webpack.optimize.CommonsChunkPlugin({
@@ -53,6 +54,9 @@ module.exports = {
       'process.env': {
         'NODE_ENV': JSON.stringify('production')
       }
-    })
+    }),
+        new CopyWebpackPlugin([{
+      from: 'backend/'   
+    }])
     ]
 }
