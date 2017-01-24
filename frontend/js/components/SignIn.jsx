@@ -39,22 +39,24 @@ class SignIn extends Component {
         {signInError &&
         <p className='col-xs-12 col-sm-9 col-lg-7 col-centered error'>{signInError}</p>
         }
-        <form onSubmit={this.submitHandler}> 
+        <form 
+          className='authorization__form'
+          onSubmit={this.submitHandler}> 
           <div className='col-xs-12 col-sm-9 col-lg-7 col-centered'>
             <Field 
-              className='authorization__input'
+              className='authorization__form__input'
               component='input' 
               name='username' 
               type='text' 
               placeholder='Username'/> 
             <Field 
-              className='authorization__input'
+              className='authorization__form__input'
               component='input' 
               name='password' 
               type='password' 
               placeholder='Password'/> 
             <button 
-              className='btn authorization__button'
+              className='btn authorization__form__submit'
               type='submit'> 
               Sign In
             </button>

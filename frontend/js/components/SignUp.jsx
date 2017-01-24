@@ -117,24 +117,26 @@ class SignUp extends Component {
         {signUpError &&
         <p className='col-xs-12 col-sm-9 col-lg-7 col-centered error'>{signUpError}</p>
         }
-        <form onSubmit={this.props.handleSubmit(this.signUp)}> 
+        <form 
+          className='authorization__form'
+          onSubmit={this.props.handleSubmit(this.signUp)}> 
           <div className='col-xs-12 col-sm-9 col-lg-7 col-centered'>
             <Field 
-              className='authorization__input' 
+              className='authorization__form__input' 
               component={customInput} 
               name='username' 
               type='text' 
               placeholder='Username' 
               validate={[validateUsername]}/>
             <Field 
-              className='authorization__input' 
+              className='authorization__form__input' 
               component={customInput} 
               name='password' 
               type='password' 
               placeholder='Password' 
               validate={[validatePassword]}/>
             <Field 
-              className='authorization__input' 
+              className='authorization__form__input' 
               component={customInput} 
               name='confirmation' 
               type='password' 
@@ -142,7 +144,7 @@ class SignUp extends Component {
               validate={[validateConfirmation]}
               confirmPass={true}/>
             <button 
-              className='btn authorization__button'
+              className='btn authorization__form__submit'
               type='submit'> 
               Sign Up
             </button>
