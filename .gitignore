@@ -2,7 +2,7 @@ dist
 node_modules
 stats.json
 photoshop
-server/tokens.php
-server/CryptoLib.php
-server/link.php
-server/Cloudinary/config.php
+backend/server/tokens.php
+backend/server/CryptoLib.php
+backend/server/link.php
+backend/server/Cloudinary/config.php

@@ -38,10 +38,6 @@
       background-color: $secondaryColor;
       border-radius: $borderRadius $borderRadius 0 0;
       
-      @include tabletPlus {
-        font-size: 1.3rem 2rem;
-      }
-      
       //create background beneath top half of date 
       &:before {
         position: absolute;
